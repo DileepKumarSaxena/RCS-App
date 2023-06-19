@@ -1,0 +1,127 @@
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div>
+
+        <div class="col-sm-4"><br><br><br>
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+
+                    <form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
+
+
+                        <div [ngStyle]="{
+                          'pointer-events': !campaignCreated ? '' : 'none'
+                        }">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Campaign Name</mat-label>
+                                <mat-select [formControl]="" (ngModelChange)="campaignChange($event)">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="" placeholderLabel="Search Campaign"
+                                            noEntriesFoundLabel="No matching campaign found">
+                                            <mat-icon ngxMatSelectSearchClear><span
+                                                    class="mdi mdi-close f-24"></span></mat-icon>
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option [value]="list.campaignId" *ngFor="let list of campaignList | async">
+                                        {{list.campaignName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <ng-container *ngIf="isHidden2">
+                                <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
+
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <div>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Lead Name</mat-label>
+                                <input matInput autocomplete="off" placeholder="Lead Name" formControlName="description"
+                                    required />
+                                <mat-icon matSuffix aria-hidden="true" container="body">
+                                    <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                        class="material-symbols-outlined">
+                                        info
+                                    </span>
+                                </mat-icon>
+
+                            </mat-form-field>
+                            <ng-container *ngIf="isHidden">
+                                <div style="margin-top: -25px; font-size: small; color: red; margin-left: 1px;">
+                                    Each lead should be given a unique name. No special character allowed.
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <div>
+
+                            <!-- <mat-form-field style="width: 90%;" appearance="outline">
+                                            <mat-label>Campaign Execution Type</mat-label>
+                                            <mat-select formControlName="saveOption"
+                                                (ngModelChange)="changeExecution($event)">
+                                                <mat-option value="2">Save and Execute</mat-option>
+                                                <mat-option value="1">Save</mat-option>
+                                                <mat-option value="3">Save and Schedule</mat-option>
+                                            </mat-select>
+                                        </mat-form-field> -->
+
+                            <input class="formcss" type="file" formControlName="file" id="filesizecheck" accept=".csv "
+                                (change)="onChange($event)">
+                        </div> <br>
+
+                        <div>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Bucket Size</mat-label>
+                                <input matInput autocomplete="off" placeholder="0" formControlName="bucket" required />
+                            </mat-form-field>
+                        </div>
+
+                        <div>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Bucket Interval</mat-label>
+                                <mat-select>
+                                    <mat-option>
+                                        Hourly
+                                    </mat-option>
+                                    <mat-option>
+                                        Mothly
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+
+                        <div>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-success" type="submit" (click)="submitData()" id="smbtbtn"
+                                data-toggle="modal" data-target="#exampleModal"
+                                [disabled]="leadForm.status === 'VALID'">Submit</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-5"><br><br><br>
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+                    <div class="custom-control custom-switch">
+                        <input  type="checkbox" class="custom-control-input"
+                            id="customSwitch2">
+                        <label class="custom-control-label" for="customSwitch2">Check Duplicate No.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

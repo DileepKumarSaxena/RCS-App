@@ -1,0 +1,31 @@
+.style {
+   float: left;
+}
+
+button {
+   width: 234px;
+   height: 56px;
+   cursor: not-allowed
+}
+
+.mt-5,
+.my-5 {
+   margin-top: 9rem !important;
+}
+
+.card-body {
+   overflow: hidden;
+   max-height: 584px;
+}
+
+.go-back-section {
+   display: flex;
+   justify-content: start;
+   align-items: flex-start;
+
+   .mat-icon {
+      margin-top: -2px;
+      margin-right: 10px;
+      cursor: pointer;
+   }
+}

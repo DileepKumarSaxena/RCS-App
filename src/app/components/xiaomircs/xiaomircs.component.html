@@ -1,0 +1,224 @@
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div>
+
+        <div class="col-sm-4 mx-auto">
+            <br>
+            <br>
+            <h5 class="text-center">VI RCS</h5>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+                        <select class="form-control" name="clientnameSoip" id="clientnameSoip">
+                            <option value="">Please select client name</option>
+                            <option value="Fonada RCS">Fonada RCS</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <!-- <div class="custom-file">
+                                <input type="file" (change)="form.get('file').setValue($event.target['files'][0])"
+                                    class="custom-file-input" id="customFile" name="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+
+                            </div> -->
+                            <div class="input-group custom-file-button">
+                                <input type="file" class="form-control" id="inputGroupFile"
+                                    (change)="form.get('file').setValue($event.target['files'][0])">
+                                <label class="input-group-text" for="inputGroupFile">Browse</label>
+                            </div>
+                            <span class="description">Recommended: Please upload the file below 150KB</span>
+                            <br> <span class="description">Supported format: 1:1 Ex: 1000px (Width) X 1000px
+                                (Height)</span>
+                            <br> <span class="description">Supported format: 16:9 Ex: 1440px (Width) X 720px
+                                (Height)</span>
+
+                        </div>
+
+                        <div class="form-group text-center">
+
+
+                            <div class="form-check-inline">
+                                <label class="form-check-label" style="cursor:pointer;">
+                                    <input type="radio" class="form-check-input imagetype" name="imagetype"
+                                        value="normal"><strong>1:1</strong>
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label" style="cursor:pointer;">
+                                    <input type="radio" class="form-check-input imagetype" name="imagetype"
+                                        value="tall"><strong>16:9</strong>
+                                </label>
+                            </div>
+
+                            <div id="raderror"></div>
+
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <input type="text" formControlName="titleinsms" class="form-control"
+                                placeholder="Title in SMS" name="Title" id="Title" autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <h6 class="text-center">Message Content</h6>
+                            <textarea class="form-control" formControlName="messagecontent" rows="3"
+                                name="MessageContent" id="MessageContent"></textarea>
+
+                        </div>
+
+                        <div class="card m-b-xs">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <input type="text" formControlName="actionButton1Title" class="form-control"
+                                        placeholder="Action Button 1 Title" name="ActionButton1Title"
+                                        id="ActionButton1Title" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" formControlName="actionButton1URL" class="form-control"
+                                        placeholder="Action Button 1 URL" name="ActionButton1URL" id="ActionButton1URL"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card m-b-xs">
+                            <div class="card-body">
+                                <div class="form-group">
+
+                                    <input type="text" formControlName="actionButton2Title" class="form-control"
+                                        placeholder="Action Button 2 Title" name="ActionButton2Title"
+                                        id="ActionButton2Title" autocomplete="off">
+                                </div>
+
+                                <div class="form-group">
+
+                                    <input type="text" formControlName="actionButton2URL" class="form-control"
+                                        placeholder="Action Button 2 URL" name="ActionButton2URL" id="ActionButton2URL"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card m-b-xs">
+                            <div class="card-body">
+                                <div class="form-group">
+
+                                    <input type="text" formControlName="actionButton3Title" class="form-control"
+                                        placeholder="Action Button 3 Title" name="ActionButton3Title"
+                                        id="ActionButton3Title" autocomplete="off">
+                                </div>
+
+                                <div class="form-group">
+
+                                    <input type="text" formControlName="actionButton3URL" class="form-control"
+                                        placeholder="Action Button 3 URL" name="ActionButton3URL" id="ActionButton3URL"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" id="smbtbtn" class="btn btn-success" data-toggle="modal"
+                                data-target="#exampleModal">Preview</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-5">
+            <br><br>
+            <h5 class="text-center">VI TEMPLATES</h5>
+
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr style="background-color: #888; color:#f8f9fa;">
+                                <td>VI TEMP ID</td>
+                                <td>Title</td>
+                                <td>Date</td>
+                            </tr>
+
+                        </tbody>
+                        <tbody id="jar">
+                            <tr class="content">
+                                <td><a class="checkdata" id="NO DATA">NO DATA</a><span class="popdsn" id="subNO DATA">
+                                        <div class="text-center"><button type="button"
+                                                class="btn btn-success btn-sm closepopup" id="cls_NO DATA">X</button>
+                                        </div>
+                                        <pre class="prewrap">NO DATA</pre>
+                                    </span></td>
+                                <td>NO DATA</td>
+                                <td>NO DATA</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <nav>
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li class="page-item" id="previous-page"><a class="page-link"
+                                    href="javascript:void(0)">Prev</a>
+                            </li>
+                            <li class="page-item current-page active"><a class="page-link"
+                                    href="javascript:void(0)">1</a>
+                            </li>
+                            <li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">SMS Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div *ngIf="filePreview" class="devicePreview">
+                        <div class="contents">
+                            <img [src]="filePreview" alt="File preview">
+                            <h5>{{ titleinsms }}</h5>
+                            <p class="messageContent">{{ messagecontent }}</p>
+                            <a *ngIf="actionButton1Title" href="{{actionButton1URL}}" class="btn btn-outline-primary btn-block">{{
+                                actionButton1Title }}</a>
+                            <a *ngIf="actionButton2Title" href="{{actionButton2URL}}" class="btn btn-outline-primary btn-block">{{
+                                actionButton2Title }}</a>
+                            <a *ngIf="actionButton3Title" href="{{actionButton3URL}}" class="btn btn-outline-primary btn-block">{{
+                                actionButton3Title }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

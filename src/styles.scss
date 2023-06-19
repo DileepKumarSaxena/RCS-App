@@ -1,0 +1,152 @@
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+    height: 100%;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+}
+
+.h5, h5 {
+    font-size: 1.25rem !important;
+}
+.h6, h6 {
+    font-size: 1rem !important;
+}
+.heading {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.labels {
+    font-weight: bold;
+}
+
+.popdsn {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 300px;
+    max-height: 400px;
+    overflow: auto;
+    border: 1px solid #000000;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    padding: 15px;
+    z-index: 9999999;
+}
+
+.prewrap {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.pagination-sm .page-link {
+    color: #28a745;
+}
+
+.m-b-xs {
+    margin-bottom: 15px;
+}
+
+.card.m-b-xs {
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.description {
+    font-size: 12px;
+}
+
+.card.bg-light.text-dark {
+    box-shadow: inset 0 -3em 3em rgb(0 0 0 / 10%), 0 0 0 2px rgb(255 255 255), 0.3em 0.3em 1em rgb(0 0 0 / 30%);
+}
+
+h4.text-center {
+    margin: 10px;
+}
+
+
+input[type="date"] {
+    background-color: #8888889f;
+    padding: 15px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 15%;
+    font-family: "Roboto Mono", monospace;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+::-webkit-calendar-picker-indicator {
+    background-color: #ffffff;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+button[class="btn btn-success logs"] {
+
+    padding: 14px;
+    width: 170px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 68%;
+
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bolder;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.card-body {
+    overflow: hidden;
+    // max-height: 584px;
+}
+
+.table {
+    border-collapse: separate;
+    text-indent: initial;
+    border-spacing: 2px;
+}
+
+/* width */
+::-webkit-scrollbar, iframe::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track,  iframe::-webkit-scrollbar-track  {
+    box-shadow: inset 0 0 5px #fff; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb, iframe::-webkit-scrollbar-thumb  {
+    background: #f8f9fa; 
+    border-radius: 4px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover, iframe::-webkit-scrollbar-thumb:hover {
+    background: #aeaeae; 
+  }

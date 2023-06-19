@@ -1,0 +1,85 @@
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div>
+        <div class="col-sm-9">
+            <br><br><br>
+
+            <div class="card bg-light text-dark" style="height: 80px;">
+                <div class="d-flex justify-content-center" *ngIf="showLoader">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem; margin-top: 80px;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form [formGroup]="summaryReportForm" (ngSubmit)="onSubmit()">
+                        <input type="date" formControlName="from_date">
+                        <input type="date" style="margin-left: 250px;" formControlName="to_date">
+                        <button type="submit" class="btn btn-success logs"
+                            [disabled]="summaryReportForm.status === 'INVALID'">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+            <br><br>
+            <h5 class="text-center">CAMPAIGN LOGS</h5>
+
+            <div class="card bg-light text-dark">
+                <!-- <div use *ngIf="detail_report" line:33 ></div> -->
+                <div class="card-body">
+
+                    <table class="table table-striped tableScroll" id="tableData">
+                        <!-- <div use *ngIf="detail_report" line:39></div> -->
+                        <tbody>
+                            <tr style="background-color: #888; color:#f8f9fa;">
+                                <th>Date</th>
+                                <th>Total<br>Count</th>
+                                <th>Total<br>Delivered</th>
+                                <th>SMS<br>Count</th>
+                                <th>SMS<br>Delivered</th>
+                                <th>VI<br>Count</th>
+                                <th>VI<br>Delivered</th>
+                                <th>VI RCS<br>Count</th>
+                                <th>VI RCS<br>Delivered</th>
+                            </tr>
+                            <!-- <h1 *ngFor="let data of detail_report" {{(data.index)+1}}></h1>   let i = index" [class.active]="i == currentIndex"> -->
+                        </tbody>
+                        <tbody id="jar">
+
+                            <tr class="content" *ngFor="let data of summary_report">
+                                <td>{{data.name}}</td>
+                                <td>{{data.established}}</td>
+                                <td>{{data.country}}</td>
+                                <td>{{data.slogan}}</td>
+                                <td>{{data.head_quaters}}</td>
+                                <td>{{data.website}}</td>
+                                <td>NODATA</td>
+                                <td>NODATA</td>
+                                <td>NODATA</td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+
+                    <nav>
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li class="page-item" id="previous-page"><a class="page-link"
+                                    href="javascript:void(0)">Prev</a>
+                            </li>
+                            <li class="page-item current-page active"><a class="page-link"
+                                    href="javascript:void(0)">1</a>
+                            </li>
+                            <li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

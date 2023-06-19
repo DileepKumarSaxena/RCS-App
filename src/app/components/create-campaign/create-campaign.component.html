@@ -1,0 +1,137 @@
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div>
+
+        <div class="col-sm-9"><br><br><br>
+            <div class="go-back-section">
+                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+                <h5 class="text-center">ADD CAMPAIGN</h5>
+            </div>
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+
+                    <form [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
+
+                        <div class="row" style="margin-left: 40px;">
+                            <div class="style col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Campaign Name</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Campaign name"
+                                        formControlName="campaignName" (blur)="checkDuplicateName()" />
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
+                                        Campaign name is required
+                                    </mat-error>
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">
+                                        Campaign name already exists
+                                    </mat-error>
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                        <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
+                                            (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                    </mat-icon>
+                                </mat-form-field>
+
+                                <ng-container
+                                    *ngIf="isHidden2 && !campaignForm.get('campaignName').hasError('duplicateName')">
+                                    <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
+                                        No Special Characters allowed.
+                                    </div>
+                                </ng-container>
+
+                                <!-- <div class="error-field" *ngIf="submitted && f.camaignName.errors">
+                                    <span *ngIf="f.camaignName.errors.required">This field is required!</span>
+                                    <span *ngIf="f.campignName.errors.pattern">Special character not allowed!</span>
+                                </div>
+                                <div class="error-field" *ngIf="campNameErrorCheck">
+                                    <span>Campaign with Name
+                                        {{ campaignForm.controls.campaignName.value }} already
+                                        exists !!</span>
+                                </div> -->
+                            </div>
+
+                            <div class="style col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Description</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Description"
+                                        formControlName="description" required />
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                            class="material-symbols-outlined">
+                                            info
+                                        </span>
+                                    </mat-icon>
+
+                                </mat-form-field>
+                                <ng-container
+                                    *ngIf="isHidden && !campaignForm.get('campaignName').hasError('duplicateName')">
+                                    <div style="margin-top: -25px; font-size: small; color: red; margin-left: 4px;">
+                                        Brief description about your campaign.
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <div class="style col-sm-4">
+                                <mat-form-field appearance="outline" style="width: 85%;">
+                                    <mat-label>Message</mat-label>
+                                    <textarea placeholder="Enter JSON Format" formControlName="textMessage" matInput
+                                        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                                        cdkAutosizeMaxRows="1"></textarea>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mt-4" style="margin-left: 40px; ">
+                            <div class="col-sm-4">
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Campaign Start Date</mat-label>
+                                    <input formControlName="campaignStartTime" matInput [matDatepicker]="picker"
+                                        required>
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker">
+                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-4">
+
+                                <mat-form-field class="example-full-width" appearance="outline">
+                                    <mat-label>Campaign End Date</mat-label>
+                                    <input formControlName="campaignEndTime" matInput [matDatepicker]="picker2"
+                                        required>
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker2">
+                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Message Type</mat-label>
+                                    <mat-select placeholder="Select One" formControlName="messageType">
+                                        <mat-option *ngFor="let item of messageTypes"
+                                            [value]="item.messageId">{{item.messageType}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <br><br>
+                            <div class="col-sm-12 text-center mt-3">
+                                <button class="btn btn-success" type="submit" id="smbtbtn" data-toggle="modal"
+                                    data-target="#exampleModal"
+                                    [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+.w100 {
+    width: 100%;
+}
+.mrbt {
+    margin-bottom: 5px;
+}
+.checkdata {
+    cursor: pointer;
+    text-decoration: none !important;
+}
+nav.navbar.bg-light.w100{
+    position: relative;
+    box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(255, 255, 255),
+    0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+
+    img{
+        max-width: 90%;
+        margin-top: 10px;
+    }
+}
+nav.navbar.bg-light.w100:before {
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-left: 20px solid #ddd;
+    border-bottom: 0px solid transparent;
+    content: "";
+    position: absolute;
+    right: -22px;
+    top: 0px;
+    z-index: -1;
+}
