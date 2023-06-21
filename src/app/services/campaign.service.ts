@@ -14,7 +14,7 @@ export class CampaignService {
 
   //Compaign Name List
 
-  // private existingCampaignsEndpoint='https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId?campaignName=';
+  //private existingCampaignsEndpoint='https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId?campaignName=';
   private existingCampaignsEndpoint = 'https://fuat.flash49.com/rcsmsg/campaign/campaignListing?userId=1';
 
   getAllTheCampaignList(): Observable<any> {

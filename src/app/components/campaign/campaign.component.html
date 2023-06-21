@@ -18,14 +18,14 @@
                                 <mat-form-field appearance="fill">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker">
-                                        <input matStartDate placeholder="Start date">
-                                        <input matEndDate placeholder="End date">
+                                      <input matStartDate placeholder="Start date" [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}">
+                                      <input matEndDate placeholder="End date" [(ngModel)]="endDate" [ngModelOptions]="{standalone: true}">
                                     </mat-date-range-input>
                                     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                                <button type="button" class="btn btn-success btn-lg">Submit</button>
+                                <button type="button" class="btn btn-success btn-lg" (click)="filterData()">Submit</button>
                             </div>
                             <button type="button" class="btn btn-info btn-lg" routerLink="/campaign/create">+ Add
                                 Campaign</button>

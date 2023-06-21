@@ -24,6 +24,12 @@ export class CampaignComponent {
   inputdata: any;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   campaignForm: FormGroup;
+  startDate: Date | null;
+  endDate: Date | null;
+  campaignData: any;
+
+
+
 
 
   displayedColumns: string[] = ['userId', 'campaignName', 'description', 'textMessage', 'campaignStartTime', 'campaignEndTime', 'messageType', 'actions'];
@@ -38,31 +44,86 @@ export class CampaignComponent {
   }
   ngOnInit(): void {
     this.getCampaignList();
+    this.dataSource = new MatTableDataSource<any>();
 
+    let today = new Date();
+    let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    this.startDate = firstDayOfMonth;
+    this.endDate = lastDayOfMonth;
   }
 
-  
+
+  // getCampaignList() {
+  //   this.campaignservice.getCampaignlistDetails().subscribe({
+  //     next: (res: any) => { // Type assertion to any[]
+  //       const campaignData = res.Campaign; // Access the 'Campaign' property
+  //       this.dataSource = new MatTableDataSource(campaignData);
+  //       this.dataSource.paginator = this.paginator;
+  //       this.dataSource.sort = this.sort;
+  //     },
+  //     error: (err) => {
+  //       alert("Error while fetching the records.");
+  //     }
+  //   });
+  // }
+
+  // getCampaignList() {
+  //   this.campaignservice.getCampaignlistDetails().subscribe({
+  //     next: (res: any) => {
+  //       console.log(res, "filteredData");
+  //       const campaignData = res.Campaign;
+
+  //       // Apply date range filter
+  //       const filteredData = campaignData.filter((row: any) => {
+  //         const campaignStartTime = new Date(row.campaignStartTime);
+  //         return (
+  //           campaignStartTime >= this.startDate && campaignStartTime <= this.endDate ||
+  //           campaignStartTime.toDateString() === this.startDate.toDateString() ||
+  //           campaignStartTime.toDateString() === this.endDate.toDateString()
+  //         );
+  //       });
+
+
+  //       this.dataSource = new MatTableDataSource(filteredData);
+  //       this.dataSource.paginator = this.paginator;
+  //       this.dataSource.sort = this.sort;
+  //     },
+  //     error: (err) => {
+  //       alert("Error while fetching the records.");
+  //     }
+  //   });
+  // }
+
   getCampaignList() {
     this.campaignservice.getCampaignlistDetails().subscribe({
-      next: (res: any) => { // Type assertion to any[]
-        console.log(res, "RRREEESSS");
-        const campaignData = res.Campaign; // Access the 'Campaign' property
-        this.dataSource = new MatTableDataSource(campaignData);
+      next: (res: any) => {
+        this.campaignData = res.Campaign;
+        this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.filterData();
       },
       error: (err) => {
-        console.log(err, "ERRRROOORRRR");
         alert("Error while fetching the records.");
       }
     });
   }
-  
-  
-  
-  
-  editRow(data){}
-  deleteRow(id: number) {}
 
+  filterData() {
+    let filteredData = this.campaignData.filter((row: any) => {
+      let campaignStartTime = new Date(row.campaignStartTime);
+      return campaignStartTime >= this.startDate && campaignStartTime <= this.endDate;
+    });
+
+    this.dataSource = new MatTableDataSource(filteredData);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+
+  editRow(data) { }
+  deleteRow(id: number) { }
 
 }
