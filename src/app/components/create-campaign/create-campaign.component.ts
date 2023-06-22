@@ -22,7 +22,6 @@ export class CreateCampaignComponent {
   constructor(private formbuilder: FormBuilder, private campaignService: CampaignService, private location: Location, private router: Router) {
   }
 
-  get g() { return this.campaignForm.controls; }
   onChange(event) {
 
   }
@@ -30,7 +29,6 @@ export class CreateCampaignComponent {
   ngOnInit(): void {
     this.createCampaignForm();
     this.messageTypeList();
-    this.campaignList();
   }
   get f() { return this.campaignForm.controls; }
 
@@ -53,20 +51,22 @@ export class CreateCampaignComponent {
 
 
   }
-  campaignList() {
-    this.existingCampaignNames = [];
-    this.campaignService.getAllTheCampaignList().subscribe(res => {
-      if (res) {
-        this.existingCampaignNames = res;
-      }
-    })
-  }
+ 
   checkDuplicateName() {
-    let campaignName = this.campaignForm.value.campaignName;
-    let val = this.existingCampaignNames.find(el => el.campaignName === campaignName)
-    if (val) {
-      this.campaignForm.get('campaignName').setErrors({ duplicateName: true });
-    }
+    this.existingCampaignNames = [];
+    const userId = 1;
+    const campName = this.campaignForm.value.campaignName;
+    this.campaignService.getAllTheCampaignList(userId, campName).subscribe({
+      next: (res) => {
+        console.log("Campaign Created Successfully.");
+      },
+      error: (err) => {
+        let msgVal = err.includes("Campaign Doesn't Exist")
+        if (!msgVal) {
+          this.campaignForm.get('campaignName').setErrors({ duplicateName: true });
+        }
+      }
+    });
   }
 
   messageTypeList() {
@@ -87,9 +87,9 @@ export class CreateCampaignComponent {
     if(this.campaignForm.valid) {
       this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
         next: (res) => {
+          console.log(res, "Create Form....");
           alert("Campaign Created Successfully.");
           this.campaignForm.reset();
-          this.campaignList();
           this.router.navigate(['/campaignList']);
         },
         error: () => {

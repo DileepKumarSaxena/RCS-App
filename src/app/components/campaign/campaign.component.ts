@@ -5,7 +5,8 @@ declare var jQuery: any;
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import moment from 'moment';
 
 @Component({
   selector: 'app-campaign',
@@ -13,116 +14,61 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./campaign.component.scss']
 })
 export class CampaignComponent {
-  public showLoader = false;
-  public create_campaign: any[];
-  public last_page: number
-  public data_ar: any[];
-  config: any;
-  totalCount: number = 0;
-  currentPage: number = 1;
-  campaignList: null;
-  inputdata: any;
+  campaignListForm: FormGroup;
+  // public showLoader = false;
+  // public create_campaign: any[];
+  // public last_page: number
+  // public data_ar: any[];
+  // config: any;
+  // totalCount: number = 0;
+  // currentPage: number = 1;
+  // campaignList: null;
+  // inputdata: any;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
-  campaignForm: FormGroup;
-  startDate: Date | null;
-  endDate: Date | null;
   campaignData: any;
+  moment: any = moment;
 
-
-
-
-
-  displayedColumns: string[] = ['userId', 'campaignName', 'description', 'textMessage', 'campaignStartTime', 'campaignEndTime', 'messageType', 'actions'];
+  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'textMessage', 'campaignStartTime', 'campaignEndTime', 'messageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  constructor(
+    private campaignservice: CampaignService,
+    private formbuilder: FormBuilder
+  ) { }
 
-  constructor(private campaignservice: CampaignService) {
-
-  }
   ngOnInit(): void {
-    this.getCampaignList();
     this.dataSource = new MatTableDataSource<any>();
-
-    let today = new Date();
-    let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
-    this.startDate = firstDayOfMonth;
-    this.endDate = lastDayOfMonth;
+    this.createCampaignForm();
+    this.getCampaignList();
   }
 
+  get f() { return this.campaignListForm.controls; }
 
-  // getCampaignList() {
-  //   this.campaignservice.getCampaignlistDetails().subscribe({
-  //     next: (res: any) => { // Type assertion to any[]
-  //       const campaignData = res.Campaign; // Access the 'Campaign' property
-  //       this.dataSource = new MatTableDataSource(campaignData);
-  //       this.dataSource.paginator = this.paginator;
-  //       this.dataSource.sort = this.sort;
-  //     },
-  //     error: (err) => {
-  //       alert("Error while fetching the records.");
-  //     }
-  //   });
-  // }
-
-  // getCampaignList() {
-  //   this.campaignservice.getCampaignlistDetails().subscribe({
-  //     next: (res: any) => {
-  //       console.log(res, "filteredData");
-  //       const campaignData = res.Campaign;
-
-  //       // Apply date range filter
-  //       const filteredData = campaignData.filter((row: any) => {
-  //         const campaignStartTime = new Date(row.campaignStartTime);
-  //         return (
-  //           campaignStartTime >= this.startDate && campaignStartTime <= this.endDate ||
-  //           campaignStartTime.toDateString() === this.startDate.toDateString() ||
-  //           campaignStartTime.toDateString() === this.endDate.toDateString()
-  //         );
-  //       });
-
-
-  //       this.dataSource = new MatTableDataSource(filteredData);
-  //       this.dataSource.paginator = this.paginator;
-  //       this.dataSource.sort = this.sort;
-  //     },
-  //     error: (err) => {
-  //       alert("Error while fetching the records.");
-  //     }
-  //   });
-  // }
-
+  createCampaignForm() {
+    this.campaignListForm = this.formbuilder.group({
+      startDate: [(moment().startOf('month'))['_d']],
+      endDate: [(moment().endOf('month'))['_d']]
+    })
+  }
   getCampaignList() {
-    this.campaignservice.getCampaignlistDetails().subscribe({
+    let userId = 1;
+    let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
+    this.campaignservice.getCampaignlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
         this.campaignData = res.Campaign;
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.filterData();
       },
       error: (err) => {
-        alert("Error while fetching the records.");
+        console.log(err, "Error while fetching the records.");
       }
     });
   }
-
-  filterData() {
-    let filteredData = this.campaignData.filter((row: any) => {
-      let campaignStartTime = new Date(row.campaignStartTime);
-      return campaignStartTime >= this.startDate && campaignStartTime <= this.endDate;
-    });
-
-    this.dataSource = new MatTableDataSource(filteredData);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-
   editRow(data) { }
   deleteRow(id: number) { }
 

@@ -7,7 +7,7 @@
 
         <div class="col-sm-9">
             <br><br><br>
-            <form>
+            <form [formGroup]="campaignListForm">
 
                 <div class="card bg-light text-dark">
 
@@ -18,14 +18,14 @@
                                 <mat-form-field appearance="fill">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker">
-                                      <input matStartDate placeholder="Start date" [(ngModel)]="startDate" [ngModelOptions]="{standalone: true}">
-                                      <input matEndDate placeholder="End date" [(ngModel)]="endDate" [ngModelOptions]="{standalone: true}">
+                                      <input matStartDate placeholder="Start date" formControlName="startDate">
+                                      <input matEndDate placeholder="End date" formControlName="endDate">
                                     </mat-date-range-input>
                                     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                                <button type="button" class="btn btn-success btn-lg" (click)="filterData()">Submit</button>
+                                <button type="button" class="btn btn-success btn-lg" (click)="getCampaignList()">Submit</button>
                             </div>
                             <button type="button" class="btn btn-info btn-lg" routerLink="/campaign/create">+ Add
                                 Campaign</button>
@@ -45,9 +45,9 @@
                     <div class="mat-elevation-z8">
                         <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
                           <!-- User ID Column -->
-                          <ng-container matColumnDef="userId">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> User ID </th>
-                            <td mat-cell *matCellDef="let row"> {{row.userId}} </td>
+                          <ng-container matColumnDef="campaignId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
+                            <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
                           </ng-container>
                           <!-- campaignName -->
                           <ng-container matColumnDef="campaignName">
@@ -69,14 +69,14 @@
 
                            <!-- campaignStartTime -->
                            <ng-container matColumnDef="campaignStartTime">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Start Time</th>
-                            <td mat-cell *matCellDef="let row">{{row.campaignStartTime}}</td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Start Date</th>
+                            <td mat-cell *matCellDef="let row">{{moment(row.campaignStartTime).format('MM/DD/YYYY')}}</td>
                           </ng-container>
 
                            <!-- campaignEndTime -->
                            <ng-container matColumnDef="campaignEndTime">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign End Time</th>
-                            <td mat-cell *matCellDef="let row">{{row.campaignEndTime}}</td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign End Date</th>
+                            <td mat-cell *matCellDef="let row">{{moment(row.campaignEndTime).format('MM/DD/YYYY')}}</td>
                           </ng-container>
 
                            <!-- messageType -->

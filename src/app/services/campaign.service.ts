@@ -12,21 +12,12 @@ export class CampaignService {
 
   constructor(private http: HttpClient) { }
 
-  //Compaign Name List
-
-  //private existingCampaignsEndpoint='https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId?campaignName=';
-  private existingCampaignsEndpoint = 'https://fuat.flash49.com/rcsmsg/campaign/campaignListing?userId=1';
-
-  getAllTheCampaignList(): Observable<any> {
-    return this.http.get(`${this.existingCampaignsEndpoint}`)
+  private existingCampaignsEndpoint = 'https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId';
+ 
+  getAllTheCampaignList(userId: number, campaignName: string): Observable<any> {
+    const url = `${this.existingCampaignsEndpoint}?userId=${userId}&campaignName=${campaignName}`;
+    return this.http.get(url).pipe(map(response=>response));
   }
-  checkCampaignName(campaignName): Observable<any> {
-    return this.http.get(`${this.existingCampaignsEndpoint + campaignName + '&userId=1'}`)
-      .pipe(
-        map(response => response)
-      );
-  }
-
 
   // Message Types
   private messageType = "https://fuat.flash49.com/rcsmsg/campaign/messageTypes";
@@ -49,19 +40,9 @@ export class CampaignService {
     return this.http.post("https://fuat.flash49.com/rcsmsg/campaign/createCampaign", formData)
   }
 
-  getCampaignlistDetails() {
-    //return this.http.get("https://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?from=2023-05-01&to=2023-06-09&userId=1");
-   
-    let fromDate = "2023-05-01";
-    let toDate = "2023-06-09";
-    let userId = 1;
+  getCampaignlistDetails(userId, fromDate, toDate) {
     let apiUrl = "https://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?from=";
-    console.log(apiUrl + fromDate + "&to=" + toDate + "&userId=" + userId, 'apiUrl');
     return this.http.get(apiUrl + fromDate + "&to=" + toDate + "&userId=" + userId);
-
-    // let apiUrl = "https://fuat.flash49.com/rcsmsg/campaign/campaignListing?userId=";
-    // return this.http.get(apiUrl + 1);
-
   }
 
 }
