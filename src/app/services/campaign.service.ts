@@ -14,7 +14,7 @@ export class CampaignService {
 
   private existingCampaignsEndpoint = 'https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId';
  
-  getAllTheCampaignList(userId: number, campaignName: string): Observable<any> {
+  getAllTheCampaignList(userId: any, campaignName: any): Observable<any> {
     const url = `${this.existingCampaignsEndpoint}?userId=${userId}&campaignName=${campaignName}`;
     return this.http.get(url).pipe(map(response=>response));
   }
@@ -43,6 +43,18 @@ export class CampaignService {
   getCampaignlistDetails(userId, fromDate, toDate) {
     let apiUrl = "https://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?from=";
     return this.http.get(apiUrl + fromDate + "&to=" + toDate + "&userId=" + userId);
+  }
+
+  private editCampaign = " https://fuat.flash49.com/rcsmsg/campaign/campaignListing";
+  editCampaignById(campaignId: any): Observable<any> {
+    const url = `${this.editCampaign}?Id=${campaignId}`;
+    return this.http.delete(url).pipe(map(response=>response));
+  }
+
+  private deleteCampaign = " https://fuat.flash49.com/rcsmsg/campaign/deleteCampaignById";
+  deleteCampaignById(campaignId: any): Observable<any> {
+    const url = `${this.deleteCampaign}?Id=${campaignId}`;
+    return this.http.delete(url).pipe(map(response=>response));
   }
 
 }

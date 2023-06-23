@@ -70,6 +70,18 @@ export class CampaignComponent {
     });
   }
   editRow(data) { }
-  deleteRow(id: number) { }
+
+  deleteRow(id: any) {
+    this.campaignservice.deleteCampaignById(id).subscribe({
+      next: (res: any) => {
+        console.log(res, "Deleted.........");
+        alert("Campaign Deleted Successfully");
+        this.getCampaignList();
+      },
+      error: (err) => {
+        console.log(err, "Error while deleting the records.");
+      }
+    })
+  }
 
 }
