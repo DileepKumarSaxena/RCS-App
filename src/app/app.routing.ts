@@ -21,8 +21,10 @@ const routes: Routes = [
     { path: 'upload', component: UploadFileComponent, canActivate: [AuthGuard] },
     { path: 'campaignList', component: CampaignComponent, canActivate: [AuthGuard] },
     { path: 'campaign/create', component: CreateCampaignComponent, canActivate: [AuthGuard] },
-    {path:'lead', component:LeadComponent, canActivate:[AuthGuard]},
-    {path:'create/lead', component:CreateLeadComponent, canActivate:[AuthGuard]},
+    { path: 'campaign/edit', component: CreateCampaignComponent, canActivate: [AuthGuard] },
+    { path: 'leadList', component: LeadComponent, canActivate: [AuthGuard] },
+    { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
+    { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }

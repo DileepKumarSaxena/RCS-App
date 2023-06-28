@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import moment from 'moment';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-campaign',
@@ -16,19 +16,46 @@ export class CreateCampaignComponent {
   existingCampaignNames: any = [];
   isHidden: any;
   isHidden2: any;
-  actionBtn:string = "Submit";
+  actionBtn: string = "Submit";
+  cmpId: any;
+  selectedOption: any;
 
 
-  constructor(private formbuilder: FormBuilder, private campaignService: CampaignService, private location: Location, private router: Router) {
-  }
-
-  onChange(event) {
-
+  constructor(
+    private formbuilder: FormBuilder,
+    private campaignService: CampaignService,
+    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     this.createCampaignForm();
     this.messageTypeList();
+    this.getRouteParams();
+  }
+  getRouteParams() {
+
+    this.activatedRoute.queryParams.subscribe(res => {
+      if (res['id']) {
+        this.cmpId = res['id'];
+        this.getCampaignInfo();
+        this.actionBtn = 'Update';
+      }
+    })
+
+  }
+  getCampaignInfo() {
+    this.campaignService.getCampaignData(this.cmpId).subscribe({
+      next: (res) => {
+        console.log(res, "Campaign ID");
+        this.campaignForm.patchValue(res);
+        this.campaignForm.controls['campaignName'].disable();
+      },
+      error: (err) => {
+        console.log(err, "ERRRRRRR")
+      }
+    })
   }
   get f() { return this.campaignForm.controls; }
 
@@ -37,21 +64,20 @@ export class CreateCampaignComponent {
       userId: [1],
       campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       description: [],
-      textMessage: [],
+      messageJson: [],
       campaignStartTime: [],
       campaignEndTime: [],
-      messageType: [''],
       campaignStatus: ['Active'],
       isDeleted: [0],
       usageType: [0],
       channelPriorityScheme: ['Auto'],
-      messageId: [1],
+      messageId: [],
 
     })
 
 
   }
- 
+
   checkDuplicateName() {
     this.existingCampaignNames = [];
     const userId = 1;
@@ -83,21 +109,40 @@ export class CreateCampaignComponent {
     let data = this.campaignForm.value;
     data['campaignStartTime'] = this.campaignForm.value.campaignStartTime ? moment(this.campaignForm.value.campaignStartTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
     data['campaignEndTime'] = this.campaignForm.value.campaignEndTime ? moment(this.campaignForm.value.campaignEndTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
-    
-    if(this.campaignForm.valid) {
-      this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
-        next: (res) => {
-          console.log(res, "Create Form....");
-          alert("Campaign Created Successfully.");
-          this.campaignForm.reset();
-          this.router.navigate(['/campaignList']);
-        },
-        error: () => {
-          alert("Error while adding the Campaign Details.")
+
+    if (this.campaignForm.valid) {
+      if (this.cmpId) {
+        let formData = this.campaignForm.value;
+        formData['campaignId'] = this.cmpId;
+        this.campaignService.campaignDataUpdate(this.campaignForm.value).subscribe({
+            next: (res) => {
+            console.log(res, "Create Form....");
+            alert("Campaign Updated Successfully.");
+            this.campaignForm.reset();
+            this.router.navigate(['/campaignList']);
+          },
+          error: () => {
+            alert("Error while adding the Campaign Details.")
+          }
         }
+        );
+      } else {
+
+        this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
+          next: (res) => {
+            console.log(res, "Create Form....");
+            alert("Campaign Created Successfully.");
+            this.campaignForm.reset();
+            this.router.navigate(['/campaignList']);
+          },
+          error: () => {
+            alert("Error while adding the Campaign Details.")
+          }
+        }
+        );
       }
-      );
     }
+
 
   }
 

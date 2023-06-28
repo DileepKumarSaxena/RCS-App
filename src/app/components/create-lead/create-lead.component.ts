@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { CampaignService } from 'src/app/services/campaign.service';
+import { LeadService } from 'src/app/services/lead.service';
+import moment from 'moment';
+import { Location } from '@angular/common';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { Papa } from 'ngx-papaparse';
 
 @Component({
   selector: 'app-create-lead',
@@ -8,166 +14,197 @@ import { CampaignService } from 'src/app/services/campaign.service';
   styleUrls: ['./create-lead.component.scss']
 })
 export class CreateLeadComponent {
- loading: boolean = false;
- CheckdupliacteNo: boolean = false;
   leadForm: FormGroup;
-  campaignCreated: boolean = false;
-  submitted: boolean;
-  campNameErrorCheck: boolean = false;
-  description: [''];
-  bucket:[''];
-  Start_date: [''];
-  End_date: [''];
+  messageTypes: any = [];
+  existingLeadNames: any = [];
+  isHidden: any;
+  isHidden2: any;
+  actionBtn: string = "Submit";
+  leadID: any;
+  campaignList: any = [];
+  leadExecutionData: any = [
+    { leadExecutionData: 'save', leadExecutionName: 'Save and Execute' },
+    { leadExecutionData: 'schedule', leadExecutionName: 'Save and Schedule' }
+  ]
+  displayDate: string = 'someValue';
+  leadExecutionType: FormControl;
+  switchState: boolean = false;
+  dnd: boolean = false;
+  dupliacteNo: boolean = false;
+  selectedFile: any = null;
+  numberList: any = [];
   file: File = null;
-  adjustedDate: Date;
-  campaignList: null;
-  selectedDate: any;
-  campaignName: [''];
-  textMessage: [''];
-  campaignStatus: '';
-  isDeleted: '';
-  userId: '';
-  usageType: '';
-  channelPriorityScheme: ''
-  messageId: ''
-  isHidden = false;
-  isHidden2 = false;
-  testCampaignBtn: boolean;
-  saveOption: number;
-  contineuty = false;
-  currentDate: FormControl;
-  activationDate = this.getNowUTC();
-  private getNowUTC() {
-    const now = new Date();
-    return new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
-
-  }
 
 
-
-  // currentDate = new Date();
-  // nexDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
-  // public setDate = [
-  //   new Date(),
-  //   new Date(this.nexDate.getFullYear(), this.nexDate.getMonth(), this.nexDate.getDate(), 21, 0)
-  // ];
-  // startDateVal = new Date();
-  // endDateVal = new Date(this.nexDate.getFullYear(), this.nexDate.getMonth(), this.nexDate.getDate(), 21, 0);
-
-  constructor(private formbuilder: FormBuilder, private campaignService: CampaignService) {
-
-    this.leadForm = this.formbuilder.group({
-      description: this.description,
-      bucket: this.bucket,
-      Start_date: this.Start_date,
-      End_date: this.End_date,
-      campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
-      campaignStatus: ['Active'],
-      textMessage: this.textMessage,
-      isDeleted: [0],
-      userId: [1],
-      usageType: [0],
-      channelPriorityScheme: ['Auto'],
-      messageId: [1],
-      file: this.file,
-      CheckdupliacteNo: this.CheckdupliacteNo,
-    })
-   
-
-
-    // const d: Date = new Date();
-    // let text: string = d.toISOString();
-    // document.getElementById("demo")!.innerHTML = text;
-    // this.currentDate = moment().format('YYYY-MM-DDTHH:mm:ssZ');
-  }
-
-  get g() { return this.leadForm.controls; }
-  onChange(event) {
-
+  constructor(
+    private formbuilder: FormBuilder,
+    private campaignService: CampaignService,
+    private leadService: LeadService,
+    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private papa: Papa) {
   }
 
   ngOnInit(): void {
-    // moment.tz.setDefault('Asia/Kolkata')
-
-    // this.currentDate = new FormControl(moment().utcOffset('+5:30'));
-
-    // const Start_date = moment().utc().utcOffset('+05:30')
-    // this.campaignForm.get('Start_date').setValue(Start_date);
+    this.createLeadForm();
+    this.campaignListData();
+    this.getRouteParams();
+    this.leadExecutionType = this.formbuilder.control('');
   }
 
-
-  onDateSelected(event: any) {
-    this.selectedDate = event.value;
-    const offset = this.selectedDate.getTimezoneOffset() * 60000;     // Convert minutes to milliseconds
-    const adjustedTimestamp = this.selectedDate.getTime() - offset;  // Adjust the timestamp
-    this.adjustedDate = new Date(adjustedTimestamp);
-    const utcString = this.adjustedDate.toISOString();
-    //Check the adjusted UTC string in the console
-  }
-
-
-  onSubmit() {
-    const formdata: FormData = new FormData();
-    this.loading = !this.loading;
-    console.log(this.leadForm);
-  
-        // Swal.fire(
-        //   'Campaign Created Successfully !!'
-        // )
+  getRouteParams() {
+    this.activatedRoute.queryParams.subscribe(res => {
+      if (res['id']) {
+        this.leadID = res['id'];
+        this.getLeadInfo();
+        this.actionBtn = 'Update';
+      }
+    })
 
   }
-
+  getLeadInfo() {
+    this.leadService.getLeadData(this.leadID).subscribe({
+      next: (res) => {
+        this.leadForm.patchValue(res['Lead Info']);
+        if (res['Lead Info'].hasOwnProperty("leadSchedule")) {
+          this.leadForm.get('leadExecutionType').patchValue('schedule');
+          this.leadForm.get('scheduleStartDtm').patchValue(res['Lead Info']['leadSchedule']['scheduleStartDtm']);
+          this.leadForm.get('scheduleEndDtm').patchValue(res['Lead Info']['leadSchedule']['scheduleEndDtm']);
+        } else {
+          this.leadForm.get('leadExecutionType').patchValue('save');
+        }
+        this.leadForm.controls['leadName'].disable();
+      },
+      error: (err) => {
+        console.log(err, "ERRRRRRR")
+      }
+    })
+  }
   get f() { return this.leadForm.controls; }
 
-  submitData() {
-    // this.campaignForm;
-    console.log(this.leadForm.value)
-
-    this.Start_date = this.leadForm.get('Start_date')?.value;
-    this.End_date = this.leadForm.get('End_date')?.value;
-    this.textMessage = this.leadForm.get('textMessage')?.value;
-    this.description = this.leadForm.get('description')?.value;
-    this.campaignName = this.leadForm.get('campaignName')?.value;
-    this.campaignStatus = this.leadForm.get('campaignStatus')?.value;
-    this.isDeleted = this.leadForm.get('isDeleted')?.value;
-    this.userId = this.leadForm.get('userId')?.value;
-    this.usageType = this.leadForm.get('usageType')?.value;
-    this.channelPriorityScheme = this.leadForm.get('channelPriorityScheme')?.value;
-    this.messageId = this.leadForm.get('messageId')?.value
+  createLeadForm() {
+    this.leadForm = this.formbuilder.group({
+      userId: [1],
+      campaignId: ['', [Validators.required]],
+      leadName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
+      file: [null],
+      isDND: [false],
+      isDuplicate: [false],
+      leadExecutionType: [],
+      scheduleStartDtm: [],
+      scheduleEndDtm: []
+    })
   }
 
-  changeExecution(event) {
+  checkDuplicateName() {
+    this.existingLeadNames = [];
+    const leadName = this.leadForm.value.leadName;
+    this.leadService.getAllTheLeadList(leadName).subscribe({
+      next: (res) => {
+        if (res['message'] == 'Y') {
+          this.leadForm.get('leadName').setErrors({ duplicateName: true });
+        }
+        console.log(res, "Lead Name Created Successfully.");
+      },
+      error: (err) => {
 
+      }
+    });
   }
 
-  onChangeDate(event) {
-
+  campaignListData() {
+    this.leadService.getCampaignList().subscribe(res => {
+      if (res) {
+        this.campaignList = res;
+      } else {
+        this.leadService.setCampaignList();
+      }
+    })
   }
 
-  saveData() {
+  uploadCsvFile(event) {
+    this.file = event.target.files[0];
+  }
+  onSubmit() {
+    let data = this.leadForm.value;
+    if (this.leadForm.valid) {
+      let dndValue = this.leadForm.get('isDND').value;
+      let isDuplicateValue = this.leadForm.get('isDuplicate').value;
+      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      let formData = this.createLeadData(data);
 
+      if (this.leadID) {
+        formData['leadId'] = this.leadID;
+        this.campaignService.campaignDataUpdate(formData).subscribe({
+          next: (res) => {
+            alert("Lead Updated Successfully.");
+            this.leadForm.reset();
+            this.router.navigate(['/leadList']);
+          },
+          error: () => {
+            alert("Error while adding the Lead Details.")
+          }
+        }
+        );
+      } else {
+        this.leadService.uploadCSVFile(formData, this.file, dndValue, isDuplicateValue).subscribe({
+          next: (res) => {
+            alert("Lead Created Successfully.");
+            this.leadForm.reset();
+            this.router.navigate(['/leadList']);
+          },
+          error: () => {
+            alert("Error while adding the Lead Details.")
+          }
+        }
+        );
+      }
+    }
   }
 
-  removeDate() {
-    this.leadForm.controls.endDate.setValue('');
+  createLeadData(dataVal) {
+    let obj = {
+      "insertDtm": dataVal['scheduleStartDtm'],
+      "processDtm": dataVal['scheduleEndDtm'],
+      "leadStatus": "Inactive",
+      "leadCompletionStatus": "Created",
+      "campaignId": dataVal['campaignId'],
+      "countOfNumbers": 0,
+      "countOfInvalidNumbers": 0,
+      "countOfNonRcsNumbers": 0,
+      "countOfDuplicateNumbers": 0,
+      "countOfBlackListNumbers": 0,
+      "userId": dataVal['userId'],
+      "leadName": dataVal['leadName'],
+      "retryInfo": {
+        "retryOnFail": 0,
+        "noOfRetry": 0,
+        "retryType": "C"
+      }
+    }
+
+    if (dataVal['leadExecutionType'] == 'schedule') {
+      obj["leadSchedule"] = {
+        "scheduleStartDtm": dataVal['scheduleStartDtm'],
+        "windowRequired": "N",
+        "scheduleDay": "6",
+        "scheduleEndDtm": dataVal['scheduleEndDtm'],
+        "windowStartTime": "10:18",
+        "windowEndTime": "21:00"
+      }
+    }
+    return obj;
   }
 
-  campaignChange(event) {
-   
+  goBack(): void {
+    this.location.back();
   }
 
 }
 
-  // convertToJson(): void {
-  //   try {
-  //     const jsonMessage = JSON.parse(this.textMessage);
-  //     console.log(jsonMessage);
-  //     // You can further process the JSON message as needed
-  //   } catch (error) {
-  //     console.error('Invalid JSON format:', error);
-  //     // Handle the error appropriately, such as showing an error message to the user
-  //   }
-  // }
+
 
 
 

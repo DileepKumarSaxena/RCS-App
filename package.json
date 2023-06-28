@@ -27,6 +27,8 @@
     "moment-timezone": "^0.5.43",
     "ng-pick-datetime": "^7.0.0",
     "ngx-mat-select-search": "^7.0.2",
+    "ngx-ui-loader": "^13.0.0",
+    "ngx-papaparse": "^7.0.0",
     "rxjs": "~7.5.0",
     "sass-loader": "^13.2.0",
     "sweetalert2": "^11.4.8",

@@ -5,123 +5,166 @@
             <app-navigation></app-navigation>
         </div>
 
-        <div class="col-sm-4"><br><br>
+        <div class="col-sm-9">
+            <br>
+            <br>
+            <div class="go-back-section">
+                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+                <h5 class="text-center">ADD LEAD</h5>
+            </div>
+
+
             <div class="card bg-light text-dark">
                 <div class="card-body">
-
                     <form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select Campaign Name</mat-label>
+                                    <mat-select formControlName="campaignId">
+                                        <mat-option>
+                                            <ngx-mat-select-search placeholderLabel="Search Campaign"
+                                                noEntriesFoundLabel="No matching campaign found">
+                                                <mat-icon ngxMatSelectSearchClear><span
+                                                        class="mdi mdi-close f-24"></span></mat-icon>
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let item of campaignList"
+                                            [value]="item.campaignId">{{item.campaignName}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <ng-container *ngIf="isHidden2">
+                                    <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
+                                    </div>
+                                </ng-container>
+
+                            </div>
 
 
-                        <div [ngStyle]="{
-                          'pointer-events': !campaignCreated ? '' : 'none'
-                        }">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Select Campaign Name</mat-label>
-                                <mat-select [formControl]="" (ngModelChange)="campaignChange($event)">
-                                    <mat-option>
-                                        <ngx-mat-select-search [formControl]="" placeholderLabel="Search Campaign"
-                                            noEntriesFoundLabel="No matching campaign found">
-                                            <mat-icon ngxMatSelectSearchClear><span
-                                                    class="mdi mdi-close f-24"></span></mat-icon>
-                                        </ngx-mat-select-search>
-                                    </mat-option>
-                                    <mat-option [value]="list.campaignId" *ngFor="let list of campaignList | async">
-                                        {{list.campaignName}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Lead Name</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Lead name"
+                                        (blur)="checkDuplicateName()" formControlName="leadName" />
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
+                                        Lead name is required
+                                    </mat-error>
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">
+                                        Lead name already exists
+                                    </mat-error>
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                        <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
+                                            (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                    </mat-icon>
+                                </mat-form-field>
 
-                            <ng-container *ngIf="isHidden2">
-                                <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
 
+                                <ng-container *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
+                                    <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
+                                        No Special Characters allowed.
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <div class=" col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group custom-file-button">
+                                        <input type="file" class="form-control" id="inputGroupFile"
+                                            formControlName="file" (change)="uploadCsvFile($event)">
+                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                    </div>
                                 </div>
-                            </ng-container>
+                                <div class="toggleRow">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" [(ngModel)]="switchState"
+                                            class="custom-control-input" id="customSwitch1" formControlName="isDND">
+                                        <label class="custom-control-label" for="customSwitch1">Enable DND</label>
+                                        <div *ngIf="switchState">
+                                            <!-- Switch is ON -->
+                                        </div>
+                                        <div *ngIf="!switchState">
+                                            <!-- Switch is OFF -->
+                                        </div>
+                                    </div>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                            class="custom-control-input" id="customSwitch2"
+                                            formControlName="isDuplicate">
+                                        <label class="custom-control-label" for="customSwitch2">Remove Duplicate
+                                            No.</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Lead Execution Type</mat-label>
+                                    <mat-select placeholder="Select One" formControlName="leadExecutionType">
+                                        <mat-option *ngFor="let item of leadExecutionData"
+                                            [value]="item.leadExecutionData">{{item.leadExecutionName}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Enter a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
+                                        <input matEndDate placeholder="End date" formControlName="scheduleEndDtm">
+                                    </mat-date-range-input>
+                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+                            </div>
 
-                        <div>
+
+
+                            <div class="col-sm-4">
+
+                                <button class="btn btn-success submit" type="submit" id="smbtbtn"
+                                    [disabled]="leadForm.status === 'INVALID'">{{actionBtn}}</button>
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
+                        </div>
+                        <div class="col-sm-4">
                             <mat-form-field appearance="outline">
-                                <mat-label>Lead Name</mat-label>
-                                <input matInput autocomplete="off" placeholder="Lead Name" formControlName="description"
-                                    required />
+                                <input matInput>
                                 <mat-icon matSuffix aria-hidden="true" container="body">
                                     <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
                                         class="material-symbols-outlined">
                                         info
                                     </span>
                                 </mat-icon>
-
                             </mat-form-field>
-                            <ng-container *ngIf="isHidden">
-                                <div style="margin-top: -25px; font-size: small; color: red; margin-left: 1px;">
-                                    Each lead should be given a unique name. No special character allowed.
+                            <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
+                                <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
+                                    Numbers(S) on which test call to be given.
                                 </div>
                             </ng-container>
                         </div>
-
-                        <div>
-
-                            <!-- <mat-form-field style="width: 90%;" appearance="outline">
-                                            <mat-label>Campaign Execution Type</mat-label>
-                                            <mat-select formControlName="saveOption"
-                                                (ngModelChange)="changeExecution($event)">
-                                                <mat-option value="2">Save and Execute</mat-option>
-                                                <mat-option value="1">Save</mat-option>
-                                                <mat-option value="3">Save and Schedule</mat-option>
-                                            </mat-select>
-                                        </mat-form-field> -->
-
-                            <input class="formcss" type="file" formControlName="file" id="filesizecheck" accept=".csv "
-                                (change)="onChange($event)">
-                        </div> <br>
-
-                        <div>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Bucket Size</mat-label>
-                                <input matInput autocomplete="off" placeholder="0" formControlName="bucket" required />
-                            </mat-form-field>
-                        </div>
-
-                        <div>
-
-                            <mat-form-field appearance="outline">
-                                <mat-label>Select Bucket Interval</mat-label>
-                                <mat-select>
-                                    <mat-option>
-                                        Hourly
-                                    </mat-option>
-                                    <mat-option>
-                                        Mothly
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-
-                        </div>
-
-                        <div>
-
-                        </div>
                         <div class="col-sm-4">
-                            <button class="btn btn-success" type="submit" (click)="submitData()" id="smbtbtn"
-                                data-toggle="modal" data-target="#exampleModal"
-                                [disabled]="leadForm.status === 'VALID'">Submit</button>
+                            <button class="btn btn-success lead">Test
+                                Lead</button>
                         </div>
-
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-5"><br><br>
-            <div class="card bg-light text-dark">
-                <div class="card-body">
-                    <div class="custom-control custom-switch">
-                        <input  type="checkbox" class="custom-control-input"
-                            id="customSwitch2">
-                        <label class="custom-control-label" for="customSwitch2">Check Duplicate No.</label>
                     </div>
                 </div>
             </div>
+            <br>
         </div>
     </div>
 </div>

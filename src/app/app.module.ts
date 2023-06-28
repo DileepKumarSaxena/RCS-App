@@ -36,6 +36,19 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
+import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
+
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+    bgsColor: 'red',
+    bgsPosition: POSITION.bottomCenter,
+    bgsSize: 40,
+    bgsType: SPINNER.rectangleBounce,
+    pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
+    pbThickness: 5, // progress bar thickness  
+    fgsType: "three-strings",
+    //logoUrl: "assets/img/dca_logo1_small.png",
+    //logoSize: 30
+    };
 
 @NgModule({
     imports:[
@@ -58,12 +71,12 @@ import { CreateLeadComponent } from './components/create-lead/create-lead.compon
         MatNativeDateModule,
         TextFieldModule,
         MatTableModule,
-        MatPaginatorModule
-        
-        
-    
-    
+        MatPaginatorModule,  
+        NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
+        NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
     ],
+
+    
 
     declarations: [
         AppComponent,

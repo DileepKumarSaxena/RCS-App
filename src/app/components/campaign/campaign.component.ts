@@ -7,6 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import moment from 'moment';
+import { Router } from '@angular/router'
+import { NgxUiLoaderService } from 'ngx-ui-loader'
 
 @Component({
   selector: 'app-campaign',
@@ -36,7 +38,9 @@ export class CampaignComponent {
 
   constructor(
     private campaignservice: CampaignService,
-    private formbuilder: FormBuilder
+    private formbuilder: FormBuilder,
+    private router: Router,
+    private ngxService: NgxUiLoaderService
   ) { }
 
   ngOnInit(): void {
@@ -57,19 +61,25 @@ export class CampaignComponent {
     let userId = 1;
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
+    this.ngxService.start();
     this.campaignservice.getCampaignlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
         this.campaignData = res.Campaign;
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        // this.ngxService.stop();
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
+        this.ngxService.stop();
       }
     });
   }
-  editRow(data) { }
+  editRow(data) {
+    this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
+
+  }
 
   deleteRow(id: any) {
     this.campaignservice.deleteCampaignById(id).subscribe({

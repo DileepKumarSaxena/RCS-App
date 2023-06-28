@@ -1,29 +1,29 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { error } from 'jquery';
-import moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BaseService } from './base.service'
 
 @Injectable({
   providedIn: 'root'
 })
-export class CampaignService {
+export class CampaignService extends BaseService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
-  private existingCampaignsEndpoint = 'https://fuat.flash49.com/rcsmsg/campaign/findCampaignByCampaignNameAndUserId';
- 
+  baseUrlData = this.baseUrl + 'campaign/';
+
   getAllTheCampaignList(userId: any, campaignName: any): Observable<any> {
-    const url = `${this.existingCampaignsEndpoint}?userId=${userId}&campaignName=${campaignName}`;
-    return this.http.get(url).pipe(map(response=>response));
+    let httpParams = new HttpParams()
+    httpParams = httpParams.append("userId", userId);
+    httpParams = httpParams.append("campaignName", campaignName);
+    return this.http.get(`${this.baseUrlData + 'findCampaignByCampaignNameAndUserId'}`, { params: httpParams });
   }
 
   // Message Types
-  private messageType = "https://fuat.flash49.com/rcsmsg/campaign/messageTypes";
-
   getAllTheMessageTypesList(): Observable<any> {
-    return this.http.get(`${this.messageType}`)
+    return this.http.get(`${this.baseUrlData + 'messageTypes'}`);
   }
   private messageListSubject$ = new BehaviorSubject(null);
 
@@ -37,24 +37,27 @@ export class CampaignService {
   }
 
   campaignDataSubmit(formData: any): Observable<any> {
-    return this.http.post("https://fuat.flash49.com/rcsmsg/campaign/createCampaign", formData)
+    return this.http.post(`${this.baseUrlData + 'createCampaign'}`, formData);
   }
 
   getCampaignlistDetails(userId, fromDate, toDate) {
-    let apiUrl = "https://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?from=";
-    return this.http.get(apiUrl + fromDate + "&to=" + toDate + "&userId=" + userId);
+    let httpParams = new HttpParams()
+    httpParams = httpParams.append("from", fromDate);
+    httpParams = httpParams.append("to", toDate);
+    httpParams = httpParams.append("userId", userId);
+    return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
   }
 
-  private editCampaign = " https://fuat.flash49.com/rcsmsg/campaign/campaignListing";
-  editCampaignById(campaignId: any): Observable<any> {
-    const url = `${this.editCampaign}?Id=${campaignId}`;
-    return this.http.delete(url).pipe(map(response=>response));
+  campaignDataUpdate(formData: any): Observable<any> {
+    return this.http.post(`${this.baseUrlData + 'updateCampaign'}`, formData);
   }
 
-  private deleteCampaign = " https://fuat.flash49.com/rcsmsg/campaign/deleteCampaignById";
   deleteCampaignById(campaignId: any): Observable<any> {
-    const url = `${this.deleteCampaign}?Id=${campaignId}`;
-    return this.http.delete(url).pipe(map(response=>response));
+    return this.http.delete(`${this.baseUrlData + 'deleteCampaignById?Id=' + campaignId}`);
+  }
+
+  getCampaignData(campaignId: any) {
+    return this.http.get(`${this.baseUrlData + 'findCampaignById?Id=' + campaignId}`);
   }
 
 }
