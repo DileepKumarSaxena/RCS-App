@@ -13,6 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class CreateCampaignComponent {
   campaignForm: FormGroup;
   messageTypes: any = [];
+  allTemplateList: any = [];
   existingCampaignNames: any = [];
   isHidden: any;
   isHidden2: any;
@@ -32,6 +33,7 @@ export class CreateCampaignComponent {
   ngOnInit(): void {
     this.createCampaignForm();
     this.messageTypeList();
+    this.templateList();
     this.getRouteParams();
   }
   getRouteParams() {
@@ -72,6 +74,7 @@ export class CreateCampaignComponent {
       usageType: [0],
       channelPriorityScheme: ['Auto'],
       messageId: [],
+      templateId:[]
 
     })
 
@@ -101,6 +104,15 @@ export class CreateCampaignComponent {
         this.messageTypes = res.message;
       } else {
         this.campaignService.setMessageList();
+      }
+    })
+  }
+ templateList() {
+    this.campaignService.getAllTemplateList().subscribe(res => {
+      if (res) {
+        this.allTemplateList = res.template;
+      } else {
+       this.campaignService.setTemplateList();
       }
     })
   }

@@ -25,6 +25,7 @@ export class CampaignService extends BaseService {
   getAllTheMessageTypesList(): Observable<any> {
     return this.http.get(`${this.baseUrlData + 'messageTypes'}`);
   }
+
   private messageListSubject$ = new BehaviorSubject(null);
 
   getMessageList(): Observable<any> {
@@ -36,6 +37,23 @@ export class CampaignService extends BaseService {
     });
   }
 
+  // Template List
+  getAllTemplateList(): Observable<any> {
+    return this.http.get(`https://fuat.flash49.com/rcsmsg/template/findAllTemplate`);
+  }
+
+  private templateListSubject$ = new BehaviorSubject(null);
+
+  getTemplateList(): Observable<any> {
+    return this.templateListSubject$.asObservable();
+  }
+  setTemplateList() {
+    this.getAllTemplateList().subscribe((res) => {
+      return this.templateListSubject$.next(res);
+    });
+  }
+
+  
   campaignDataSubmit(formData: any): Observable<any> {
     return this.http.post(`${this.baseUrlData + 'createCampaign'}`, formData);
   }

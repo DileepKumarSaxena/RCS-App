@@ -72,12 +72,22 @@
                                 </ng-container>
                             </div>
 
-                            <div class="style col-sm-4">
+                            <!-- <div class="style col-sm-4">
                                 <mat-form-field appearance="outline" style="width: 85%;">
                                     <mat-label>Message</mat-label>
                                     <textarea placeholder="Enter JSON Format" formControlName="messageJson" matInput
                                         cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
                                         cdkAutosizeMaxRows="1"></textarea>
+                                </mat-form-field>
+                            </div> -->
+
+                             <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Template List</mat-label>
+                                    <mat-select placeholder="Select One" formControlName="templateId">
+                                        <mat-option *ngFor="let item of allTemplateList"
+                                            [value]="item.templateId">{{item.templateCode}}</mat-option>
+                                    </mat-select>
                                 </mat-form-field>
                             </div>
 

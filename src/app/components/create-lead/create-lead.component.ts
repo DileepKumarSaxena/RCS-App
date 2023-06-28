@@ -195,7 +195,7 @@ export class CreateLeadComponent {
         "windowEndTime": "21:00"
       }
     }
-    return obj;
+   return obj;
   }
 
   goBack(): void {

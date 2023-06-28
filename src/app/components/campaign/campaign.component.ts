@@ -17,15 +17,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader'
 })
 export class CampaignComponent {
   campaignListForm: FormGroup;
-  // public showLoader = false;
-  // public create_campaign: any[];
-  // public last_page: number
-  // public data_ar: any[];
-  // config: any;
-  // totalCount: number = 0;
-  // currentPage: number = 1;
-  // campaignList: null;
-  // inputdata: any;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   campaignData: any;
   moment: any = moment;
