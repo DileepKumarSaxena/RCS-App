@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 // import { User } from "../_models";
 
@@ -10,16 +11,19 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.currentUserSubject = new BehaviorSubject<any>(
-
-      this.currentUserSubject = JSON.parse(localStorage.getItem("currentUser"))
+      JSON.parse(localStorage.getItem("currentUser"))
     );
     this.currentUser = this.currentUserSubject.asObservable();
+
+    if (this.currentUserValue) {
+      this.router.navigate(['/login']); // Redirect to login page if already logged in
+    }
   }
 
   public get currentUserValue(): any {
-   return this.currentUserSubject.value;
+    return this.currentUserSubject.value;
   }
 
   login(username: string, password: string) {
@@ -29,7 +33,7 @@ export class AuthenticationService {
       .post<any>(`https://fuat.flash49.com/rcsmsg/auth/generateToken`, { username, password })
       .pipe(
         map(user => {
-          user.authdata=user.result.token;
+          user.authdata = user.result.token;
           localStorage.setItem("currentUser", JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
@@ -37,7 +41,7 @@ export class AuthenticationService {
         })
       );
   }
-  
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem("currentUser");

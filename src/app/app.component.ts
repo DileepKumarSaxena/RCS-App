@@ -12,17 +12,19 @@ import { AuthenticationService } from './_services';
 export class AppComponent {
   title = 'FonadaRCS';
 
-  currentUser:any;
+  currentUser: any;
 
   constructor(
-      private router: Router,
-      private authenticationService: AuthenticationService
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {
-      this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
-
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
+  }
   logout() {
-      this.authenticationService.logout();
-      this.router.navigate(['/login']);
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
   }
 }
