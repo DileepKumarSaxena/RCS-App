@@ -104,16 +104,34 @@ export class LeadComponent {
   }
 
   deleteRow(id: any) {
-    this.leadService.deleteLeadById(id).subscribe({
-      next: (res: any) => {
-        console.log(res, "Deleted.........");
-        alert("Lead Deleted Successfully");
-        this.getLeadList();
+    Swal.fire({
+      title: 'Are you sure you want to delete this campaign?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      icon: 'warning',
+      confirmButtonColor: '#F34335',
+      customClass: {
+        icon: 'custom-icon-class',
       },
-      error: (err) => {
-        console.log(err, "Error while deleting the records.");
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.leadService.deleteLeadById(id).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              title: 'Lead Deleted Successfully',
+            });
+            this.getLeadList();
+          },
+          error: (err) => {
+            Swal.fire({
+              title: 'Error while deleting the records.',
+            });
+          }
+        });
       }
-    })
+    });
   }
 }
 

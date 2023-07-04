@@ -4,7 +4,7 @@ import moment from 'moment';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-create-campaign',
   templateUrl: './create-campaign.component.html',
@@ -122,41 +122,56 @@ export class CreateCampaignComponent {
     let data = this.campaignForm.value;
     data['campaignStartTime'] = this.campaignForm.value.campaignStartTime ? moment(this.campaignForm.value.campaignStartTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
     data['campaignEndTime'] = this.campaignForm.value.campaignEndTime ? moment(this.campaignForm.value.campaignEndTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
-
+  
     if (this.campaignForm.valid) {
       if (this.cmpId) {
         let formData = this.campaignForm.value;
         formData['campaignId'] = this.cmpId;
         this.campaignService.campaignDataUpdate(this.campaignForm.value).subscribe({
-            next: (res) => {
+          next: (res) => {
             console.log(res, "Create Form....");
-            alert("Campaign Updated Successfully.");
-            this.campaignForm.reset();
-            this.router.navigate(['/campaignList']);
+            Swal.fire({
+              title: 'Campaign Updated Successfully',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.campaignForm.reset();
+              this.router.navigate(['/campaignList']);
+            });
           },
           error: () => {
-            alert("Error while adding the Campaign Details.")
-          }
-        }
-        );
+            Swal.fire({
+              title: 'Error',
+              text: 'Error while updating the Campaign Details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          },
+        });
       } else {
-
         this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
           next: (res) => {
             console.log(res, "Create Form....");
-            alert("Campaign Created Successfully.");
-            this.campaignForm.reset();
-            this.router.navigate(['/campaignList']);
+            Swal.fire({
+              title: 'Campaign Created Successfully',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.campaignForm.reset();
+              this.router.navigate(['/campaignList']);
+            });
           },
           error: () => {
-            alert("Error while adding the Campaign Details.")
-          }
-        }
-        );
+            Swal.fire({
+              title: 'Error',
+              text: 'Error while adding the Campaign Details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          },
+        });
       }
     }
-
-
   }
 
   goBack(): void {

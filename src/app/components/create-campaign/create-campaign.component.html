@@ -16,11 +16,11 @@
                     <form [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
 
                         <div class="row" style="margin-left: 40px;">
-                            <div class="style col-sm-4">
+                            <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Campaign Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Campaign name"
-                                        formControlName="campaignName" (blur)="checkDuplicateName()" />
+                                        formControlName="campaignName" maxlength="255"  (blur)="checkDuplicateName()" />
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
                                         Campaign name is required
                                     </mat-error>
@@ -51,7 +51,7 @@
                                 </div> -->
                             </div>
 
-                            <div class="style col-sm-4">
+                            <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Description</mat-label>
                                     <input matInput autocomplete="off" placeholder="Description"

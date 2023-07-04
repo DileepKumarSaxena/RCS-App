@@ -23,7 +23,7 @@ export class CampaignComponent {
 
   displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'templateJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
- 
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -40,7 +40,7 @@ export class CampaignComponent {
     this.getCampaignList();
   }
 
-  
+
   get f() { return this.campaignListForm.controls; }
 
   createCampaignForm() {
@@ -78,16 +78,34 @@ export class CampaignComponent {
   }
 
   deleteRow(id: any) {
-    this.campaignservice.deleteCampaignById(id).subscribe({
-      next: (res: any) => {
-        console.log(res, "Deleted.........");
-        alert("Campaign Deleted Successfully");
-        this.getCampaignList();
+    Swal.fire({
+      title: 'Are you sure you want to delete this campaign?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      icon: 'warning',
+      confirmButtonColor: '#F34335',
+      customClass: {
+        icon: 'custom-icon-class',
       },
-      error: (err) => {
-        console.log(err, "Error while deleting the records.");
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.campaignservice.deleteCampaignById(id).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              title: 'Campaign Deleted Successfully',
+            });
+            this.getCampaignList();
+          },
+          error: (err) => {
+            Swal.fire({
+              title: 'Error while deleting the records.',
+            });
+          }
+        });
       }
-    })
+    });
   }
 
 }

@@ -7,6 +7,8 @@ import moment from 'moment';
 import { Location } from '@angular/common';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Papa } from 'ngx-papaparse';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-create-lead',
@@ -134,32 +136,50 @@ export class CreateLeadComponent {
       data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       let formData = this.createLeadData(data);
-
+  
       if (this.leadID) {
         formData['leadId'] = this.leadID;
         this.campaignService.campaignDataUpdate(formData).subscribe({
           next: (res) => {
-            alert("Lead Updated Successfully.");
-            this.leadForm.reset();
-            this.router.navigate(['/leadList']);
+            Swal.fire({
+              title: 'Lead Updated Successfully',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.leadForm.reset();
+              this.router.navigate(['/leadList']);
+            });
           },
           error: () => {
-            alert("Error while adding the Lead Details.")
-          }
-        }
-        );
+            Swal.fire({
+              title: 'Error',
+              text: 'Error while updating the Lead Details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          },
+        });
       } else {
         this.leadService.uploadCSVFile(formData, this.file, dndValue, isDuplicateValue).subscribe({
           next: (res) => {
-            alert("Lead Created Successfully.");
-            this.leadForm.reset();
-            this.router.navigate(['/leadList']);
+            Swal.fire({
+              title: 'Lead Created Successfully',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.leadForm.reset();
+              this.router.navigate(['/leadList']);
+            });
           },
           error: () => {
-            alert("Error while adding the Lead Details.")
-          }
-        }
-        );
+            Swal.fire({
+              title: 'Error',
+              text: 'Error while adding the Lead Details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          },
+        });
       }
     }
   }
