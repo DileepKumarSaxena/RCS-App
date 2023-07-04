@@ -33,10 +33,11 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {TextFieldModule} from '@angular/cdk/text-field';
 import {MatTableModule} from '@angular/material/table';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule} from '@angular/material/paginator';
 import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
+import { TemplateComponent } from './components/template/template.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -91,6 +92,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         CreateCampaignComponent,
         LeadComponent,
         CreateLeadComponent,
+        TemplateComponent,
     
     ],
     providers: [

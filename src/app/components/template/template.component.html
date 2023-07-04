@@ -1,0 +1,67 @@
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div>
+
+        <div class="col-sm-9"><br><br>
+            <!-- <div class="go-back-section">
+                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+                <h5 class="text-center">ADD TEMPLATE</h5>
+            </div> -->
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+
+                    <form [formGroup]="templateForm" (ngSubmit)="onSubmit()">
+
+                        <div class="row" style="margin-left: 40px;">
+                            <div class="style col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Template Code</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Template Code"
+                                        formControlName="templateCode"  />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="style col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Template Type</mat-label>
+                                    <mat-select  [(value)]="selected" placeholder="Select One" formControlName="templateType">
+                                        <mat-option value="staticJson">Static</mat-option>
+                                        <mat-option value="DynamicJson">Dynamic</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Template JSON</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Template JSON"
+                                        formControlName="templateJson">   {{selected}}
+                                    <mat-error>
+
+                                    </mat-error>
+
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mt-4" style="margin-left: 40px; ">
+                            <br><br>
+                            <div class="col-sm-12 text-center mt-3">
+                                <button class="btn btn-success" type="submit" id="smbtbtn"
+                                    [disabled]="templateForm.status === 'INVALID'">{{actionBtn}}</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
