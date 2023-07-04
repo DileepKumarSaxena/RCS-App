@@ -1,15 +1,16 @@
-.filter-section, .date-range-section{
+.filter-section,
+.date-range-section {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
 
-.date-range-section{
+.date-range-section {
     display: flex;
     justify-content: flex-start;
     align-items: baseline;
 
-    mat-form-field{
+    mat-form-field {
         margin-right: 20px;
     }
 }
@@ -18,4 +19,5 @@
     overflow-x: auto;
     display: block;
     white-space: nowrap;
-  }  
+}
+

@@ -21,9 +21,9 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'templateJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
-
+ 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -40,6 +40,7 @@ export class CampaignComponent {
     this.getCampaignList();
   }
 
+  
   get f() { return this.campaignListForm.controls; }
 
   createCampaignForm() {
@@ -62,6 +63,10 @@ export class CampaignComponent {
         // this.ngxService.stop();
       },
       error: (err) => {
+        this.campaignData = [];
+        this.dataSource.data = this.campaignData;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
       }

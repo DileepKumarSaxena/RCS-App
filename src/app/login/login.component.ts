@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
     returnUrl: string;
     error = '';
     lastLogin: string;
-    token:string;
-    loggedInUsername:string;
+    token: string;
+    loggedInUsername: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/']);
         }
     }
 
@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
         });
     }
 
-   
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
 
@@ -57,19 +56,19 @@ export class LoginComponent implements OnInit {
 
         this.loading = true;
         this.authenticationService.login(this.f.username.value, this.f.password.value)
-           // .pipe(first())
+            // .pipe(first())
             .subscribe({
 
                 next: (res) => {
                     console.log(res, "Data===>");
                     this.router.navigate(['/vircs']);
-                    
-                  },
-                  error: (err) => {
+
+                },
+                error: (err) => {
                     console.log(err, "err===>");
                     this.error = err;
                     this.loading = false;
-                  }
-                })
+                }
+            })
     }
 }

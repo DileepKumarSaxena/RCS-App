@@ -86,7 +86,7 @@
                                     <mat-label>Template List</mat-label>
                                     <mat-select placeholder="Select One" formControlName="templateId">
                                         <mat-option *ngFor="let item of allTemplateList"
-                                            [value]="item.id">{{item.templateCode}}</mat-option>
+                                            [value]="item.templateJson">{{item.templateCode}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -98,8 +98,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Campaign Start Date</mat-label>
-                                    <input formControlName="campaignStartTime" matInput [matDatepicker]="picker"
-                                        required>
+                                    <input formControlName="campaignStartTime" matInput [matDatepicker]="picker" [min]="minDate" required>
                                     <mat-hint>MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker">
                                         <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
@@ -112,7 +111,7 @@
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Campaign End Date</mat-label>
                                     <input formControlName="campaignEndTime" matInput [matDatepicker]="picker2"
-                                        required>
+                                    [min]="minDate" required>
                                     <mat-hint>MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker2">
                                         <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>

@@ -20,6 +20,7 @@ export class CreateCampaignComponent {
   actionBtn: string = "Submit";
   cmpId: any;
   selectedOption: any;
+  minDate:any = moment().format('YYYY-MM-DD');
 
 
   constructor(
