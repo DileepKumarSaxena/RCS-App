@@ -17,6 +17,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader'
 })
 export class CampaignComponent {
   campaignListForm: FormGroup;
+  public showLoader = false;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   campaignData: any;
   moment: any = moment;
@@ -50,17 +51,21 @@ export class CampaignComponent {
     })
   }
   getCampaignList() {
+    this.showLoader=true
     let userId = 1;
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
     this.ngxService.start();
     this.campaignservice.getCampaignlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
+       
         this.campaignData = res.Campaign;
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         // this.ngxService.stop();
+        this.showLoader=false
+    
       },
       error: (err) => {
         this.campaignData = [];
@@ -69,6 +74,8 @@ export class CampaignComponent {
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
+
+        this.showLoader=false
       }
     });
   }

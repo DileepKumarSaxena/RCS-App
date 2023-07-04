@@ -79,6 +79,8 @@ export class LeadComponent {
   }
 
   getLeadList() {
+
+    this.showLoader=true
     let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
@@ -91,10 +93,16 @@ export class LeadComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         // this.ngxService.stop();
+
+        
+    this.showLoader=false
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
+
+        
+    this.showLoader=false
       }
     });
   }

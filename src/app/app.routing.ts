@@ -11,9 +11,10 @@ import { CampaignComponent } from './components/campaign/campaign.component';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
+import { TemplateComponent } from './components/template/template.component';
 
 const routes: Routes = [
-    { path: '', component: XiaomircsComponent, canActivate: [AuthGuard] },
+    { path: '', component: TemplateComponent, canActivate: [AuthGuard] },
     { path: 'vircs', component: XiaomircsComponent, canActivate: [AuthGuard] },
     { path: 'Summary', component: GooglercsComponent, canActivate: [AuthGuard] },
     { path: 'detailreport', component: CampaignlogsComponent, canActivate: [AuthGuard] },
@@ -25,7 +26,8 @@ const routes: Routes = [
     { path: 'leadList', component: LeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
-
+    {path:'template', component:TemplateComponent, canActivate:[AuthGuard]},
+    
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }
 ];

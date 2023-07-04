@@ -67,7 +67,7 @@ export class CampaignService extends BaseService {
   }
 
   campaignDataUpdate(formData: any): Observable<any> {
-    return this.http.post(`${this.baseUrlData + 'updateCampaign'}`, formData);
+    return this.http.post('http://fuat.flash49.com/rcsmsg/template/addTemplate', formData);
   }
 
   deleteCampaignById(campaignId: any): Observable<any> {
