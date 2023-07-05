@@ -35,4 +35,8 @@ export class NavigationComponent {
     this.router.navigate(['/login']);
   }
 
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+
 }

@@ -1,59 +1,43 @@
 <br><br>
 <nav class="navbar bg-light w100" *ngIf="currentUser">
-
     <!-- Links -->
     <ul class="navbar-nav w100">
         <li>
             <img src="https://www.fonada.com/wp-content/uploads/2022/06/logo.svg" alt="">
         </li>
         <br>
-        <!-- <div *ngIf="loading" class="spinner-border spinner-border-sm"></div> -->
-        <!-- <li class="nav-item" *ngIf="users">
-
-            <div *ngFor="let user of users" class="alert alert-success text-center" style="margin-top:5px;">
-                User:<strong>{{user.firstName}} {{user.lastName}}</strong><br>
-                Last Login:<br><strong>{{lastLogin | date:'medium'}}</strong>
-            </div>
-        </li> -->
         <li class="nav-item" *ngIf="currentUser">
             <div class="alert alert-success text-center" style="margin-top:5px;">
                 User: <strong>{{ currentUser.result.username }}</strong>
             </div>
         </li>
+
+        <li class="nav-item">
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/vircs']" [ngClass]="{ 'activestage': isActive('/vircs') }">VI RCS</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/campaignList']" [ngClass]="{ 'activestage': isActive('/campaignList') }">CAMPAIGN</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/leadList']" [ngClass]="{ 'activestage': isActive('/leadList') }">LEAD</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/template']" [ngClass]="{ 'activestage': isActive('/template') }">TEMPLATE</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/detailreport']" [ngClass]="{ 'activestage': isActive('/detailreport') }">DETAILED REPORT</a>
+        </li>
         
         <li class="nav-item">
-            <a class="btn btn-success w100 mrbt activestage" routerLink="/vircs">VI RCS</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="btn btn-success w100 mrbt activestage" routerLink="/campaignList">CAMPAIGN</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="btn btn-success w100 mrbt activestage" routerLink="/leadList">LEAD</a>
-        </li>
-
-        <!-- <li class="nav-item">
-            <a class="btn btn-success w100 mrbt activestage" routerLink="/template">TEMPLATE</a>
-        </li> -->
-
-        
-        <!-- <li class="nav-item">
-            <a class="btn btn-success w100 mrbt activestage" routerLink="/template">Tempalte</a>
-        </li> -->
-
-        <!-- <li class="nav-item">
-            <a class="btn btn-success w100 mrbt" routerLink="/upload">UPLOAD FILE</a>
-        </li> -->
-
-        <li class="nav-item"> <a class="btn btn-success w100 mrbt" routerLink="/detailreport">DETAILED REPORT</a> </li>
-   <li class="nav-item">
-            <a class="btn btn-success w100 mrbt" routerLink="/Summary">SUMMARY REPORT</a>
+            <a class="btn btn-success w100 mrbt" [routerLink]="['/Summary']" [ngClass]="{ 'activestage': isActive('/Summary') }">SUMMARY REPORT</a>
         </li>
 
         <li class="nav-item">
             <a class="btn btn-success btn-success-custom w100 mrbt" (click)="logout()" href="javascript:void(0)">LOGOUT</a>
         </li>
     </ul>
-
 </nav>

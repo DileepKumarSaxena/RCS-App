@@ -110,7 +110,7 @@
                             <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Enter a date range</mat-label>
-                                    <mat-date-range-input [rangePicker]="picker">
+                                    <mat-date-range-input [rangePicker]="picker" [min]="minDate">
                                         <input matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
                                         <input matEndDate placeholder="End date" formControlName="scheduleEndDtm">
                                     </mat-date-range-input>

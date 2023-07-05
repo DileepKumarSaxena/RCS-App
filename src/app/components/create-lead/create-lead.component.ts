@@ -36,6 +36,7 @@ export class CreateLeadComponent {
   selectedFile: any = null;
   numberList: any = [];
   file: File = null;
+  minDate:any = moment().format('YYYY-MM-DD');
 
 
   constructor(
@@ -211,6 +212,15 @@ export class CreateLeadComponent {
         "windowRequired": "N",
         "scheduleDay": "6",
         "scheduleEndDtm": dataVal['scheduleEndDtm'],
+        "windowStartTime": "10:18",
+        "windowEndTime": "21:00"
+      }
+    } else if(dataVal['leadExecutionType'] == 'save'){
+      obj["leadSchedule"] = {
+        "scheduleStartDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
+        "windowRequired": "N",
+        "scheduleDay": "6",
+        "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowStartTime": "10:18",
         "windowEndTime": "21:00"
       }
