@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import moment from 'moment';
 import { Router } from '@angular/router'
 import { NgxUiLoaderService } from 'ngx-ui-loader'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-campaign',
@@ -32,7 +33,8 @@ export class CampaignComponent {
     private campaignservice: CampaignService,
     private formbuilder: FormBuilder,
     private router: Router,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -114,5 +116,7 @@ export class CampaignComponent {
       }
     });
   }
-
+  goBack(): void {
+    this.location.back();
+  }
 }

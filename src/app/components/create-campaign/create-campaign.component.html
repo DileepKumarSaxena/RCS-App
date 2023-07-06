@@ -84,7 +84,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Template List</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="templateId">
+                                    <mat-select placeholder="Select One" formControlName="templateId" required>
                                         <mat-option *ngFor="let item of allTemplateList"
                                             [value]="item.templateJson">{{item.templateCode}}</mat-option>
                                     </mat-select>
@@ -123,7 +123,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Message Type</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="messageId">
+                                    <mat-select placeholder="Select One" formControlName="messageId" required>
                                         <mat-option *ngFor="let item of messageTypes"
                                             [value]="item.messageId">{{item.messageType}}</mat-option>
                                     </mat-select>

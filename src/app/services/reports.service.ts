@@ -1,30 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { BaseService } from './base.service'
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReportsService {
+export class ReportsService extends BaseService{
+  constructor(private http: HttpClient) {
+    super();
+  }
+  baseUrlData = this.baseUrl + 'report/';
 
-  constructor(private http: HttpClient) { }
 
-
-
-  detailsReportData(detailsReport: any) {
-    var credentials = {
-      from_date: detailsReport.from_date,
-      to_date: detailsReport.to_date
-    }
-    return this.http.get(' https://api.instantwebtools.net/v1/airlines');
-
+  getDetailReports() {
+    return this.http.get(`${this.baseUrlData + 'getRcsDetailedSmsReport'}`);
   }
 
-  summaryReportData(summaryReport:any){
-    var credentials = {
-      from_date: summaryReport.from_date,
-      to_date: summaryReport.to_date
-    }
-    return this.http.get(' https://api.instantwebtools.net/v1/airlines');
-
-  }
 }

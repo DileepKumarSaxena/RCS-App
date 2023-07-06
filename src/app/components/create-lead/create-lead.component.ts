@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class CreateLeadComponent {
   leadForm: FormGroup;
+  testLeadForm: FormGroup;
   messageTypes: any = [];
   existingLeadNames: any = [];
   isHidden: any;
@@ -53,6 +54,7 @@ export class CreateLeadComponent {
     this.createLeadForm();
     this.campaignListData();
     this.getRouteParams();
+    this.testLeadNumber();
     this.leadExecutionType = this.formbuilder.control('');
   }
 
@@ -99,6 +101,20 @@ export class CreateLeadComponent {
       scheduleEndDtm: []
     })
   }
+  testLeadNumber() {
+    this.testLeadForm = this.formbuilder.group({
+      testingNumber: ['', [Validators.required,this.validateNumericInput]]
+    })
+  }
+
+  validateNumericInput(control) {
+    const numericPattern = /^[0-9]+(,[0-9]+)*$/; // Regular expression for numeric values with a single comma separated
+    if (control.value && !numericPattern.test(control.value)) {
+      return { invalidNumericInput: true };
+    }
+    return null;
+  }
+  
 
   checkDuplicateName() {
     this.existingLeadNames = [];

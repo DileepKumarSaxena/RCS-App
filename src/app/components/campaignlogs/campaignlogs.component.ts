@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { UploadService } from 'src/app/services/upload.service';
 import { ReportsService } from 'src/app/services/reports.service';
-
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-campaignlogs',
@@ -22,36 +22,47 @@ export class CampaignlogsComponent {
   // public data: any[];
 
 
-  constructor(private http: HttpClient, private detailsReportService: ReportsService) {
+  constructor(private http: HttpClient, private detailsReportService: ReportsService, private location: Location) {
   }
 
   ngOnInit(): void {
+    this.getReportData();
     this.detailReportForm = new FormGroup({
       from_date: new FormControl('', Validators.required),
       to_date: new FormControl('', Validators.required),
 
     });
   }
+  getReportData(){
+    this.detailsReportService.getDetailReports().subscribe({
+      next: (res: any) => {
+        console.log(res, "res");
+        // this.campaignData = res.Campaign;
+        // this.dataSource.data = this.campaignData;
+        // this.dataSource.paginator = this.paginator;
+        // this.dataSource.sort = this.sort;
+        // this.ngxService.stop();
+        this.showLoader=false
+    
+      },
+      error: (err) => {
+        // this.campaignData = [];
+        // this.dataSource.data = this.campaignData;
+        // this.dataSource.paginator = this.paginator;
+        // this.dataSource.sort = this.sort;
+        console.log(err, "Error while fetching the records.");
+        // this.ngxService.stop();
 
-  onSubmit() {
-    this.showLoader = true;
-    this.detailsReportService.detailsReportData(this.detailReportForm.value)
-      .subscribe((Response: any) => {
-        //if (Response.status == 200) {
-        //this.detail_report = Response.data.map((e,i) => {e['index']= i;return e});
-        this.detail_report = Response;
-        this.showLoader = false
-        //}
-      })
-
-    // Swal.fire({
-    //   title: 'Data is Loading..Please Wait',
-    //   width: '290px',
-    //   // icon: 'error',
-    // });
-
+        this.showLoader=false
+      }
+    });
   }
-
+  onSubmit() {
+   
+  }
+  goBack(): void {
+    this.location.back();
+  }
 }
 
 

@@ -26,8 +26,8 @@ const routes: Routes = [
     { path: 'leadList', component: LeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
-    {path:'template', component:TemplateComponent, canActivate:[AuthGuard]},
-    
+    { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
+
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }
 ];

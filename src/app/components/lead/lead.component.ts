@@ -8,6 +8,7 @@ import { LeadService } from 'src/app/services/lead.service';
 import Swal from 'sweetalert2';
 import { NgxUiLoaderService } from 'ngx-ui-loader'
 import moment from 'moment';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-lead',
@@ -43,7 +44,8 @@ export class LeadComponent {
     private leadService: LeadService,
     private formbuilder: FormBuilder,
     private router: Router,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private location: Location
     ) {
 
   }
@@ -140,6 +142,9 @@ export class LeadComponent {
         });
       }
     });
+  }
+  goBack(): void {
+    this.location.back();
   }
 }
 

@@ -152,9 +152,22 @@ button[class="btn btn-success logs"] {
   }
   .records-not-found{
     text-align: center;
+    margin: 30px
   }
 
   .custom-icon-class {
     width: 4em !important;
     height: 4em !important;
   }
+
+  .go-back-section {
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+ 
+    .mat-icon {
+       margin-top: -2px;
+       margin-right: 10px;
+       cursor: pointer;
+    }
+ }

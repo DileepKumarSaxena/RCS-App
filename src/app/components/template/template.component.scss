@@ -1,8 +1,8 @@
-.style {
-    float: left;
- }
- 
- button {
+.card-body {
+   overflow: auto;
+   max-height: 500px;
+}
+ .submit-button button {
     width: 234px;
     height: 56px;
     cursor: not-allowed
@@ -11,11 +11,6 @@
  .mt-5,
  .my-5 {
     margin-top: 9rem !important;
- }
- 
- .card-body {
-    overflow: hidden;
-    max-height: 584px;
  }
  
  .go-back-section {
@@ -34,3 +29,15 @@
  mat-form-field{
     width: 100%;
  }
+
+ .add-remove-section{
+   display: flex;
+   justify-content: flex-start;
+   align-items: center;
+
+   button:first-child{
+      margin-right: 10px;
+   }
+ }
+
+ 

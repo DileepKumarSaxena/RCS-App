@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CampaignService } from '@app/services/campaign.service';
+import { TemplateService } from '@app/services/template.service';
 import { Location } from '@angular/common';
 import moment from 'moment';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-template',
   templateUrl: './template.component.html',
   styleUrls: ['./template.component.scss']
 })
 export class TemplateComponent {
-
-  selected = '';
-
   templateForm: FormGroup;
   messageTypes: any = [];
   allTemplateList: any = [];
@@ -22,6 +19,13 @@ export class TemplateComponent {
   isHidden2: any;
   actionBtn: string = "Submit";
   cmpId: any;
+  fileUploading = false;
+  selected: any;
+  rows: any[] = [];
+  items: FormArray;
+
+
+
 
   selectedOption: any;
   leadExecutionData: any = [
@@ -32,98 +36,111 @@ export class TemplateComponent {
 
   constructor(
     private formbuilder: FormBuilder,
-    private campaignService: CampaignService,
+    private templateService: TemplateService,
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.createtemplateForm();
-  
-    this.getRouteParams();
+    this.createTemplateForm();
   }
-  getRouteParams() {
 
-    this.activatedRoute.queryParams.subscribe(res => {
-      if (res['id']) {
-        this.cmpId = res['id'];
-        this.getCampaignInfo();
-        this.actionBtn = 'Update';
-      }
-    })
 
-  }
-  getCampaignInfo() {
-    this.campaignService.getCampaignData(this.cmpId).subscribe({
-      next: (res) => {
-        console.log(res, "Campaign ID");
-        this.templateForm.patchValue(res);
-        this.templateForm.controls['campaignName'].disable();
-      },
-      error: (err) => {
-        console.log(err, "ERRRRRRR")
-      }
-    })
-  }
-  get f() { return this.templateForm.controls; }
-
-  createtemplateForm() {
-    
+  createTemplateForm() {
     this.templateForm = this.formbuilder.group({
-      
-      templateType:[],
-      templateJson:[],
-      templateCode:[]
- 
-      
-
+      templateCode: [],
+      templateType: [],
+      templateJson: [],
+      items: new FormArray([])
     })
-   
+  }
+  createItem(): FormGroup {
+    return this.formbuilder.group({
+      date: [],
+      amount: [],
+    });
+  }
+  onSubmit() {
+    console.log('Hellllooo');
+    let data = this.templateForm.value;
+    let tempData = this.dataCreate(data);
+    console.log(tempData, "tmD");
+    if (this.templateForm.valid) {
+      this.templateService.templateDataSubmit(tempData).subscribe({
+        next: (res) => {
+          console.log(res, "Template....")
+          Swal.fire({
+            title: 'Template Created Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            this.templateForm.reset();
+          });
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Error while adding the Template Details.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        },
+      });
 
-
+    }
   }
 
+  dataCreate(val) {
 
-
-
-  onSubmit() {
-    let data = this.templateForm.value;
-
-    if (this.templateForm.valid) {
-      if (this.cmpId) {
-        let formData = this.templateForm.value;
-        formData['campaignId'] = this.cmpId;
-        this.campaignService.campaignDataUpdate(this.templateForm.value).subscribe({
-            next: (res) => {
-            console.log(res, "Create Form....");
-            alert("Campaign Updated Successfully.");
-            this.templateForm.reset();
-            this.router.navigate(['/campaignList']);
-          },
-          error: () => {
-            alert("Error while adding the Campaign Details.")
-          }
-        }
-        );
-      } else {
-
-        this.campaignService.campaignDataSubmit(this.templateForm.value).subscribe({
-          next: (res) => {
-            console.log(res, "Create Form....");
-            alert("Campaign Created Successfully.");
-            this.templateForm.reset();
-            this.router.navigate(['/campaignList']);
-          },
-          error: () => {
-            alert("Error while adding the Campaign Details.")
-          }
-        }
-        );
-      }
+    if (val.items.length > 0) {
+      val.items.forEach((element, i) => {
+        console.log(element, "elele", i);
+        val.items[i]['date'] = element.date ? moment(element.date).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      });
     }
 
+    let obj = {
+      'RCSMessage': {
+        'templateMessage': {
+          'templateCode': val.templateCode,
+        },
+        'messageContact': {
+          'userContact': 'MSISDN'
+        }
+      }
+    }
+    if (val.templateType == 'DynamicJson') {
+      obj['RCSMessage']['templateMessage']['customParams'] = val.items;
+    }
+    return obj;
+  }
+  tempSelection() {
+    if (this.templateForm.get('templateType').value == 'DynamicJson') {
+      console.log("DDDLDLLDLLD");
+      this.addRow();
+    } else {
+      console.log("elelele");
+      const arr = <FormArray>this.templateForm.controls.items;
+      arr.controls = [];
 
+    }
+  }
+  onTemplateTypeChange(event: Event): void {
+    this.selected = (event.target as HTMLSelectElement).value;
+  }
+
+  // Function to add a new row
+  addRow(){
+    this.items = this.templateForm.get('items') as FormArray;
+    this.items.push(this.createItem());
+  }
+
+  // Function to remove the last row
+  removeRow(index: number) {
+    if (this.rows.length > 0) {
+      this.rows.pop();
+    }
   }
 
   goBack(): void {

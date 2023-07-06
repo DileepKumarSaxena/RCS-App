@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ReportsService } from 'src/app/services/reports.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-googlercs',
   templateUrl: './googlercs.component.html',
@@ -13,7 +13,7 @@ export class GooglercsComponent {
   summaryReportForm: FormGroup
   public showLoader = false;
 
-  constructor(private fb: FormBuilder, private summaryReportService: ReportsService) {
+  constructor(private fb: FormBuilder, private summaryReportService: ReportsService, private location: Location) {
 
   }
 
@@ -30,15 +30,15 @@ export class GooglercsComponent {
     this.showLoader = true;
     // console.log(this.detailReportForm.value)
 
-    this.summaryReportService.summaryReportData(this.summaryReportForm.value)
-      .subscribe((Response: any) => {
-        //if (Response.status == 200) {
-        //this.detail_report = Response.data.map((e,i) => {e['index']= i;return e});
-        this.summary_report = Response;
-        this.showLoader = false
-        console.log(this.summaryReportForm.value, Response, "Data........")
-        //}
-      })
+    // this.summaryReportService.summaryReportData(this.summaryReportForm.value)
+    //   .subscribe((Response: any) => {
+    //     //if (Response.status == 200) {
+    //     //this.detail_report = Response.data.map((e,i) => {e['index']= i;return e});
+    //     this.summary_report = Response;
+    //     this.showLoader = false
+    //     console.log(this.summaryReportForm.value, Response, "Data........")
+    //     //}
+    //   })
 
     // Swal.fire({
     //   title: 'Data is Loading..Please Wait',
@@ -58,5 +58,7 @@ export class GooglercsComponent {
   // }
 
 
-
+  goBack(): void {
+    this.location.back();
+  }
 }
