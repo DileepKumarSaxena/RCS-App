@@ -136,6 +136,7 @@ export class CreateCampaignComponent {
               title: 'Campaign Updated Successfully',
               icon: 'success',
               confirmButtonText: 'OK',
+              width: '300px',
             }).then(() => {
               this.campaignForm.reset();
               this.router.navigate(['/campaignList']);
@@ -147,6 +148,10 @@ export class CreateCampaignComponent {
               text: 'Error while updating the Campaign Details.',
               icon: 'error',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
           },
         });
@@ -158,6 +163,10 @@ export class CreateCampaignComponent {
               title: 'Campaign Created Successfully',
               icon: 'success',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             }).then(() => {
               this.campaignForm.reset();
               this.router.navigate(['/campaignList']);
@@ -169,6 +178,10 @@ export class CreateCampaignComponent {
               text: 'Error while adding the Campaign Details.',
               icon: 'error',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
           },
         });

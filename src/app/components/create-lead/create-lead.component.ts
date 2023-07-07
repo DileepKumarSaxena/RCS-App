@@ -36,9 +36,9 @@ export class CreateLeadComponent {
   dupliacteNo: boolean = false;
   selectedFile: any = null;
   numberList: any = [];
-  file: File = null;
+  file: File;
   minDate:any = moment().format('YYYY-MM-DD');
-
+  allowedFileExtensions = ['csv'];
 
   constructor(
     private formbuilder: FormBuilder,
@@ -93,7 +93,7 @@ export class CreateLeadComponent {
       userId: [1],
       campaignId: ['', [Validators.required]],
       leadName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
-      file: [null],
+      file: [null, [Validators.required, this.validateFileFormat()]],
       isDND: [false],
       isDuplicate: [false],
       leadExecutionType: [],
@@ -114,8 +114,28 @@ export class CreateLeadComponent {
     }
     return null;
   }
+
+  uploadCsvFile(event) {
+    this.file = event.target.files[0];
+    this.leadForm.controls['file'].updateValueAndValidity();
+
+  }
+
+  validateFileFormat() {
+    return (control) => {
+      const file = this.file;
+      if (file && file.name) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (fileExtension !== 'csv') {
+          return { invalidFileFormat: true };
+        }
+      }
+      return null;
+    };
+  }
   
 
+  
   checkDuplicateName() {
     this.existingLeadNames = [];
     const leadName = this.leadForm.value.leadName;
@@ -142,9 +162,7 @@ export class CreateLeadComponent {
     })
   }
 
-  uploadCsvFile(event) {
-    this.file = event.target.files[0];
-  }
+ 
   onSubmit() {
     let data = this.leadForm.value;
     if (this.leadForm.valid) {
@@ -162,6 +180,10 @@ export class CreateLeadComponent {
               title: 'Lead Updated Successfully',
               icon: 'success',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             }).then(() => {
               this.leadForm.reset();
               this.router.navigate(['/leadList']);
@@ -173,6 +195,10 @@ export class CreateLeadComponent {
               text: 'Error while updating the Lead Details.',
               icon: 'error',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             });
           },
         });
@@ -183,6 +209,10 @@ export class CreateLeadComponent {
               title: 'Lead Created Successfully',
               icon: 'success',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             }).then(() => {
               this.leadForm.reset();
               this.router.navigate(['/leadList']);
@@ -194,6 +224,10 @@ export class CreateLeadComponent {
               text: 'Error while adding the Lead Details.',
               icon: 'error',
               confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             });
           },
         });

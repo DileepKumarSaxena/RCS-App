@@ -97,24 +97,36 @@ export class CampaignComponent {
       customClass: {
         icon: 'custom-icon-class',
       },
-
+      width: '300px',
     }).then((result) => {
       if (result.isConfirmed) {
         this.campaignservice.deleteCampaignById(id).subscribe({
           next: (res: any) => {
             Swal.fire({
               title: 'Campaign Deleted Successfully',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
             this.getCampaignList();
           },
           error: (err) => {
             Swal.fire({
               title: 'Error while deleting the records.',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
           }
         });
       }
     });
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   goBack(): void {
     this.location.back();

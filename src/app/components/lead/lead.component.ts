@@ -30,14 +30,15 @@ export class LeadComponent {
   inputdata: any;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   leadForm: FormGroup;
-  campaignList:any;
+  campaignList: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['leadId','campaignName', 'leadName', 'leadExecutionType', 'scheduleStartDtm', 'scheduleEndDtm', 'actions'];
+  displayedColumns: string[] = ['leadId', 'campaignName', 'leadName', 'leadExecutionType', 'scheduleStartDtm', 'scheduleEndDtm', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  
 
 
   constructor(
@@ -46,16 +47,19 @@ export class LeadComponent {
     private router: Router,
     private ngxService: NgxUiLoaderService,
     private location: Location
-    ) {
+  ) {
 
   }
+
+
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<any>();
     this.createCampaignForm();
     this.campaignListData();
     this.getLeadList();
-    
+    this.dataSource = new MatTableDataSource<any>();
   }
+
+  
 
   get f() { return this.leadForm.controls; }
 
@@ -75,14 +79,13 @@ export class LeadComponent {
       }
     })
   }
-  getCampaignName(id:any){
+  getCampaignName(id: any) {
     let val = this.campaignList.find(el => el.campaignId == id);
     return val['campaignName'];
   }
 
   getLeadList() {
-
-    this.showLoader=true
+    this.showLoader = true
     let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
@@ -95,27 +98,22 @@ export class LeadComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         // this.ngxService.stop();
-
-        
-    this.showLoader=false
+        this.showLoader = false
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
-
-        
-    this.showLoader=false
+        this.showLoader = false
       }
     });
   }
   editRow(data) {
-   this.router.navigate(['/lead/edit'], { queryParams: { id: data } });
-
+    this.router.navigate(['/lead/edit'], { queryParams: { id: data } });
   }
 
   deleteRow(id: any) {
     Swal.fire({
-      title: 'Are you sure you want to delete this campaign?',
+      title: 'Are you sure you want to delete this Lead?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
@@ -124,24 +122,36 @@ export class LeadComponent {
       customClass: {
         icon: 'custom-icon-class',
       },
-
+      width: '300px'
     }).then((result) => {
       if (result.isConfirmed) {
         this.leadService.deleteLeadById(id).subscribe({
           next: (res: any) => {
             Swal.fire({
               title: 'Lead Deleted Successfully',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             });
             this.getLeadList();
           },
           error: (err) => {
             Swal.fire({
               title: 'Error while deleting the records.',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px'
             });
           }
         });
       }
     });
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   goBack(): void {
     this.location.back();

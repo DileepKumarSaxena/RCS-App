@@ -74,6 +74,10 @@ export class TemplateComponent {
             title: 'Template Created Successfully',
             icon: 'success',
             confirmButtonText: 'OK',
+            customClass: {
+              icon: 'custom-icon-class',
+            },
+            width: '300px'
           }).then(() => {
             this.templateForm.reset();
           });
@@ -84,6 +88,10 @@ export class TemplateComponent {
             text: 'Error while adding the Template Details.',
             icon: 'error',
             confirmButtonText: 'OK',
+            customClass: {
+              icon: 'custom-icon-class',
+            },
+            width: '300px'
           });
         },
       });

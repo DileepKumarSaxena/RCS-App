@@ -45,7 +45,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Lead Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Lead name"
-                                        (blur)="checkDuplicateName()" formControlName="leadName" />
+                                        (blur)="checkDuplicateName()"  maxlength="255" formControlName="leadName" />
                                     <!-- <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
                                         Lead name is required
                                     </mat-error> -->
@@ -69,11 +69,14 @@
                             <div class=" col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group custom-file-button">
-                                        <input type="file" class="form-control" id="inputGroupFile"
-                                            formControlName="file" required (change)="uploadCsvFile($event)">
-                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" required (change)="uploadCsvFile($event)">
+                                      <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
-                                </div>
+                                  </div>
+                                  <div *ngIf="leadForm.get('file').errors?.invalidFileFormat" class="text-danger invalid-format">
+                                    Invalid file format. Please upload a CSV file.
+                                  </div>
+                                  
                                 <div class="toggleRow">
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" [(ngModel)]="switchState" class="custom-control-input"
@@ -145,14 +148,16 @@
                                 <mat-form-field appearance="outline">
                                     <input matInput formControlName="testingNumber">
                                     <mat-icon matSuffix aria-hidden="true" container="body">
-                                      <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden" class="material-symbols-outlined">
-                                        info
-                                      </span>
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                            class="material-symbols-outlined">
+                                            info
+                                        </span>
                                     </mat-icon>
-                                  </mat-form-field>
-                                  <div *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
+                                </mat-form-field>
+                                <div
+                                    *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
                                     Please enter a valid numeric value with a single comma separated.
-                                  </div>
+                                </div>
                                 <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
                                     <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                         Numbers(S) on which test call to be given.
