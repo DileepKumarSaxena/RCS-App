@@ -84,7 +84,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Template List</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="templateId" required>
+                                    <mat-select placeholder="Select One" formControlName="messageJson" required>
                                         <mat-option *ngFor="let item of allTemplateList"
                                             [value]="item.templateJson">{{item.templateCode}}</mat-option>
                                     </mat-select>

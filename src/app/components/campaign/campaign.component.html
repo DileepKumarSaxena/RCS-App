@@ -60,11 +60,16 @@
           </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+              <!-- SLNo Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                <td mat-cell *matCellDef="let row; let i = index;"> {{i + 1}} </td>
+              </ng-container>
               <!-- User ID Column -->
-              <ng-container matColumnDef="campaignId">
+              <!-- <ng-container matColumnDef="campaignId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
                 <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
-              </ng-container>
+              </ng-container> -->
               <!-- campaignName -->
               <ng-container matColumnDef="campaignName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
@@ -78,9 +83,9 @@
               </ng-container>
 
               <!-- textMessage -->
-              <ng-container matColumnDef="templateJson">
+              <ng-container matColumnDef="messageJson">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> MSG Template</th>
-                <td mat-cell *matCellDef="let row">{{row.templateJson}}</td>
+                <td mat-cell *matCellDef="let row">{{row.messageJson}}</td>
               </ng-container>
 
               <!-- campaignStartTime -->

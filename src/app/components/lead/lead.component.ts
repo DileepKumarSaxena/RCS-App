@@ -33,7 +33,7 @@ export class LeadComponent {
   campaignList: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['leadId', 'campaignName', 'leadName', 'leadExecutionType', 'scheduleStartDtm', 'scheduleEndDtm', 'actions'];
+  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -59,11 +59,16 @@
           </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+                <!-- SLNo Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                  <td mat-cell *matCellDef="let row; let i = index;"> {{i + 1}} </td>
+                </ng-container>
               <!-- User ID Column -->
-              <ng-container matColumnDef="leadId">
+              <!-- <ng-container matColumnDef="leadId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead ID </th>
                 <td mat-cell *matCellDef="let row"> {{row.leadId}} </td>
-              </ng-container>
+              </ng-container> -->
               <!-- campaignName -->
               <ng-container matColumnDef="campaignName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
@@ -75,10 +80,10 @@
                 <td mat-cell *matCellDef="let row">{{row.leadName}}</td>
               </ng-container>
               <!-- leadExecutionType -->
-              <ng-container matColumnDef="leadExecutionType">
+              <!-- <ng-container matColumnDef="leadExecutionType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Execution Type</th>
                 <td mat-cell *matCellDef="let row">{{row.leadExecutionType}}</td>
-              </ng-container>
+              </ng-container> -->
 
               <!-- scheduleStartDtm -->
               <ng-container matColumnDef="scheduleStartDtm">
@@ -95,7 +100,7 @@
               </ng-container>
 
               <!-- Actions -->
-              <ng-container matColumnDef="actions">
+              <!-- <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let data">
                   <button mat-icon-button matTooltip="Edit" color="primary" (click)="editRow(data.leadId)">
@@ -105,7 +110,7 @@
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
-              </ng-container>
+              </ng-container> -->
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

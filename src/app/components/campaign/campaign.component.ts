@@ -23,7 +23,7 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'templateJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+  displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
