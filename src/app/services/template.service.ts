@@ -13,7 +13,7 @@ export class TemplateService extends BaseService{
   baseUrlData = this.baseUrl + 'template/';
 
   templateDataSubmit(formData: any): Observable<any> {
-    return this.http.post(`${this.baseUrlData + 'addTemplate'}`, formData);
+    return this.http.post(`${this.baseUrlData + 'addTemplate'}`, formData );
   }
 
  
