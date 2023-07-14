@@ -37,8 +37,10 @@ export class CreateLeadComponent {
   selectedFile: any = null;
   numberList: any = [];
   file: File;
-  minDate:any = moment().format('YYYY-MM-DD');
+  minDate: any = moment().format('YYYY-MM-DD');
   allowedFileExtensions = ['csv'];
+  uploadProgress: number = 0;
+
 
   constructor(
     private formbuilder: FormBuilder,
@@ -103,7 +105,7 @@ export class CreateLeadComponent {
   }
   testLeadNumber() {
     this.testLeadForm = this.formbuilder.group({
-      testingNumber: ['', [Validators.required,this.validateNumericInput]]
+      testingNumber: ['', [Validators.required, this.validateNumericInput]]
     })
   }
 
@@ -118,9 +120,47 @@ export class CreateLeadComponent {
   uploadCsvFile(event) {
     this.file = event.target.files[0];
     this.leadForm.controls['file'].updateValueAndValidity();
-
+  
+    // Check if the file has any invalid column value
+    if (this.leadForm.get('file').errors?.invalidColumnValue) {
+      this.uploadProgress = null; // Disable the progress bar
+      return; // Stop the upload process if there's an error
+    }
+  
+    // Start the upload process
+    this.uploadProgress = 0;
+    if (this.uploadProgress !== null) {
+      this.uploadFile(this.file);
+    }
   }
 
+  uploadFile(file) {
+    // Check if the file has any invalid column value
+    if (this.leadForm.get('file').errors?.invalidColumnValue) {
+      this.uploadProgress = null; // Disable the progress bar
+      return; // Stop the upload process if there's an error
+    }
+  
+    // Example code using XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+  
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded / event.total) * 100);
+        this.uploadProgress = progress;
+      }
+    });
+  
+    xhr.upload.addEventListener('load', () => {
+      this.uploadProgress = 100;
+    });
+  
+    xhr.open('POST', 'your-upload-url');
+    xhr.send(file);
+  }
+  
+  
+  
   validateFileFormat() {
     return (control) => {
       const file = this.file;
@@ -129,13 +169,43 @@ export class CreateLeadComponent {
         if (fileExtension !== 'csv') {
           return { invalidFileFormat: true };
         }
+  
+        // Read the contents of the file
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const contents = event.target.result as string;
+          const lines = contents.split('\n');
+          
+          // Skip the first row (header row)
+          const rowsToValidate = lines.slice(1);
+  
+          const invalidColumn = rowsToValidate.some(line => {
+            const values = line.split(',');
+            for (const value of values) {
+              if (isNaN(Number(value.trim()))) {
+                return true;
+              }
+            }
+            return false;
+          });
+  
+          if (invalidColumn) {
+            control.setErrors({ invalidColumnValue: true });
+          } else {
+            control.setErrors(null);
+          }
+        };
+        reader.readAsText(file);
       }
       return null;
     };
   }
   
-
   
+  
+
+
+
   checkDuplicateName() {
     this.existingLeadNames = [];
     const leadName = this.leadForm.value.leadName;
@@ -162,7 +232,7 @@ export class CreateLeadComponent {
     })
   }
 
- 
+
   onSubmit() {
     let data = this.leadForm.value;
     if (this.leadForm.valid) {
@@ -171,7 +241,7 @@ export class CreateLeadComponent {
       data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       let formData = this.createLeadData(data);
-  
+
       if (this.leadID) {
         formData['leadId'] = this.leadID;
         this.campaignService.campaignDataUpdate(formData).subscribe({
@@ -265,7 +335,7 @@ export class CreateLeadComponent {
         "windowStartTime": "10:18",
         "windowEndTime": "21:00"
       }
-    } else if(dataVal['leadExecutionType'] == 'save'){
+    } else if (dataVal['leadExecutionType'] == 'save') {
       obj["leadSchedule"] = {
         "scheduleStartDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowRequired": "N",
@@ -275,7 +345,7 @@ export class CreateLeadComponent {
         "windowEndTime": "21:00"
       }
     }
-   return obj;
+    return obj;
   }
 
   goBack(): void {

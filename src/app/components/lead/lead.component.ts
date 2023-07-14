@@ -89,7 +89,6 @@ export class LeadComponent {
     let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
-    this.ngxService.start();
     this.leadService.getLeadlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
         console.log(res['Lead Info'], "REEEEEE");
@@ -97,12 +96,10 @@ export class LeadComponent {
         this.dataSource.data = this.leadData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // this.ngxService.stop();
-        this.showLoader = false
+        this.showLoader = false;
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
-        this.ngxService.stop();
         this.showLoader = false
       }
     });
