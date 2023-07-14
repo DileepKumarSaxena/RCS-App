@@ -65,7 +65,6 @@ export class CampaignComponent {
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // this.ngxService.stop();
         this.showLoader=false
     
       },
@@ -75,8 +74,6 @@ export class CampaignComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
-        this.ngxService.stop();
-
         this.showLoader=false
       }
     });

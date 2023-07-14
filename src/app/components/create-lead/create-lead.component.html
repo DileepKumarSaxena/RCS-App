@@ -22,13 +22,6 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Select Campaign Name</mat-label>
                                     <mat-select formControlName="campaignId">
-                                        <!-- <mat-option>
-                                            <ngx-mat-select-search placeholderLabel="Search Campaign"
-                                                noEntriesFoundLabel="No matching campaign found">
-                                                <mat-icon ngxMatSelectSearchClear><span
-                                                        class="mdi mdi-close f-24"></span></mat-icon>
-                                            </ngx-mat-select-search>
-                                        </mat-option> -->
                                         <mat-option *ngFor="let item of campaignList"
                                             [value]="item.campaignId">{{item.campaignName}}</mat-option>
                                     </mat-select>
@@ -69,12 +62,12 @@
                             <div class=" col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group custom-file-button">
-                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" required (change)="uploadCsvFile($event)">
+                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" accept=".csv" required (change)="uploadCsvFile($event)">
                                       <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
                                   </div>
-                                  <div *ngIf="leadForm.get('file').errors?.invalidFileFormat" class="text-danger invalid-format">
-                                    Invalid file format. Please upload a CSV file.
+                                  <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent" class="text-danger invalid-format">
+                                    Invalid column value. Please ensure all values in the CSV file column are numbers.
                                   </div>
                                   
                                 <div class="toggleRow">
@@ -96,6 +89,14 @@
                                             No.</label>
                                     </div>
                                 </div>
+                                <ng-template #validFileContent>
+                                    <div class="progress">
+                                      <div class="progress-bar progress-bar-green" role="progressbar" [style.width.%]="leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress" [style.display]="leadForm.get('file').hasError('invalidColumnValue') ? 'none' : 'block'">
+                                        {{ leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress }}%
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                  
                             </div>
                         </div>
                         <br>

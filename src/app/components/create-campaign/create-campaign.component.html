@@ -20,7 +20,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Campaign Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Campaign name"
-                                        formControlName="campaignName" maxlength="255"  (blur)="checkDuplicateName()" />
+                                        formControlName="campaignName" maxlength="255" (blur)="checkDuplicateName()" />
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
                                         Campaign name is required
                                     </mat-error>
@@ -54,7 +54,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Description</mat-label>
-                                    <input matInput autocomplete="off" placeholder="Description"
+                                    <input matInput autocomplete="off" maxlength="255" placeholder="Description"
                                         formControlName="description" required />
                                     <mat-icon matSuffix aria-hidden="true" container="body">
                                         <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
@@ -96,29 +96,18 @@
 
                         <div class="row mt-4" style="margin-left: 40px; ">
                             <div class="col-sm-4">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Campaign Start Date</mat-label>
-                                    <input formControlName="campaignStartTime" matInput [matDatepicker]="picker" [min]="minDate" required>
-                                    <mat-hint>MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker">
-                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Campaign Date Range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker" [min]="minDate">
+                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                                            formControlName="campaignStartTime">
+                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="campaignEndTime">
+                                    </mat-date-range-input>
+                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                            </div>
-                            <div class="col-sm-4">
-
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Campaign End Date</mat-label>
-                                    <input formControlName="campaignEndTime" matInput [matDatepicker]="picker2"
-                                    [min]="minDate" required>
-                                    <mat-hint>MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker2">
-                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-
                             </div>
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
@@ -129,11 +118,11 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <br><br>
-                            <div class="col-sm-12 text-center mt-3">
+                            <div class="col-sm-4">
                                 <button class="btn btn-success" type="submit" id="smbtbtn"
                                     [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
                             </div>
+                                               
                         </div>
 
 
