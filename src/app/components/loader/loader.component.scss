@@ -1,0 +1,26 @@
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 9999;
+  }
+  
+  .spinner-container {
+    margin-top: 50vh;
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .spinner-border, p {
+    color: #fff; 
+    font-size: 18px;
+    padding: 10px;
+  }

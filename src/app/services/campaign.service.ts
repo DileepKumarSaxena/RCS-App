@@ -63,6 +63,7 @@ export class CampaignService extends BaseService {
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
     httpParams = httpParams.append("userId", userId);
+    console.log(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams }, "CampAPI");
     return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
   }
 

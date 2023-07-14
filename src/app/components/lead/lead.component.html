@@ -9,7 +9,7 @@
       <br><br>
       <div class="go-back-section">
         <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-        <h5 class="text-center">ADD CAMPAIGN</h5>
+        <h5 class="text-center">ADD LEAD</h5>
     </div>
      
       <form [formGroup]="leadForm">
@@ -44,22 +44,28 @@
         </div>
       </form>
 
-      <div class="d-flex justify-content-center" *ngIf="showLoader">
-        <div class="spinner-border" style="width: 3rem; height: 3rem; margin-top: 10px;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+      <app-loader *ngIf="showLoader"></app-loader>
 
-      <div class="card bg-light text-dark" style="margin-top: 50px;">
+
+      <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
         <div class="card-body">
+          <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Lead Name" #input>
+          </mat-form-field>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+                <!-- SLNo Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                  <td mat-cell *matCellDef="let row; let i = index;"> {{i + 1}} </td>
+                </ng-container>
               <!-- User ID Column -->
-              <ng-container matColumnDef="leadId">
+              <!-- <ng-container matColumnDef="leadId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead ID </th>
                 <td mat-cell *matCellDef="let row"> {{row.leadId}} </td>
-              </ng-container>
+              </ng-container> -->
               <!-- campaignName -->
               <ng-container matColumnDef="campaignName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
@@ -71,10 +77,10 @@
                 <td mat-cell *matCellDef="let row">{{row.leadName}}</td>
               </ng-container>
               <!-- leadExecutionType -->
-              <ng-container matColumnDef="leadExecutionType">
+              <!-- <ng-container matColumnDef="leadExecutionType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Execution Type</th>
                 <td mat-cell *matCellDef="let row">{{row.leadExecutionType}}</td>
-              </ng-container>
+              </ng-container> -->
 
               <!-- scheduleStartDtm -->
               <ng-container matColumnDef="scheduleStartDtm">
@@ -91,7 +97,7 @@
               </ng-container>
 
               <!-- Actions -->
-              <ng-container matColumnDef="actions">
+              <!-- <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let data">
                   <button mat-icon-button matTooltip="Edit" color="primary" (click)="editRow(data.leadId)">
@@ -101,7 +107,7 @@
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
-              </ng-container>
+              </ng-container> -->
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -119,189 +125,3 @@
 
   </div>
 </div>
-
-
-<!-- <div class="container-fluid h-100">
-
-    <div class="row">
-        <div class="col-sm-3">
-            <app-navigation></app-navigation>
-        </div>
-
-        <div class="col-sm-9">
-            <br><br>
-
-            <form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
-
-                <div class="card bg-light text-dark">
-
-                    <div class="card-body">
-                        <div class="row">
-
-                            <div class="col-sm-3">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Campaign Start Date</mat-label>
-                                    <input (dateChange)="onDateSelected($event)" formControlName="Start_date" matInput
-                                        [matDatepicker]="picker" required>
-                                    <mat-hint>MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker">
-                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="col-sm-3">
-                                <mat-form-field class="example-full-width" appearance="outline">
-                                    <mat-label>Campaign End Date</mat-label>
-                                    <input (dateChange)="onDateSelected($event)" formControlName="End_date" matInput
-                                        [matDatepicker]="picker2" required>
-                                    <mat-hint>MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker2">
-                                        <mat-icon> <i class="fa fa-calendar" aria-hidden="true"></i></mat-icon>
-                                    </mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-
-                            <div class="col-sm-3">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Select User</mat-label>
-                                    <mat-select (ngModelChange)="userChange($event)">
-                                        <mat-option>
-                                            <ngx-mat-select-search placeholderLabel="Search User"
-                                                noEntriesFoundLabel="No matching User found">
-                                                <mat-icon ngxMatSelectSearchClear><span
-                                                        class="mdi mdi-close f-24"></span></mat-icon>
-                                            </ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option [value]="list.campaignId" *ngFor="let list of userList | async">
-                                            {{list.userName}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-
-
-                            <div class="col-sm-3">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Select Campaign</mat-label>
-                                    <mat-select [formControl]="" (ngModelChange)="campaignChange($event)">
-                                        <mat-option>
-                                            <ngx-mat-select-search [formControl]="" placeholderLabel="Search Campaign"
-                                                noEntriesFoundLabel="No matching campaign found">
-                                                <mat-icon ngxMatSelectSearchClear><span
-                                                        class="mdi mdi-close f-24"></span></mat-icon>
-                                            </ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option [value]="list.campaignId" *ngFor="let list of campaignList | async">
-                                            {{list.campaignName}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-
-
-                        </div> <br>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Select Lead</mat-label>
-                                    <mat-select (ngModelChange)="leadChange($event)">
-                                        <mat-option>
-                                            <ngx-mat-select-search [formControl]="" placeholderLabel="Search Lead"
-                                                noEntriesFoundLabel="No matching Lead found">
-                                                <mat-icon ngxMatSelectSearchClear><span
-                                                        class="mdi mdi-close f-24"></span></mat-icon>
-                                            </ngx-mat-select-search>
-                                        </mat-option>
-                                        <mat-option [value]="list.leadId" *ngFor="let list of leadList | async">
-                                            {{list.leadName}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-sm-3">
-                                <button type="button" style="width: 100%; padding: 5%;"
-                                    class="btn btn-primary"><mat-icon>search</mat-icon>Search</button>
-                            </div>
-                            <div class="col-sm-3">
-
-                            </div>
-
-
-                            <div class="col-sm-3">
-                                <button type="button" class="btn btn-primary" style="width: 100%; padding: 5%;"
-                                    routerLink="/create/lead"><mat-icon>add_circle</mat-icon>Add Lead</button>
-                            </div>
-                        </div>
-                        <div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-
-
-            <div class="card bg-light text-dark" style="margin-top: 70px;">
-             
-                <div class="card-body">
-
-                    <table style="white-space: nowrap;" class="table table-striped tableScroll" id="tableData">
-                        
-                        <tbody>
-                            <tr style="background-color: #888; color:#f8f9fa;">
-                           						
-                                <th>ID</th>
-                                <th>Create Date</th>
-                                <th>Schedule Date</th>
-                                <th> User Name</th>
-                                <th>Campaign Name</th>
-                                <th>Lead Name</th>
-                                <th>IVR Name </th>
-                                <th>Total No.</th>
-                                <th>Valid No. </th>
-                                <th>Invalid / Duplicate</th>
-                                <th>DND / BlackList</th>
-                                <th>Total Dialed</th>
-                                <th>No of Retry	Discard Count</th>
-                            </tr>
-                           
-                        </tbody>
-                        <tbody id="jar">
-
-                            <tr class="content" *ngFor="let data of create_lead">
-                                <td>{{data.name}}</td>
-                                <td>{{data.established}}</td>
-                                <td>{{data.country}}</td>
-                                <td>{{data.slogan}}</td>
-                                <td>{{data.head_quaters}}</td>
-                                <td>{{data.website}}</td>
-                                <td>NODATA</td>
-                                <td>NODATA</td>
-                                <td>NODATA</td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-
-                    <nav>
-                        <ul class="pagination justify-content-center pagination-sm">
-                            <li class="page-item" id="previous-page"><a class="page-link"
-                                    href="javascript:void(0)">Prev</a>
-                            </li>
-                            <li class="page-item current-page active"><a class="page-link"
-                                    href="javascript:void(0)">1</a>
-                            </li>
-                            <li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div> -->

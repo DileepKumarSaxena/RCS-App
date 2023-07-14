@@ -22,13 +22,6 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Select Campaign Name</mat-label>
                                     <mat-select formControlName="campaignId">
-                                        <!-- <mat-option>
-                                            <ngx-mat-select-search placeholderLabel="Search Campaign"
-                                                noEntriesFoundLabel="No matching campaign found">
-                                                <mat-icon ngxMatSelectSearchClear><span
-                                                        class="mdi mdi-close f-24"></span></mat-icon>
-                                            </ngx-mat-select-search>
-                                        </mat-option> -->
                                         <mat-option *ngFor="let item of campaignList"
                                             [value]="item.campaignId">{{item.campaignName}}</mat-option>
                                     </mat-select>
@@ -45,7 +38,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Lead Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Lead name"
-                                        (blur)="checkDuplicateName()" formControlName="leadName" />
+                                        (blur)="checkDuplicateName()"  maxlength="255" formControlName="leadName" />
                                     <!-- <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
                                         Lead name is required
                                     </mat-error> -->
@@ -69,11 +62,14 @@
                             <div class=" col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group custom-file-button">
-                                        <input type="file" class="form-control" id="inputGroupFile"
-                                            formControlName="file" required (change)="uploadCsvFile($event)">
-                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" accept=".csv" required (change)="uploadCsvFile($event)">
+                                      <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
-                                </div>
+                                  </div>
+                                  <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent" class="text-danger invalid-format">
+                                    Invalid column value. Please ensure all values in the CSV file column are numbers.
+                                  </div>
+                                  
                                 <div class="toggleRow">
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" [(ngModel)]="switchState" class="custom-control-input"
@@ -93,6 +89,14 @@
                                             No.</label>
                                     </div>
                                 </div>
+                                <ng-template #validFileContent>
+                                    <div class="progress">
+                                      <div class="progress-bar progress-bar-green" role="progressbar" [style.width.%]="leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress" [style.display]="leadForm.get('file').hasError('invalidColumnValue') ? 'none' : 'block'">
+                                        {{ leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress }}%
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                  
                             </div>
                         </div>
                         <br>
@@ -145,14 +149,16 @@
                                 <mat-form-field appearance="outline">
                                     <input matInput formControlName="testingNumber">
                                     <mat-icon matSuffix aria-hidden="true" container="body">
-                                      <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden" class="material-symbols-outlined">
-                                        info
-                                      </span>
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                            class="material-symbols-outlined">
+                                            info
+                                        </span>
                                     </mat-icon>
-                                  </mat-form-field>
-                                  <div *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
+                                </mat-form-field>
+                                <div
+                                    *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
                                     Please enter a valid numeric value with a single comma separated.
-                                  </div>
+                                </div>
                                 <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
                                     <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                         Numbers(S) on which test call to be given.

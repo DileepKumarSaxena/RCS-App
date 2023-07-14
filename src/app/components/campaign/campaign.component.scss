@@ -1,3 +1,6 @@
+mat-form-field {
+    width: 100%;
+  }
 .filter-section,
 .date-range-section {
     display: flex;
@@ -21,3 +24,10 @@
     white-space: nowrap;
 }
 
+.mdc-data-table__cell{
+    white-space: normal;
+    word-break: break-word;
+}
+
+  
+  

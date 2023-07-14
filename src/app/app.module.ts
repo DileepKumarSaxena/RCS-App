@@ -38,6 +38,7 @@ import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
 import { TemplateComponent } from './components/template/template.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -93,6 +94,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         LeadComponent,
         CreateLeadComponent,
         TemplateComponent,
+        LoaderComponent,
     
     ],
     providers: [

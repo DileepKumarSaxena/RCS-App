@@ -23,7 +23,7 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'templateJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+  displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -65,7 +65,6 @@ export class CampaignComponent {
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // this.ngxService.stop();
         this.showLoader=false
     
       },
@@ -75,8 +74,6 @@ export class CampaignComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
-        this.ngxService.stop();
-
         this.showLoader=false
       }
     });
@@ -97,24 +94,36 @@ export class CampaignComponent {
       customClass: {
         icon: 'custom-icon-class',
       },
-
+      width: '300px',
     }).then((result) => {
       if (result.isConfirmed) {
         this.campaignservice.deleteCampaignById(id).subscribe({
           next: (res: any) => {
             Swal.fire({
               title: 'Campaign Deleted Successfully',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
             this.getCampaignList();
           },
           error: (err) => {
             Swal.fire({
               title: 'Error while deleting the records.',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
           }
         });
       }
     });
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   goBack(): void {
     this.location.back();
