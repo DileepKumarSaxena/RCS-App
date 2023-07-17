@@ -20,7 +20,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Campaign Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Campaign name"
-                                        formControlName="campaignName" maxlength="255" (blur)="checkDuplicateName()" />
+                                        formControlName="campaignName" maxlength="20" (blur)="checkDuplicateName()" />
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
                                         Campaign name is required
                                     </mat-error>
@@ -54,7 +54,7 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Description</mat-label>
-                                    <input matInput autocomplete="off" maxlength="255" placeholder="Description"
+                                    <input matInput autocomplete="off" maxlength="50" placeholder="Description"
                                         formControlName="description" required />
                                     <mat-icon matSuffix aria-hidden="true" container="body">
                                         <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"

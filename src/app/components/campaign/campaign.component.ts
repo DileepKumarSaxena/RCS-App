@@ -48,8 +48,8 @@ export class CampaignComponent {
 
   createCampaignForm() {
     this.campaignListForm = this.formbuilder.group({
-      startDate: [(moment().startOf('month'))['_d']],
-      endDate: [(moment().endOf('month'))['_d']]
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     })
   }
   getCampaignList() {
