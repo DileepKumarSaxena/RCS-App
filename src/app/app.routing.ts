@@ -14,7 +14,7 @@ import { CreateLeadComponent } from './components/create-lead/create-lead.compon
 import { TemplateComponent } from './components/template/template.component';
 
 const routes: Routes = [
-    { path: '', component: TemplateComponent, canActivate: [AuthGuard] },
+    { path: '', component: XiaomircsComponent, canActivate: [AuthGuard] },
     { path: 'vircs', component: XiaomircsComponent, canActivate: [AuthGuard] },
     { path: 'Summary', component: GooglercsComponent, canActivate: [AuthGuard] },
     { path: 'detailreport', component: CampaignlogsComponent, canActivate: [AuthGuard] },
@@ -26,7 +26,7 @@ const routes: Routes = [
     { path: 'leadList', component: LeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
-    { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
+    // { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }
