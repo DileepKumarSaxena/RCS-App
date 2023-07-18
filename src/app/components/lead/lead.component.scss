@@ -24,3 +24,8 @@ mat-form-field {
     overflow-x: auto;
     white-space: nowrap;
   }  
+
+  .mdc-data-table__cell{
+    white-space: normal;
+    word-break: break-word;
+}
