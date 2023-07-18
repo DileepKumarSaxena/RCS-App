@@ -117,4 +117,8 @@ export class GooglercsComponent {
   goBack(): void {
     this.location.back();
   }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
