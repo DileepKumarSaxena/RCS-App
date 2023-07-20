@@ -27,4 +27,7 @@ export class AppComponent {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
 }

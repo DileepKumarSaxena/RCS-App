@@ -39,6 +39,9 @@ import { CreateLeadComponent } from './components/create-lead/create-lead.compon
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
 import { TemplateComponent } from './components/template/template.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { TemplateListComponent } from './components/template-list/template-list.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -76,6 +79,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatPaginatorModule,  
         NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
+        MatTabsModule,
+        MatTooltipModule
     ],
 
     
@@ -95,6 +100,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         CreateLeadComponent,
         TemplateComponent,
         LoaderComponent,
+        TemplateListComponent,
     
     ],
     providers: [

@@ -65,6 +65,7 @@ export class TemplateComponent {
     console.log('Hellllooo');
     let data = this.templateForm.value;
     let tempData = this.dataCreate(data);
+    let tempData2 = this.dataCreate(data);
     console.log(tempData, "tmD");
     if (this.templateForm.valid) {
       this.templateService.templateDataSubmit(tempData).subscribe({

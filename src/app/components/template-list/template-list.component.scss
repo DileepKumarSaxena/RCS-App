@@ -29,5 +29,18 @@ mat-form-field {
     word-break: break-word;
 }
 
+.template-back{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   .mat-icon {
+        margin-top: -10px
+    }
+    .back-icon{
+        display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+}
   
   
