@@ -39,6 +39,12 @@ import { CreateLeadComponent } from './components/create-lead/create-lead.compon
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
 import { TemplateComponent } from './components/template/template.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { TemplateListComponent } from './components/template-list/template-list.component';
+import { HttpConfigInterceptor } from './_interceptors/http-config.interceptor';
+import { HttpErrorInterceptor } from './_interceptors/http-error.interceptor';
+import { SpinnerInterceptorService } from './_interceptors/spinner.interceptor';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -76,6 +82,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatPaginatorModule,  
         NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
+        MatTabsModule,
+        MatTooltipModule
     ],
 
     
@@ -95,11 +103,13 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         CreateLeadComponent,
         TemplateComponent,
         LoaderComponent,
+        TemplateListComponent,
     
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptorService, multi: true },
 
         // provider used to create fake backend
         fakeBackendProvider
