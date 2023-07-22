@@ -332,7 +332,7 @@ export class CreateLeadComponent {
         "windowRequired": "N",
         "scheduleDay": "6",
         "scheduleEndDtm": dataVal['scheduleEndDtm'],
-        "windowStartTime": "10:18",
+        "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }
     } else if (dataVal['leadExecutionType'] == 'save') {
@@ -341,7 +341,7 @@ export class CreateLeadComponent {
         "windowRequired": "N",
         "scheduleDay": "6",
         "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
-        "windowStartTime": "10:18",
+        "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }
     }

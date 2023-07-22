@@ -12,7 +12,7 @@ export class TemplateListComponent {
   public showLoader = false;
   moment: any = moment;
   campaignListForm: FormGroup;
-  displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+  displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'actions'];
   dataSource!: MatTableDataSource<any>;
   
   constructor(private location: Location){

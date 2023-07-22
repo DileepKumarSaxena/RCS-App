@@ -65,39 +65,38 @@ export class TemplateComponent {
     console.log('Hellllooo');
     let data = this.templateForm.value;
     let tempData = this.dataCreate(data);
-    let tempData2 = this.dataCreate(data);
     console.log(tempData, "tmD");
-    if (this.templateForm.valid) {
-      this.templateService.templateDataSubmit(tempData).subscribe({
-        next: (res) => {
-          console.log(res, "Template....")
-          Swal.fire({
-            title: 'Template Created Successfully',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-              icon: 'custom-icon-class',
-            },
-            width: '300px'
-          }).then(() => {
-            this.templateForm.reset();
-          });
-        },
-        error: () => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Error while adding the Template Details.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-              icon: 'custom-icon-class',
-            },
-            width: '300px'
-          });
-        },
-      });
+    // if (this.templateForm.valid) {
+    //   this.templateService.templateDataSubmit(tempData).subscribe({
+    //     next: (res) => {
+    //       console.log(res, "Template....")
+    //       Swal.fire({
+    //         title: 'Template Created Successfully',
+    //         icon: 'success',
+    //         confirmButtonText: 'OK',
+    //         customClass: {
+    //           icon: 'custom-icon-class',
+    //         },
+    //         width: '300px'
+    //       }).then(() => {
+    //         this.templateForm.reset();
+    //       });
+    //     },
+    //     error: () => {
+    //       Swal.fire({
+    //         title: 'Error',
+    //         text: 'Error while adding the Template Details.',
+    //         icon: 'error',
+    //         confirmButtonText: 'OK',
+    //         customClass: {
+    //           icon: 'custom-icon-class',
+    //         },
+    //         width: '300px'
+    //       });
+    //     },
+    //   });
 
-    }
+    // }
   }
 
   dataCreate(val) {

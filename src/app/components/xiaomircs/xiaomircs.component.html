@@ -156,7 +156,7 @@
                                                             <div class="input-group custom-file-button">
                                                                 <input type="file" class="form-control"
                                                                     accept="image/*, video/*" id="inputGroupFile"
-                                                                    (change)="validateFile($event.target)"
+                                                                    (change)="validateFileCr($event.target, i)"
                                                                     formControlName="fileName">
                                                                 <label class="input-group-text"
                                                                     for="inputGroupFile">Select</label>
@@ -306,6 +306,7 @@
                                                         templateForm.get('cardDescription').value
                                                         }}
                                                     </p>
+                                                    <a href=""><i class="fa fa-globe"></i> Suggestion Text</a>
                                                 </div>
                                                 <div id="carousel-div"
                                                     *ngIf="templateForm.get('templateType').value === 'carousel'">
@@ -313,52 +314,20 @@
 
                                                         <!-- Slides -->
                                                         <div class="carousel-inner">
-                                                            <div formArrayName="cardDetails" class="carousel-item" 
-                                                            [ngClass]="{'vertical':(templateForm.get('cardDetails').value[i]['cardWidth'].value === 'SMALL_WIDTH'), 'horizontal': (templateForm.get('cardDetails').value[i]['cardWidth'].value === 'MEDIUM_WIDTH'), 'shortHeight':(templateForm.get('cardDetails').value[i]['mediaHeight'].value === 'SHORT_HEIGHT'), 'mediumHeight':(templateForm.get('cardDetails').value[i]['mediaHeight'].value === 'MEDIUM_HEIGHT')}"
+                                                            <div formArrayName="cardDetails" class="carousel-item"
                                                                 *ngFor="let item of templateForm.get('cardDetails')['controls']; let i = index;"
                                                                 [ngClass]="(i === 0) ? 'active' : ''">
                                                                 <div [formGroupName]="i">
-                                                                    <img [src]="fileName" alt="File preview"
-                                                                        *ngIf="fileName">
+                                                                    <img [src]="item.get('fileName').value" alt="File preview" *ngIf="item.get('fileName').value">
                                                                     <h5>{{templateForm.get('cardDetails').value[i]['cardtitle']}}
                                                                     </h5>
-                                                                    <p class="messageContent">{{
-                                                                        templateForm.get('cardDetails').value[i]['cardDescription']
-                                                                        }}</p>
+                                                                    <p class="messageContent">
+                                                                        {{templateForm.get('cardDetails').value[i]['cardDescription']}}
+                                                                    </p>
+                                                                    <a href=""><i class="fa fa-globe"></i> Suggestion Text</a>
                                                                 </div>
-
                                                             </div>
                                                         </div>
-
-                                                        <!-- <div formArrayName="cardDetails">
-                                                            <div>
-                                                                <div class="carousel-inner">
-                                                                    <div class="carousel-item active">
-                                                                        <img [src]="fileName" alt="File preview"
-                                                                            *ngIf="fileName">
-                                                                        <h5>{{ templateForm.get('cardtitle').value }}
-                                                                        </h5>
-                                                                        <p class="messageContent">{{
-                                                                            templateForm.get('cardDescription').value
-                                                                            }}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="carousel-item">
-                                                                        <img [src]="fileName" alt="File preview"
-                                                                            *ngIf="fileName">
-                                                                        <h5>{{ templateForm.get('cardtitle').value }}
-                                                                        </h5>
-                                                                        <p class="messageContent">{{
-                                                                            templateForm.get('cardDescription').value
-                                                                            }}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> -->
-
-
-
                                                         <!-- Left and right controls -->
                                                         <a class="carousel-control-prev" href="#myCarousel"
                                                             data-slide="prev">
@@ -376,6 +345,7 @@
                                                         templateForm.get('messageContent').value
                                                         }}
                                                     </p>
+                                                    <a href=""><i class="fa fa-globe"></i> Suggestion Text</a>
                                                 </div>
                                             </div>
                                         </div>

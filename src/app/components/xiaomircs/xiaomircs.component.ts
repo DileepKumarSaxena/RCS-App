@@ -5,6 +5,8 @@ declare var require: any;
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { TemplateService } from '@app/services/template.service';
+import { Template, TemplateJson } from '@app/_models';
+import { AlertService } from '@app/services';
 @Component({
   selector: 'app-xiaomircs',
   templateUrl: './xiaomircs.component.html',
@@ -37,7 +39,11 @@ export class XiaomircsComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder, private templateService: TemplateService, private location: Location) {
+  constructor(
+    private fb: FormBuilder,
+    private templateService: TemplateService, 
+    private alertService: AlertService,
+    private location: Location) {
     this.templateForm = this.fb.group({
 
     })
@@ -54,18 +60,21 @@ export class XiaomircsComponent implements OnInit {
       cardtitle: [''],
       cardDescription: [''],
       messageContent: [''],
-      cardOrientation:['VERTICAL'],
-      mediaHeight:['SHORT_HEIGHT'],
+      cardOrientation: ['VERTICAL'],
+      mediaHeight: ['SHORT_HEIGHT'],
       items: new FormArray([]),
-      cardDetails: new FormArray([])
+      cardDetails: new FormArray([
+        
+      ])
     })
   }
   createItem(): FormGroup {
     return this.fb.group({
       suggestionType: ['reply'],
-      displayText: [],
-      postback: [],
-      url: [],
+      displayText: [''],
+      postback: [''],
+      url: [''],
+      phoneNumber:['']
     });
   }
   createCards(): FormGroup {
@@ -80,17 +89,21 @@ export class XiaomircsComponent implements OnInit {
   tabs = [];
   addTab() {
     this.cardDetails = this.templateForm.get('cardDetails') as FormArray;
-    if(this.cardDetails.value.length < 5){
+    if (this.cardDetails.value.length < 5) {
       this.cardDetails.push(this.createCards());
       this.tabs.push('Card ' + this.cardDetails.value.length);
     }
   }
+  getClassName(data) {
+    console.log(data, "DDDDDDDD");
+    return "Vertical"
+  }
   // Function to add a new row
   addRow() {
-    let loopCount = this.templateForm.get('templateType').value == 'text_message'?10:4;
+    let loopCount = this.templateForm.get('templateType').value == 'text_message' ? 10 : 4;
     this.items = this.templateForm.get('items') as FormArray;
-    if(this.items.value.length < loopCount){
-          this.items.push(this.createItem());
+    if (this.items.value.length < loopCount) {
+      this.items.push(this.createItem());
     }
   }
 
@@ -101,6 +114,11 @@ export class XiaomircsComponent implements OnInit {
       console.log(index, this.items);
       this.items.removeAt(index);
     }
+  }
+
+  getImage(imagePath) {
+    console.log(imagePath, "imagePath");
+    return imagePath;
   }
   templateNameCharacterCount(event: any) {
     let value = event.target.value as string;
@@ -170,8 +188,22 @@ export class XiaomircsComponent implements OnInit {
     }
   }
 
+  validateFileCr(input: any, index:any) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        console.log(e.target.result, 'fileName....')
+        const dataURL = e.target.result;
+        this.cardDetails.at(index).get('fileName').patchValue(input.files[0]);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+}
+
 
   addCustomVariable(formCtrl) {
+    console.log(formCtrl, "Add custom_param");
     let cardDescriptionControl = this.templateForm.get(formCtrl);
     if (!cardDescriptionControl.value.includes('[custom_param]')) {
       let currentValue = cardDescriptionControl.value;
@@ -182,59 +214,73 @@ export class XiaomircsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Hellllooo');
-    let data = this.templateForm.value;
-    console.log(data, "Data....");
-    let tempData = this.dataCreate(data);
-    console.log(this.templateForm, "templateForm");
+    console.log(this.templateForm.get('cardDetails').value, 'cardDetails....');
 
     if (this.templateForm.valid) {
-      this.templateService.templateDataSubmit(tempData).subscribe({
-        next: (res) => {
+      let data = this.templateForm?.value;
+      console.log(data, "Data....");
+      const tempData: Template = this.dataCreate(data);
+      console.log(this.templateForm, "templateForm");
+      const body = JSON.stringify(tempData);
+      const formData = new FormData();
+      const cardDetails = this.templateForm.get('cardDetails').value;
+      if(cardDetails?.length){
+        cardDetails?.forEach(element => {
+          formData.append('files', element?.fileName);
+        });
+      }else{
+        formData.append('files', this.templateForm?.get('fileName')?.value);
+      }
+      formData.append('addTemplate', body?.toString());
+      this.templateService.templateDataSubmit(formData).subscribe({
+        next: (res: any) => {
           console.log(res, "Template....")
-          Swal.fire({
-            title: 'Template Created Successfully',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-              icon: 'custom-icon-class',
-            },
-            width: '300px'
-          }).then(() => {
-            this.templateForm.reset();
-          });
+          this.alertService.successToaster('Template Created Successfully');
+          this.templateForm.reset();
         },
-        error: () => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Error while adding the Template Details.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-              icon: 'custom-icon-class',
-            },
-            width: '300px'
-          });
+        error: (error: string) => {
+          if (error) {
+            this.alertService.errorToaster(error);
+          }
         },
       });
 
     }
   }
-  dataCreate(val) {
-    let obj: any = {
-      'templateCode': val.templateCode,
-      'templateType': val.templateType,
+  dataCreate(val: any): Template {
+    console.log(val, "VAAAA");
+    const obj: Template = {
+      templateCode: val?.templateCode,
+      templateType: val?.templateType,
+      templateMsgType: 'templateMsgType',
       templeteJson: {
-        'botId': 12345,
-        standAlone: {
-          'cardTitle': val.cardtitle,
-          'textMessageContent': val.cardDescription,
-          'fileName': val.filePreview,
-          'suggestions': val.items
-        }
+        //botId: 12345,
+        cardTitle: val?.cardtitle,
+        textMessageContent: val?.cardDescription,
+        mediaFileOriginalName: 'mediaFileOriginalName',
+        // fileName: val?.fileName,
+        suggestions: val?.items,
+      } as TemplateJson
+    }
+
+    if (val?.templateType === 'rich_card') {
+      obj["standAlone"] = {
+        cardTitle: val.cardtitle,
+        textMessageContent: val.cardDescription,
+        fileName: val.fileName,
+        suggestions: val.items
+      }
+    } else if (val['templateType'] == 'carousel'){
+      obj["carouselList"] = {
+        cardTitle: val.cardtitle,
+        textMessageContent: val.cardDescription,
+        mediaFileOriginalName:'mediaFileOriginalName',
+        fileName:val.fileName,
+        suggestions: val.items
       }
     }
-    obj.templeteJson = JSON.stringify(obj.templeteJson);
+
+    // obj.templeteJson = JSON.stringify(obj.templeteJson) as any;
     return obj;
   }
   // }
