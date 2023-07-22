@@ -8,18 +8,22 @@
         <div class="col-sm-4 mx-auto">
             <br>
             <br>
+            <div class="go-back-section">
+                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+                <h5 class="text-center">MESSAGE PREVIEW</h5>
+            </div>
             <!-- <h5 class="text-center">VI RCS</h5> -->
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-                <div class="card bg-light text-dark">
+                <!-- <div class="card bg-light text-dark">
                     <div class="card-body">
                         <select class="form-control" name="clientnameSoip" id="clientnameSoip">
                             <option value="">Please select client name</option>
                             <option value="Fonada RCS">Fonada RCS</option>
                         </select>
                     </div>
-                </div>
-                <br>
+                </div> -->
+
 
 
                 <div class="card bg-light text-dark">
@@ -48,18 +52,18 @@
                         <div class="form-group text-center">
 
 
-                            <div class="form-check-inline">
+                            <!-- <div class="form-check-inline">
                                 <label class="form-check-label" style="cursor:pointer;">
                                     <input type="radio" class="form-check-input imagetype" name="imagetype"
                                         value="normal"><strong>1:1</strong>
                                 </label>
-                            </div>
-                            <div class="form-check-inline">
+                            </div> -->
+                            <!-- <div class="form-check-inline">
                                 <label class="form-check-label" style="cursor:pointer;">
                                     <input type="radio" class="form-check-input imagetype" name="imagetype"
                                         value="tall"><strong>16:9</strong>
                                 </label>
-                            </div>
+                            </div> -->
 
                             <div id="raderror"></div>
 
@@ -141,10 +145,11 @@
         </div>
 
         <div class="col-sm-5">
-            <br><br>
+
+
             <!-- <h5 class="text-center">VI TEMPLATES</h5> -->
 
-            <div class="card bg-light text-dark">
+            <div class="card bg-light text-dark top-spacing">
                 <div class="card-body">
 
                     <table class="table table-striped">
@@ -205,11 +210,14 @@
                             <img [src]="filePreview" alt="File preview">
                             <h5>{{ titleinsms }}</h5>
                             <p class="messageContent">{{ messagecontent }}</p>
-                            <a *ngIf="actionButton1Title" href="{{actionButton1URL}}" class="btn btn-outline-primary btn-block">{{
+                            <a *ngIf="actionButton1Title" href="{{actionButton1URL}}"
+                                class="btn btn-outline-primary btn-block">{{
                                 actionButton1Title }}</a>
-                            <a *ngIf="actionButton2Title" href="{{actionButton2URL}}" class="btn btn-outline-primary btn-block">{{
+                            <a *ngIf="actionButton2Title" href="{{actionButton2URL}}"
+                                class="btn btn-outline-primary btn-block">{{
                                 actionButton2Title }}</a>
-                            <a *ngIf="actionButton3Title" href="{{actionButton3URL}}" class="btn btn-outline-primary btn-block">{{
+                            <a *ngIf="actionButton3Title" href="{{actionButton3URL}}"
+                                class="btn btn-outline-primary btn-block">{{
                                 actionButton3Title }}</a>
                         </div>
                     </div>

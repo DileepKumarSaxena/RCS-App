@@ -23,8 +23,20 @@ export class AppComponent {
   isLoginPage(): boolean {
     return this.router.url === '/login';
   }
+
+
+  isResetPage(): boolean {
+    return this.router.url === '/reset/password';
+    
+  }
+
+
   logout() {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  resetPassword(){
+    this.router.navigate(['/reset/password'])
   }
 }

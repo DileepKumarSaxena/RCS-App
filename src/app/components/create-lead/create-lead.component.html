@@ -45,39 +45,42 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Lead Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Lead name"
-                                        (blur)="checkDuplicateName()" formControlName="leadName" />
+                                        (blur)="checkDuplicateName()"  maxlength="255" formControlName="leadName" />
                                     <!-- <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
                                         Lead name is required
                                     </mat-error> -->
                                     <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">
                                         Lead name already exists
                                     </mat-error>
-                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                    <!-- <mat-icon matSuffix aria-hidden="true" container="body">
                                         <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
                                             (mouseleave)="isHidden2 = !isHidden2">info</span>
-                                    </mat-icon>
+                                    </mat-icon> -->
                                 </mat-form-field>
 
-
+<!-- 
                                 <ng-container *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
                                     <div style="margin-top: -20px; font-size: small; color: red;  margin-left: 4px">
                                         No Special Characters allowed.
                                     </div>
-                                </ng-container>
+                                </ng-container> -->
                             </div>
 
                             <div class=" col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group custom-file-button">
-                                        <input type="file" class="form-control" id="inputGroupFile"
-                                            formControlName="file" required (change)="uploadCsvFile($event)">
-                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" required (change)="uploadCsvFile($event)">
+                                      <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
-                                </div>
+                                  </div>
+                                  <div *ngIf="leadForm.get('file').errors?.invalidFileFormat" class="text-danger invalid-format">
+                                    Invalid file format. Please upload a CSV file.
+                                  </div>
+                                  
                                 <div class="toggleRow">
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" [(ngModel)]="switchState"
-                                            class="custom-control-input" id="customSwitch1" formControlName="isDND">
+                                        <input type="checkbox" [(ngModel)]="switchState" class="custom-control-input"
+                                            id="customSwitch1" formControlName="isDND">
                                         <label class="custom-control-label" for="customSwitch1">Enable DND</label>
                                         <div *ngIf="switchState">
                                             <!-- Switch is ON -->
@@ -87,8 +90,7 @@
                                         </div>
                                     </div>
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox"
-                                            class="custom-control-input" id="customSwitch2"
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch2"
                                             formControlName="isDuplicate">
                                         <label class="custom-control-label" for="customSwitch2">Remove Duplicate
                                             No.</label>
@@ -96,12 +98,12 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <br> <br>
                         <div class="row">
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Lead Execution Type</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="leadExecutionType">
+                                    <mat-select  placeholder="Select One" formControlName="leadExecutionType" required>
                                         <mat-option *ngFor="let item of leadExecutionData"
                                             [value]="item.leadExecutionData">{{item.leadExecutionName}}</mat-option>
                                     </mat-select>
@@ -111,8 +113,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker" [min]="minDate">
-                                        <input matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
-                                        <input matEndDate placeholder="End date" formControlName="scheduleEndDtm">
+                                        <input  required matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
+                                        <input required  matEndDate placeholder="End date" formControlName="scheduleEndDtm">
                                     </mat-date-range-input>
                                     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -135,35 +137,41 @@
             </div>
             <br>
             <br>
-            <div class="card bg-light text-dark">
+            <!-- <div class="card bg-light text-dark">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <input matInput>
-                                <mat-icon matSuffix aria-hidden="true" container="body">
-                                    <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
-                                        class="material-symbols-outlined">
-                                        info
-                                    </span>
-                                </mat-icon>
-                            </mat-form-field>
-                            <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
-                                <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
-                                    Numbers(S) on which test call to be given.
+                    <form [formGroup]="testLeadForm">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <input matInput formControlName="testingNumber">
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                            class="material-symbols-outlined">
+                                            info
+                                        </span>
+                                    </mat-icon>
+                                </mat-form-field>
+                                <div
+                                    *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
+                                    Please enter a valid numeric value with a single comma separated.
                                 </div>
-                            </ng-container>
+                                <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
+                                    <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
+                                        Numbers(S) on which test call to be given.
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-success lead" [disabled]="testLeadForm.status === 'INVALID'">Test
+                                    Lead</button>
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-success lead">Test
-                                Lead</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-            </div>
+            </div> -->
             <br>
         </div>
     </div>

@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import moment from 'moment';
 import { Router } from '@angular/router'
 import { NgxUiLoaderService } from 'ngx-ui-loader'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-campaign',
@@ -22,7 +23,7 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['campaignId', 'campaignName', 'description', 'templateJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+  displayedColumns: string[] = ['id', 'createdDate', 'campaignName', 'description', 'templateName', 'campaignStatus', 'leadCount', 'usageType', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -32,7 +33,8 @@ export class CampaignComponent {
     private campaignservice: CampaignService,
     private formbuilder: FormBuilder,
     private router: Router,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -46,26 +48,26 @@ export class CampaignComponent {
 
   createCampaignForm() {
     this.campaignListForm = this.formbuilder.group({
-      startDate: [(moment().startOf('month'))['_d']],
-      endDate: [(moment().endOf('month'))['_d']]
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     })
   }
   getCampaignList() {
-    this.showLoader=true
+    this.showLoader = true
     let userId = 1;
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
     this.ngxService.start();
     this.campaignservice.getCampaignlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
-       
+
         this.campaignData = res.Campaign;
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         // this.ngxService.stop();
-        this.showLoader=false
-    
+        this.showLoader = false
+
       },
       error: (err) => {
         this.campaignData = [];
@@ -75,13 +77,13 @@ export class CampaignComponent {
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
 
-        this.showLoader=false
+        this.showLoader = false
+        // alert("Something Went Wrong! Please try again.")
       }
     });
   }
   editRow(data) {
     this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
-
   }
 
   deleteRow(id: any) {
@@ -95,19 +97,27 @@ export class CampaignComponent {
       customClass: {
         icon: 'custom-icon-class',
       },
-
+      width: '300px',
     }).then((result) => {
       if (result.isConfirmed) {
         this.campaignservice.deleteCampaignById(id).subscribe({
           next: (res: any) => {
             Swal.fire({
               title: 'Campaign Deleted Successfully',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
             this.getCampaignList();
           },
           error: (err) => {
             Swal.fire({
               title: 'Error while deleting the records.',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
             });
           }
         });
@@ -115,4 +125,11 @@ export class CampaignComponent {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  goBack(): void {
+    this.location.back();
+  }
 }

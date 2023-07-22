@@ -3,8 +3,8 @@
 }
 
 button {
-   width: 234px;
-   height: 56px;
+      width: 250px;
+      height: 56px;
    cursor: not-allowed
 }
 
@@ -18,14 +18,6 @@ button {
    max-height: 584px;
 }
 
-.go-back-section {
-   display: flex;
-   justify-content: start;
-   align-items: flex-start;
-
-   .mat-icon {
-      margin-top: -2px;
-      margin-right: 10px;
-      cursor: pointer;
-   }
+mat-form-field{
+   width: 90%;
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthenticationService } from 'src/app/_services';
 declare var require: any;
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-xiaomircs',
   templateUrl: './xiaomircs.component.html',
@@ -19,7 +20,7 @@ export class XiaomircsComponent implements OnInit {
   actionButton3Title: string;
   actionButton3URL: string;
 
-  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService) {
+  constructor(private fb: FormBuilder, private authenticationService: AuthenticationService, private location: Location) {
     this.form = this.fb.group({
       file: null,
       titleinsms: '',
@@ -34,8 +35,8 @@ export class XiaomircsComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-   }
+
+  }
 
   onSubmit() {
     this.titleinsms = this.form.get('titleinsms')?.value;
@@ -55,7 +56,9 @@ export class XiaomircsComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
+  goBack(): void {
+    this.location.back();
+  }
 
 
 }

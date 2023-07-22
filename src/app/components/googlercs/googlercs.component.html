@@ -4,82 +4,121 @@
         <div class="col-sm-3">
             <app-navigation></app-navigation>
         </div>
+
         <div class="col-sm-9">
             <br><br>
+            <div class="go-back-section">
+                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+                <h5 class="text-center">SUMMARY REPORT</h5>
+            </div>
+            <!-- <div class="go-back-section">
+          <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
+          <h5 class="text-center">DETAILED REPORT</h5>
+      </div> -->
+            <form [formGroup]="summaryListForm">
 
-            <div class="card bg-light text-dark" style="height: 80px;">
-                <div class="d-flex justify-content-center" *ngIf="showLoader">
-                    <div class="spinner-border" style="width: 3rem; height: 3rem; margin-top: 80px;" role="status">
-                        <span class="sr-only">Loading...</span>
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+                        <div class="filter-section">
+                            <div class="date-range-section">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Enter a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                                            formControlName="startDate">
+                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="endDate">
+                                    </mat-date-range-input>
+                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+                                <button type="button" class="btn btn-success btn-lg"
+                                    (click)="getSummaryList()">Search</button>
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                        </div>
+
                     </div>
                 </div>
+            </form>
 
-                <div class="card-body">
-                    <form [formGroup]="summaryReportForm" (ngSubmit)="onSubmit()">
-                        <input type="date" formControlName="from_date">
-                        <input type="date" style="margin-left: 250px;" formControlName="to_date">
-                        <button type="submit" class="btn btn-success logs"
-                            [disabled]="summaryReportForm.status === 'INVALID'">Submit</button>
-                    </form>
+            <div class="d-flex justify-content-center" *ngIf="showLoader">
+                <div class="spinner-border" style="width: 3rem; height: 3rem; margin-top: 10px;" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
 
-            <br><br>
-            <h5 class="text-center">CAMPAIGN LOGS</h5>
+<!--  shownig table when data is there otherwise hide the table  *ngIf="data_cnt"   -->
 
-            <div class="card bg-light text-dark">
-                <!-- <div use *ngIf="detail_report" line:33 ></div> -->
+            <div class="card bg-light text-dark" style="margin-top: 50px;">
+                <!-- <div use *ngIf="" for table condition  ></div> -->
                 <div class="card-body">
+                    <mat-form-field>
+                        <mat-label>Filter Data</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Campaign Name" #input>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8 example-container">
+                        <table  mat-table [dataSource]="dataSource" matSort
+                            class="horizontal-scroll-table">
+                            <!-- SLNo Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                                <td mat-cell *matCellDef="let row; let i = index;">{{ (paginatorRef.pageIndex * paginatorRef.pageSize) + (i + 1) }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="created_date">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+                                <td mat-cell *matCellDef="let row"> {{row.created_date}} </td>
+                            </ng-container>
 
-                    <table class="table table-striped tableScroll" id="tableData">
-                        <!-- <div use *ngIf="detail_report" line:39></div> -->
-                        <tbody>
-                            <tr style="background-color: #888; color:#f8f9fa;">
-                                <th>Date</th>
-                                <th>Total<br>Count</th>
-                                <th>Total<br>Delivered</th>
-                                <th>SMS<br>Count</th>
-                                <th>SMS<br>Delivered</th>
-                                <th>VI<br>Count</th>
-                                <th>VI<br>Delivered</th>
-                                <th>VI RCS<br>Count</th>
-                                <th>VI RCS<br>Delivered</th>
-                            </tr>
-                            <!-- <h1 *ngFor="let data of detail_report" {{(data.index)+1}}></h1>   let i = index" [class.active]="i == currentIndex"> -->
-                        </tbody>
-                        <tbody id="jar">
+                            <ng-container matColumnDef="lead_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Name </th>
+                                <td  mat-cell *matCellDef="let row">{{row.lead_name}}</td>
+                            </ng-container>
 
-                            <tr class="content" *ngFor="let data of summary_report">
-                                <td>{{data.name}}</td>
-                                <td>{{data.established}}</td>
-                                <td>{{data.country}}</td>
-                                <td>{{data.slogan}}</td>
-                                <td>{{data.head_quaters}}</td>
-                                <td>{{data.website}}</td>
-                                <td>NODATA</td>
-                                <td>NODATA</td>
-                                <td>NODATA</td>
-                            </tr>
-                        </tbody>
-                        
-                    </table>
 
-                    <nav>
-                        <ul class="pagination justify-content-center pagination-sm">
-                            <li class="page-item" id="previous-page"><a class="page-link"
-                                    href="javascript:void(0)">Prev</a>
-                            </li>
-                            <li class="page-item current-page active"><a class="page-link"
-                                    href="javascript:void(0)">1</a>
-                            </li>
-                            <li class="page-item" id="next-page"><a class="page-link" href="javascript:void(0)">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                            <ng-container matColumnDef="last_modified_date">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Modified Date</th>
+                                <td mat-cell *matCellDef="let row">{{row.last_modified_date}}</td>
+                            </ng-container>
 
+
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
+                                <td mat-cell *matCellDef="let row">{{row.status}}</td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="TOTAL">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total</th>
+                                <td mat-cell *matCellDef="let row">{{row.TOTAL}}</td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="campaing_name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaing Name</th>
+                                <td mat-cell *matCellDef="let row">{{row.campaing_name}}</td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                           
+                        </table>
+                       
+                        <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div>
+                    </div>
+                    <mat-paginator  #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"
+                    aria-label="Select page of users"></mat-paginator>
+
+                   
                 </div>
-            </div>
-
+            </div> 
+  
+  
         </div>
     </div>
-</div>

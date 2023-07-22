@@ -38,6 +38,8 @@ import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
 import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
 import { TemplateComponent } from './components/template/template.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -93,6 +95,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         LeadComponent,
         CreateLeadComponent,
         TemplateComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
     
     ],
     providers: [
