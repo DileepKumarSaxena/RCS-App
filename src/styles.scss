@@ -164,10 +164,10 @@ iframe::-webkit-scrollbar-thumb:hover {
     margin: 30px
 }
 
-.custom-icon-class {
-    width: 4em !important;
-    height: 4em !important;
-}
+//   .custom-icon-class {
+//     width: 4em !important;
+//     height: 4em !important;
+//   }
 
 .go-back-section {
     display: flex;
@@ -182,15 +182,38 @@ iframe::-webkit-scrollbar-thumb:hover {
 }
 
 
-.example-container::-webkit-scrollbar {
-    // width: 8px;
-    // height: 8px;
-    border-radius: 30px;
-    background-color: rgba(255, 255, 255, 0.007)
+mat-form-field {
+    width: 100%;
 }
 
+.spacing {
+    padding-top: 3%;
+}
 
-.example-container::-webkit-scrollbar-thumb {
-    border-radius: 30px;
-    background-color: rgba(0, 0, 0, 0.527)
+.mat-h4,
+.mat-body-1,
+.mat-typography .mat-h4,
+.mat-typography .mat-body-1,
+.mat-typography h4 {
+    margin: 0 0 2px;
+    font-weight: 500;
+
+    span {
+        color: rgb(0, 122, 255);
+    }
+
+    
+}
+i {
+    color: #a6a6a6;
+}
+.card-body {
+    label {
+        font-weight: 500;
+        font-size: 16px;
+    }
+    p{
+        color: #a6a6a6;
+    }
+
 }

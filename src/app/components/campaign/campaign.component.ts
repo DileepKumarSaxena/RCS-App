@@ -23,7 +23,11 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
+<<<<<<< HEAD
   displayedColumns: string[] = ['id', 'createdDate', 'campaignName', 'description', 'templateName', 'campaignStatus', 'leadCount', 'usageType', 'actions'];
+=======
+  displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -65,9 +69,14 @@ export class CampaignComponent {
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+<<<<<<< HEAD
         // this.ngxService.stop();
         this.showLoader = false
 
+=======
+        this.showLoader=false
+    
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
       },
       error: (err) => {
         this.campaignData = [];
@@ -75,10 +84,14 @@ export class CampaignComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
+<<<<<<< HEAD
         this.ngxService.stop();
 
         this.showLoader = false
         // alert("Something Went Wrong! Please try again.")
+=======
+        this.showLoader=false
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
       }
     });
   }
@@ -124,7 +137,6 @@ export class CampaignComponent {
       }
     });
   }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

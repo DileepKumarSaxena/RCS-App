@@ -1,15 +1,15 @@
 <div class="container-fluid h-100">
 
   <div class="row">
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <app-navigation></app-navigation>
-    </div>
+    </div> -->
 
-    <div class="col-sm-9">
+    <div class="col-sm-12">
       <br><br>
       <div class="go-back-section">
         <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-        <h5 class="text-center">LEAD LIST</h5>
+        <h5 class="text-center">ADD LEAD</h5>
     </div>
      
       <form [formGroup]="leadForm">
@@ -44,25 +44,22 @@
         </div>
       </form>
 
-      <div class="d-flex justify-content-center" *ngIf="showLoader">
-        <div class="spinner-border" style="width: 3rem; height: 3rem; margin-top: 10px;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+      <app-loader *ngIf="showLoader"></app-loader>
 
-      <div class="card bg-light text-dark" style="margin-top: 50px;">
+
+      <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
         <div class="card-body">
           <mat-form-field>
-            <mat-label>Filter Data by Lead Name</mat-label>
-            <input matInput (keyup)="applyFilter($event)" #input>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Lead Name" #input>
           </mat-form-field>
           <div class="mat-elevation-z8">
-            <table  mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+            <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
                 <!-- SLNo Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
-                  <td mat-cell *matCellDef="let row; let i = index;"> {{ (paginatorRef.pageIndex * paginatorRef.pageSize) + (i + 1) }} </td>
+                  <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex * paginatorRef.pageSize) + (i + 1)}} </td>
                 </ng-container>
               <!-- User ID Column -->
               <!-- <ng-container matColumnDef="leadId">

@@ -21,6 +21,17 @@
     white-space: nowrap;
 }
 
+    mat-form-field {
+        margin-right: 20px;
+    }
+}
+
+.horizontal-scroll-table {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+}
+
 mat-form-field{
     width: 100%;
 }

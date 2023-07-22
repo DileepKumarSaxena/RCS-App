@@ -77,6 +77,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatPaginatorModule,  
         NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
+        MatTabsModule,
+        MatTooltipModule
     ],
 
     
@@ -100,8 +102,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptorService, multi: true },
 
         // provider used to create fake backend
         fakeBackendProvider

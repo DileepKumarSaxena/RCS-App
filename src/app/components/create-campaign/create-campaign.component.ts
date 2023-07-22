@@ -116,6 +116,7 @@ export class CreateCampaignComponent {
   templateList() {
     this.campaignService.getAllTemplateList().subscribe(res => {
       if (res) {
+        console.log(res, "Alllll....");
         this.allTemplateList = res.template;
       } else {
         this.campaignService.setTemplateList();
