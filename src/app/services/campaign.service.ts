@@ -39,7 +39,7 @@ export class CampaignService extends BaseService {
 
   // Template List
   getAllTemplateList(): Observable<any> {
-    return this.http.get(`https://fuat.flash49.com/rcsmsg/template/findAllTemplate`);
+    return this.http.get('http://fuat.flash49.com/rcsmsg/template/getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
   }
 
   private templateListSubject$ = new BehaviorSubject(null);
@@ -58,13 +58,33 @@ export class CampaignService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'createCampaign'}`, formData);
   }
 
-  getCampaignlistDetails(userId, fromDate, toDate) {
+  // getCampaignlistDetails(userId, fromDate, toDate, pageIndex, pageSize) {
+  //   let httpParams = new HttpParams()
+  //   httpParams = httpParams.append("from", fromDate);
+  //   httpParams = httpParams.append("to", toDate);
+  //   httpParams = httpParams.append("userId", userId);
+  //   httpParams = httpParams.append("start", (pageIndex * pageSize).toString())
+  //   httpParams= httpParams.append("limit", pageSize.toString());
+
+  //   console.log(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams }, "CampAPI");
+  //   return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
+  // }
+
+  //http://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?from=2023-07-24&to=2023-07-24&userId=1&start=0&limit=5 
+
+  //http://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?userId=1&startDate=2023-07-24&endDate=2023-07-24&limit=5&start=0
+
+  getCampaignlistDetails(userId: any, startDate: string, endDate: string, start: number, limit: number): Observable<any> {
     let httpParams = new HttpParams()
-    httpParams = httpParams.append("from", fromDate);
-    httpParams = httpParams.append("to", toDate);
-    httpParams = httpParams.append("userId", userId);
-    console.log(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams }, "CampAPI");
+    .append("from", startDate)
+    .append("to", endDate)
+      .append("userId", userId)
+      .append("limit", limit)
+      .append("start", start)
+      
+
     return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
+    
   }
 
   campaignDataUpdate(formData: any): Observable<any> {

@@ -317,7 +317,7 @@ export class CreateLeadComponent {
       "countOfNonRcsNumbers": 0,
       "countOfDuplicateNumbers": 0,
       "countOfBlackListNumbers": 0,
-      "userId": dataVal['userId'],
+      "userId": sessionStorage.getItem('userId'),
       "leadName": dataVal['leadName'],
       "retryInfo": {
         "retryOnFail": 0,

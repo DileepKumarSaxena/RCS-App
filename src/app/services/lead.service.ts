@@ -28,6 +28,9 @@ export class LeadService extends BaseService {
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
     httpParams = httpParams.append("userId", userId);
+    httpParams = httpParams.append("start","100");
+    httpParams = httpParams.append("limit","1000");
+
     return this.http.get(`${this.baseUrlData + 'leadInfoList'}`, { params: httpParams });
   }
 

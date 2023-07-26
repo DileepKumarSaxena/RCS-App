@@ -84,9 +84,9 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Template List</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="messageJson" required>
+                                    <mat-select placeholder="Select One" formControlName="templateId" required>
                                         <mat-option *ngFor="let item of allTemplateList"
-                                            [value]="item.templateJson">{{item.templateCode}}</mat-option>
+                                            [value]="item.id">{{item.templateCode}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -96,7 +96,16 @@
 
                         <div class="row mt-4" style="margin-left: 40px; ">
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+
+                                <!-- <mat-form-field appearance="outline">
+                                    <mat-label>Message Type</mat-label>
+                                    <mat-select required placeholder="Select One" formControlName="messageId" required>
+                                        <mat-option  *ngFor="let item of messageTypes"
+                                            [value]="item.messageId">{{item.messageType}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Campaign Date Range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker" [min]="minDate">
                                         <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
@@ -107,23 +116,45 @@
                                     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
-                                </mat-form-field>
+                                </mat-form-field> -->
                             </div>
                             <div class="col-sm-4">
+<!-- 
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Message Type</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="messageId" required>
-                                        <mat-option *ngFor="let item of messageTypes"
-                                            [value]="item.messageId">{{item.messageType}}</mat-option>
+                                    <mat-label>Campaign Type</mat-label>
+                                    <mat-select required placeholder="Select One"  >
+                                        <mat-option *ngFor="let item of campaignType"
+                                        [value]="item.campaignType">{{item.campaignType}}</mat-option>
+                                        
                                     </mat-select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+                              
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-success" type="submit" id="smbtbtn"
-                                    [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
+                                <!-- <mat-form-field appearance="outline">
+                                    <mat-label>Template Type</mat-label>
+                                    <mat-select required placeholder="Select One"  >
+                                        <mat-option *ngFor="let item of campaignSend"
+                                        [value]="item.campaignSend">{{item.campaignSend}}</mat-option>
+                                        
+                                    </mat-select>
+                                </mat-form-field> -->
+                                
                             </div>
-                                               
-                        </div>
+
+                        
+                            <div class="col-sm-4"></div>
+                            
+                            <div class="col-sm-4" >
+                                <button  style="width: 90%;" class="btn btn-success" type="submit" id="smbtbtn"
+                                [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button> 
+                            </div>
+                            <div class="col-sm-4">
+
+                            </div>
+                            </div>
+                                       
+                        
 
 
                     </form>

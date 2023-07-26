@@ -11,7 +11,17 @@ import { AuthenticationService } from './_services';
 })
 export class AppComponent {
   title = 'FonadaRCS';
+  showDropdown = false;
 
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  closeDropdown(event: Event) {
+    if (!(event.target as HTMLElement).closest('.dropdown')) {
+      this.showDropdown = false;
+    }
+  }
   currentUser: any;
 
   constructor(
@@ -29,5 +39,14 @@ export class AppComponent {
   }
   isActive(route: string): boolean {
     return this.router.url === route;
+  }
+  
+  isResetPage(): boolean {
+    return this.router.url === '/reset/password';
+    
+  }
+
+  resetPassword(){
+    this.router.navigate(['/reset/password'])
   }
 }

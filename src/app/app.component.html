@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="currentUser && !isLoginPage()">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="currentUser && !isLoginPage() && !isResetPage()">
   <a class="navbar-brand" href="#">Fonada - Digital SMS </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -7,11 +7,11 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/vircs']" [ngClass]="{ 'active': isActive('/vircs') }">Template</a>
+        <a class="nav-link" [routerLink]="['/templateList']" [ngClass]="{ 'active': isActive('/templateList') }">Template</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" [routerLink]="['/template']" [ngClass]="{ 'active': isActive('/template') }">Template Old</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-link" [routerLink]="['/campaignList']" [ngClass]="{ 'active': isActive('/campaignList') }">Campaign</a>
       </li>
@@ -32,7 +32,22 @@
       </li> -->
     </ul>
     <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-2" (click)="resetPassword()">Change Password</button>
          <button class="btn btn-outline-success btn-sm my-2 my-sm-0" (click)="logout()">Logout</button>
+
+         <!-- <mat-form-field >
+          <div class="dropdown" (click)="toggleDropdown()">
+            <i class="fa fa-user dropdown-icon" style="font-size: 48px; color: white;"></i>
+            <div class="dropdown-content" *ngIf="showDropdown" (click)="closeDropdown($event)">
+              <mat-select>
+                <mat-option value="option1">            <button class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-5" (click)="resetPassword()">Change Password</button></mat-option>
+                <mat-option value="option2">     <button class="btn btn-outline-success btn-sm my-2 my-sm-0" (click)="logout()">Logout</button></mat-option>
+      
+              </mat-select>
+            </div>
+          </div>
+       
+        </mat-form-field> -->
     </form>
   </div>
 </nav>
@@ -53,4 +68,4 @@
 <!-- main app container -->
 
 <router-outlet></router-outlet>
-<app-loader></app-loader>
+<!-- <app-loader></app-loader> -->

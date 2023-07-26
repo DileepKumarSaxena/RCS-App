@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { TemplateService } from '@app/services/template.service';
 import { Template, TemplateJson } from '@app/_models';
 import { AlertService } from '@app/services';
+import moment from 'moment';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-xiaomircs',
   templateUrl: './xiaomircs.component.html',
@@ -16,6 +18,7 @@ export class XiaomircsComponent implements OnInit {
   templateForm: FormGroup;
   templateName: string;
   fileName: string = '';
+  fileUrl: any;
   cardtitle: string;
   cardDescription: string;
   messagecontent: string;
@@ -31,18 +34,29 @@ export class XiaomircsComponent implements OnInit {
   fileSizeError = false;
   fileSizeErrorMessage = '';
   selectedOption: string;
+  moment: any = moment;
+  extractedVariables: string[] = [];
+  cardDetailsArrayToString: string[] = [];
+  templateCodeVal: boolean = false;
+  forTestVariable: string[] = [];
 
   rows: any[] = [];
-  items: FormArray;
+  suggestions: FormArray;
   cardDetails: FormArray;
+  templateTypeValue: any = [{ value: 'Rich Card Stand Alone', key: 'rich_card' }, { value: 'Rich Card Carousel', key: 'carousel' }, { value: 'Text Message', key: 'text_message' }]
+  cardOrientationValue: any = [{ value: 'HORIZONTAL', key: 'HORIZONTAL' }, { value: 'VERTICAL', key: 'VERTICAL' }]
+  cardHeightValue: any = [{ value: 'SHORT', key: 'SHORT_HEIGHT' }, { value: 'MEDIUM', key: 'MEDIUM_HEIGHT' }]
+  cardWidthValue: any = [{ value: 'SMALL', key: 'SMALL_WIDTH' }, { value: 'MEDIUM', key: 'MEDIUM_WIDTH' }]
+  suggestionActionValue: any = [{ value: 'URL Action', key: 'url_action' }, { value: 'Dialer Action', key: 'dialer_action' }, { value: 'Reply', key: 'reply' }]
 
 
 
 
   constructor(
     private fb: FormBuilder,
-    private templateService: TemplateService, 
+    private templateService: TemplateService,
     private alertService: AlertService,
+    private router: Router,
     private location: Location) {
     this.templateForm = this.fb.group({
 
@@ -54,18 +68,21 @@ export class XiaomircsComponent implements OnInit {
   }
   createTemplateForm() {
     this.templateForm = this.fb.group({
-      templateCode: [''],
+      templateCode: ['', [Validators.required, Validators.maxLength(20)]],
       templateType: ['rich_card'],
       fileName: null,
-      cardtitle: [''],
-      cardDescription: [''],
+      mediaFileOriginalName: [''],
+      cardtitle: ['', [Validators.required, Validators.maxLength(200)]],
+      cardTitleCustomParam: [],
+      cardDescriptionCustomParam: [],
+      messageContentCustomParam: [],
+      cardDescription: ['', [Validators.required, Validators.maxLength(2000)]],
       messageContent: [''],
       cardOrientation: ['VERTICAL'],
       mediaHeight: ['SHORT_HEIGHT'],
-      items: new FormArray([]),
-      cardDetails: new FormArray([
-        
-      ])
+      cardWidth: ['SMALL_WIDTH'],
+      suggestions: new FormArray([]),
+      cardDetails: new FormArray([])
     })
   }
   createItem(): FormGroup {
@@ -74,7 +91,10 @@ export class XiaomircsComponent implements OnInit {
       displayText: [''],
       postback: [''],
       url: [''],
-      phoneNumber:['']
+      phoneNumber: [''],
+      // displayTextCustomParam:[],
+      // postbackCustomParam:[],
+      // urlCustomParam:[]
     });
   }
   createCards(): FormGroup {
@@ -82,8 +102,13 @@ export class XiaomircsComponent implements OnInit {
       cardWidth: ['SMALL_WIDTH'],
       mediaHeight: ['SHORT_HEIGHT'],
       fileName: [],
+      mediaUrl: [null],
+      fileNameDisplay: [],
       cardtitle: [],
-      cardDescription: []
+      cardDescription: [],
+      // mediaFileOriginalName: [''],
+      // cardTitleCustomParam:[],
+      // cardDescriptionCustomParam:[],
     });
   }
   tabs = [];
@@ -101,18 +126,19 @@ export class XiaomircsComponent implements OnInit {
   // Function to add a new row
   addRow() {
     let loopCount = this.templateForm.get('templateType').value == 'text_message' ? 10 : 4;
-    this.items = this.templateForm.get('items') as FormArray;
-    if (this.items.value.length < loopCount) {
-      this.items.push(this.createItem());
+    this.suggestions = this.templateForm.get('suggestions') as FormArray;
+    if (this.suggestions.value.length < loopCount) {
+      this.suggestions.push(this.createItem());
+      console.log(this.templateForm.get('suggestions'), "suggestions");
     }
   }
 
   // Function to remove the last row
   removeRow(index: number) {
-    this.items = this.templateForm.get('items') as FormArray;
+    this.suggestions = this.templateForm.get('suggestions') as FormArray;
     if (index > -1) {
-      console.log(index, this.items);
-      this.items.removeAt(index);
+      console.log(index, this.suggestions);
+      this.suggestions.removeAt(index);
     }
   }
 
@@ -135,6 +161,7 @@ export class XiaomircsComponent implements OnInit {
     }
     const templateNameControl = this.templateForm.get('cardtitle');
     templateNameControl.setValue(value);
+    // this.getStringBetweenBraces();
   }
 
   cardDescriptionCharacterCount(event: any) {
@@ -157,49 +184,86 @@ export class XiaomircsComponent implements OnInit {
 
   validateFile(input: any) {
     if (input.files && input.files[0]) {
+      this.templateForm.get('mediaFileOriginalName').patchValue(input.files[0].name);
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.fileName = e.target.result;
+        this.templateForm.get("fileName").setValue(input.files[0]);
       };
       reader.readAsDataURL(input.files[0]);
-    }
 
-    let maxImageSize = 2 * 1024 * 1024; // 2MB
-    let maxVideoSize = 10 * 1024 * 1024; // 10MB
+      let maxImageSize = 2 * 1024 * 1024; // 1MB
+      let file = input.files[0];
+      let fileSize = file.size;
+      let fileType = file.type.split('/')[0]; // 'image' or 'video'
 
-    let file = input.files[0];
-    let fileSize = file.size;
-    let fileType = file.type.split('/')[0]; // 'image' or 'video'
-
-    if (fileType === 'image' && fileSize > maxImageSize) {
-      console.log(maxImageSize, "maxImageSize");
-      this.fileSizeError = true;
-      this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 2MB.';
-      input.value = ''; // Clear the selected file
-    } else if (fileType === 'video' && fileSize > maxVideoSize) {
-      console.log(maxVideoSize, "maxVideoSize");
-      this.fileSizeError = true;
-      this.fileSizeErrorMessage = 'The selected video exceeds the maximum file size of 10MB.';
-      input.value = ''; // Clear the selected file
-    } else {
-      console.log("tjljljl");
-      this.fileSizeError = false;
-      this.fileSizeErrorMessage = '';
+      if (fileType !== 'image') {
+        this.fileSizeError = true;
+        this.fileSizeErrorMessage = 'Only image files are allowed.';
+        input.value = ''; // Clear the selected file
+      } else if (fileSize > maxImageSize) {
+        this.fileSizeError = true;
+        this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 1MB.';
+        input.value = ''; // Clear the selected file
+      } else {
+        // Check if the file name contains any special characters except underscore
+        const fileName = input.files[0].name;
+        const regex = /^[A-Za-z0-9_]+\.(jpg|jpeg|png|gif)$/; // Only allows alphanumeric characters and underscores in the file name, and specific image file extensions
+        if (!regex.test(fileName)) {
+          this.fileSizeError = true;
+          this.fileSizeErrorMessage = 'File names must contain only letters, numbers, and underscores, and end with a valid image file extension.';
+          input.value = ''; // Clear the selected file
+        } else {
+          this.fileSizeError = false;
+          this.fileSizeErrorMessage = '';
+        }
+      }
     }
   }
 
-  validateFileCr(input: any, index:any) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        console.log(e.target.result, 'fileName....')
-        const dataURL = e.target.result;
-        this.cardDetails.at(index).get('fileName').patchValue(input.files[0]);
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
 
-}
+  validateFileCr(input: any, index: any) {
+    console.log(input.files, "Fileeee");
+    if (input.files && input.files[0]) {
+      const reader1 = new FileReader();
+      reader1.onload = (e: any) => {
+        const dataURL = e.target.result;
+        this.cardDetails.at(index).get('fileName').patchValue(dataURL);
+        this.cardDetails.at(index).get('fileNameDisplay').patchValue(input.files[0]);
+        this.cardDetails.at(index).get('mediaFileOriginalName').patchValue(input.files[0].name);
+        console.log(this.cardDetails, "cardDetails")
+      };
+      reader1.readAsDataURL(input.files[0]);
+
+      let maxImageSize = 2 * 1024 * 1024; // 1MB
+      let file = input.files[0];
+      let fileSize = file.size;
+      let fileType = file.type.split('/')[0]; // 'image' or 'video'
+
+      if (fileType !== 'image') {
+        this.fileSizeError = true;
+        this.fileSizeErrorMessage = 'Only image files are allowed.';
+        input.value = ''; // Clear the selected file
+      } else if (fileSize > maxImageSize) {
+        this.fileSizeError = true;
+        this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 1MB.';
+        input.value = ''; // Clear the selected file
+      } else {
+        // Check if the file name contains any special characters except underscore
+        const fileName = input.files[0].name;
+        const regex = /^[A-Za-z0-9_]+\.(jpg|jpeg|png|gif)$/; // Only allows alphanumeric characters and underscores in the file name, and specific image file extensions
+        if (!regex.test(fileName)) {
+          this.fileSizeError = true;
+          this.fileSizeErrorMessage = 'File names must contain only letters, numbers, and underscores, and end with a valid image file extension.';
+          input.value = ''; // Clear the selected file
+        } else {
+          this.fileSizeError = false;
+          this.fileSizeErrorMessage = '';
+        }
+      }
+
+    }
+  }
 
 
   addCustomVariable(formCtrl) {
@@ -214,29 +278,36 @@ export class XiaomircsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.templateForm.get('cardDetails').value, 'cardDetails....');
-
+    this.templateCodeVal = true;
+    if (this.templateForm.invalid) {
+      return;
+    }
+    console.log(this.templateForm, "templateForm....");
     if (this.templateForm.valid) {
       let data = this.templateForm?.value;
       console.log(data, "Data....");
-      const tempData: Template = this.dataCreate(data);
-      console.log(this.templateForm, "templateForm");
+      let tempData: any = this.dataCreate(data);
       const body = JSON.stringify(tempData);
       const formData = new FormData();
       const cardDetails = this.templateForm.get('cardDetails').value;
-      if(cardDetails?.length){
+      if (cardDetails?.length) {
         cardDetails?.forEach(element => {
-          formData.append('files', element?.fileName);
+          formData.append('files', element?.fileNameDisplay);
         });
-      }else{
-        formData.append('files', this.templateForm?.get('fileName')?.value);
+      } else {
+        console.log(this.fileUrl, "files");
+        // let fName = this.updateFiles(this.fileUrl);
+        formData.append('files', this.templateForm.get('fileName').value);
+
       }
       formData.append('addTemplate', body?.toString());
+      console.log(formData, "templateForm");
       this.templateService.templateDataSubmit(formData).subscribe({
         next: (res: any) => {
           console.log(res, "Template....")
           this.alertService.successToaster('Template Created Successfully');
           this.templateForm.reset();
+          this.router.navigate(['/templateList']);
         },
         error: (error: string) => {
           if (error) {
@@ -247,59 +318,178 @@ export class XiaomircsComponent implements OnInit {
 
     }
   }
-  dataCreate(val: any): Template {
+  onCancel() {
+    window.location.reload();
+  }
+  // updateFiles(data) {
+  //   if (data['name'].includes('.jpeg')) {
+  //     let arr = data.name.split('.jpeg')
+  //     // data['name'] = arr[0] + moment().format('YYYY-MM-DD') + '.jpeg';
+  //     data.name = 'Hello';
+  //     console.log(arr[0] + new Date() + '.jpeg');
+  //   }
+  //   console.log(data['name']);
+  // }
+
+  getName(index) {
+    return 'Card ' + index;
+  }
+
+  removeTab(index: number) {
+    // this.tabs.splice(index, 1);
+    console.log(index, "Index..........");
+    if (this.cardDetails.length > 2) {
+      this.cardDetails.removeAt(index);
+      this.tabs.splice(index, 1);
+    }
+  }
+
+  extractVariables(inputString: string): string[] {
+    const regex = /\{([^}]+)\}/g;
+    const matches = [];
+    let match;
+    while ((match = regex.exec(inputString))) {
+      matches.push(match[1]);
+    }
+    return matches;
+  }
+
+  displayVariables(event: Event, formCtrl: any, flag: any, index?: any): any {
+    let inputElement = event.target as HTMLInputElement;
+    let inputString = inputElement.value;
+    let extractedVariables = this.extractVariables(inputString);
+    const temp: any = [];
+    extractedVariables?.forEach((item, idx) => {
+
+      if (idx >= 0) {
+        temp?.push(item);
+        console.log(item, idx, "item.....");
+      }
+    })
+    console.log(temp, "temp.....");
+    this.forTestVariable.push(...temp);
+
+    // var convertArrayToString = extractedVariables.reduce((current, value, index) => {
+    //   if (index > 0)
+    //     current?.push(value);
+
+    //   return current;
+    // }, []);
+    // this.cardDetailsArrayToString = convertArrayToString;
+    //console.log(convertArrayToString, "convertArrayToString....");
+    // let val;
+    // if (this.cardDetailsArrayToString) {
+    //   val = this.cardDetailsArrayToString.concat(",", convertArrayToString);
+    // }
+    // else {
+    //   val = convertArrayToString;
+    // }
+    // convertArrayToString = val;
+    // this.cardDetailsArrayToString = convertArrayToString;
+    if (flag == 1) {
+      this.templateForm.get(formCtrl).setValue(String(temp));
+      // String(temp) = convertArrayToString;
+    } else if (flag == 2) {
+      this.cardDetails.at(index).get(formCtrl).patchValue(String(temp));
+      // String(temp) = convertArrayToString;
+    } else {
+      this.suggestions.at(index).get(formCtrl).patchValue(String(temp));
+      // String(temp) = convertArrayToString;
+    }
+
+    // console.log('cardDetailsArrayToString....', String(temp) );
+    // console.log('Extracted Variables:', convertArrayToString);
+  }
+
+  dataCreate(val: any) {
+    let xyz: any = [];
+    const cardTitleCustomParam = this.extractVariables(this.templateForm.get('cardtitle').value);
+    const cardDescriptionCustomParam = this.extractVariables(this.templateForm.get('cardDescription').value);
+    const messageContentCustomParam = this.extractVariables(this.templateForm.get('messageContent').value);
+    xyz = [...cardTitleCustomParam, ...cardDescriptionCustomParam, ...messageContentCustomParam];
+
+    const cardDetails = this.templateForm.get('cardDetails').value;
+    cardDetails.forEach(element => {
+      const cardTitleCustomParam = this.extractVariables(element?.cardtitle);
+      const cardDescriptionCustomParam = this.extractVariables(element?.cardDescription);
+      if (cardTitleCustomParam?.length) {
+        xyz = [...xyz, ...cardTitleCustomParam]
+      }
+      if (cardDescriptionCustomParam?.length) {
+        xyz = [...xyz, ...cardDescriptionCustomParam]
+      }
+    });
+    
+    const suggestions = this.templateForm.get('suggestions').value;
+    suggestions.forEach(element => {
+      const displayTextCustomParam = this.extractVariables(element?.displayText);
+      const postbackCustomParam = this.extractVariables(element?.postback);
+      if (displayTextCustomParam?.length) {
+        xyz = [...xyz, ...displayTextCustomParam]
+      }
+      if (postbackCustomParam?.length) {
+        xyz = [...xyz, ...postbackCustomParam]
+      }
+    });
+
+   
+
+
+
+
+
+    // this.templateForm.get('cardTitleCustomParam').value;
+    const component = this;
     console.log(val, "VAAAA");
-    const obj: Template = {
+    const obj = {
       templateCode: val?.templateCode,
       templateType: val?.templateType,
-      templateMsgType: 'templateMsgType',
-      templeteJson: {
-        //botId: 12345,
-        cardTitle: val?.cardtitle,
-        textMessageContent: val?.cardDescription,
-        mediaFileOriginalName: 'mediaFileOriginalName',
-        // fileName: val?.fileName,
-        suggestions: val?.items,
-      } as TemplateJson
+      templateMsgType: val.templateMsgType,
+      templateCustomParam: String(xyz),
+      templateJson: {
+        botId: val.botId,
+        suggestions: val.suggestions
+      }
     }
 
     if (val?.templateType === 'rich_card') {
-      obj["standAlone"] = {
+      obj['templateJson']["standAlone"] = {
         cardTitle: val.cardtitle,
-        textMessageContent: val.cardDescription,
-        fileName: val.fileName,
-        suggestions: val.items
+        cardDescription: val.cardDescription,
+        mediaUrl: val.fileName,
+        mediaFileOriginalName: val.mediaFileOriginalName,
+        // templateCustomParam: this.cardDetailsArrayToString,
+        // cardTitleCustomParam:val.cardTitleCustomParam, 
+        // cardDescriptionCustomParam:val.cardDescriptionCustomParam, 
       }
-    } else if (val['templateType'] == 'carousel'){
-      obj["carouselList"] = {
-        cardTitle: val.cardtitle,
-        textMessageContent: val.cardDescription,
-        mediaFileOriginalName:'mediaFileOriginalName',
-        fileName:val.fileName,
-        suggestions: val.items
-      }
-    }
 
-    // obj.templeteJson = JSON.stringify(obj.templeteJson) as any;
+    } else if (val['templateType'] == 'carousel') {
+      obj['templateJson']["carouselList"] = val["cardDetails"].map(function (obj) {
+        return {
+          cardWidth: obj.cardWidth,
+          mediaHeight: obj.mediaHeight,
+          cardtitle: obj.cardtitle,
+          cardDescription: obj.cardDescription,
+          mediaFileOriginalName: obj.mediaFileOriginalName,
+
+          // templateCustomParam: component.cardDetailsArrayToString,
+          // cardTitleCustomParam:val.cardTitleCustomParam, 
+          // cardDescriptionCustomParam:val.cardDescriptionCustomParam, 
+        };
+      });
+
+    } else {
+      obj['templateJson']["messageContent"] = val.messageContent;
+      // obj['templateJson']["messageContentCustomParam"]= val.messageContentCustomParam;
+    }
+    obj.templateJson = JSON.stringify(obj.templateJson) as any;
     return obj;
   }
-  // }
-  // dataCreate(val) {
-  //   let obj = {
-  //    'name':val.templateCode,
-  //    'type':val.templateType,
-  //    'textMessageContent':val.cardDescription,
-  //    'botId':12345,
-  //    'suggestions':val.items
-  //   }
-  //   return obj;
-  // }
+
   goBack(): void {
     this.location.back();
   }
 
-  removeTab(index: number) {
-    this.tabs.splice(index, 1);
-  }
+
 
 }

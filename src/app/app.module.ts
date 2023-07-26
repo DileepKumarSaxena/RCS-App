@@ -43,8 +43,11 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { TemplateListComponent } from './components/template-list/template-list.component';
 import { HttpConfigInterceptor } from './_interceptors/http-config.interceptor';
-import { HttpErrorInterceptor } from './_interceptors/http-error.interceptor';
+// import { HttpErrorInterceptor } from './_interceptors/http-error.interceptor';
 import { SpinnerInterceptorService } from './_interceptors/spinner.interceptor';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import {NgxPaginationModule} from 'ngx-pagination'
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -83,7 +86,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
         MatTabsModule,
-        MatTooltipModule
+        MatTooltipModule,
+        NgxPaginationModule
+        
+        
     ],
 
     
@@ -104,10 +110,12 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         TemplateComponent,
         LoaderComponent,
         TemplateListComponent,
+        ResetPasswordComponent,
+        ForgotPasswordComponent
     
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        // { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptorService, multi: true },
 

@@ -16,7 +16,7 @@ export class ReportsService extends BaseService{
   //Api for Detail_Report
 
   getDeatilReport(username, fromDate, toDate) {
-    const url = 'https://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+    const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -37,7 +37,7 @@ export class ReportsService extends BaseService{
 //Api for Summary_Report
 
   getSummaryReport(username, fromDate, toDate) {
-    const url = 'https://fuat.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
+    const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,

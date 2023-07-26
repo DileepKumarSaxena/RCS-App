@@ -20,7 +20,7 @@ mat-form-field {
 
 .horizontal-scroll-table {
     overflow-x: auto;
-    display: block;
+    // display: block;
     white-space: nowrap;
 }
 
@@ -29,5 +29,14 @@ mat-form-field {
     word-break: break-word;
 }
 
+.paging{
+    background-color: blue;
+    color: white;
+    // margin-left: 100%;
+ 
+}
+.page{
+    margin-left: 88%;
+}
   
   

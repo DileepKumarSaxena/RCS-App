@@ -20,9 +20,22 @@ export class CreateCampaignComponent {
   isHidden2: any;
   actionBtn: string = "Submit";
   cmpId: any;
+  
   selectedOption: any;
   minDate: any = moment().format('YYYY-MM-DD');
+  campaignType: any = [
+    { campaignType: 'Transactional', campaignName: 'Trans' },
+    { campaignType: 'Promotional', campaignName: 'Pro' }
+  ]
 
+  campaignSend: any = [
+    { campaignSend: 'Static', campaignName: 'Stat' },
+    { campaignSend: 'Dynamic', campaignName: 'Dyan' }
+  ]
+
+
+  campType: FormControl;
+  campSend :FormControl;
 
   constructor(
     private formbuilder: FormBuilder,
@@ -66,18 +79,20 @@ export class CreateCampaignComponent {
 
   createCampaignForm() {
     this.campaignForm = this.formbuilder.group({
-      userId: [1],
+      userId: sessionStorage.getItem('userId'),
       campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       description: [],
-      messageJson: [],
+      // messageJson: [],
       campaignStartTime: [],
       campaignEndTime: [],
       campaignStatus: ['Active'],
       isDeleted: [0],
       usageType: [0],
       channelPriorityScheme: ['Auto'],
-      messageId: [],
-      templateId: []
+      messageId: 1,
+      templateId: [],
+      // campSend:[]
+     
 
     })
 
@@ -86,7 +101,7 @@ export class CreateCampaignComponent {
 
   checkDuplicateName() {
     this.existingCampaignNames = [];
-    const userId = 1;
+    const userId = sessionStorage.getItem('userId');
     const campName = this.campaignForm.value.campaignName;
     this.campaignService.getAllTheCampaignList(userId, campName).subscribe({
       next: (res) => {

@@ -13,6 +13,8 @@ import { LeadComponent } from './components/lead/lead.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
 import { TemplateComponent } from './components/template/template.component';
 import { TemplateListComponent } from './components/template-list/template-list.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 const routes: Routes = [
     { path: '', component: TemplateListComponent, canActivate: [AuthGuard] },
@@ -29,6 +31,8 @@ const routes: Routes = [
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
+    { path: 'reset/password', component: ResetPasswordComponent , canActivate:[AuthGuard]  },
+    { path: 'forgot/password', component: ForgotPasswordComponent },
    
 
     // otherwise redirect to home

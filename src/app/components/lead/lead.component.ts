@@ -86,10 +86,10 @@ export class LeadComponent {
 
   getLeadList() {
     this.showLoader = true
-    let userId = 1;
+    // let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
-    this.leadService.getLeadlistDetails(userId, startDateVal, endDateVal).subscribe({
+    this.leadService.getLeadlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal).subscribe({
       next: (res: any) => {
         console.log(res['Lead Info'], "REEEEEE");
         this.leadData = res['Lead Info'];

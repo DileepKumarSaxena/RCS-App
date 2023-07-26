@@ -17,5 +17,15 @@ export class TemplateService extends BaseService{
     return this.http.post(`${this.baseUrlData + 'addTemplate'}`, formData );
   }
 
+  getTemplatelistDetails(templateUserId, limit, start, pageIndex: number, pageSize: number ) {
+    let httpParams = new HttpParams()
+    httpParams = httpParams.append("limit", limit);
+    httpParams = httpParams.append("start", start);
+    httpParams = httpParams.append("templateUserId", templateUserId);
+    httpParams = httpParams.append("pageIndex", pageIndex.toString());
+    httpParams = httpParams.append("pageSize", pageSize.toString());
+    return this.http.get(`${this.baseUrlData + 'findAllTemplate'}`, { params: httpParams });
+  }
  
+
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../_services';
 
 @Component({
@@ -51,6 +50,7 @@ export class LoginComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
+
             return;
         }
 
@@ -60,13 +60,22 @@ export class LoginComponent implements OnInit {
             .subscribe({
 
                 next: (res) => {
+                    sessionStorage.setItem('userId', res.userId);
+                    sessionStorage.setItem('botId', res.botId);
+                    
                     console.log(res, "Data===>");
-                    this.router.navigate(['/vircs']);
+                    this.router.navigate(['/templateList']);
 
                 },
+
                 error: (err) => {
+
                     console.log(err, "err===>");
                     this.error = ('Username or password is incorrect');
+
+                    // if(Response['status'] == 403){
+                    //     this.error = ('Username or password is incorrect'); 
+                    // }
                     this.loading = false;
                 }
             })
