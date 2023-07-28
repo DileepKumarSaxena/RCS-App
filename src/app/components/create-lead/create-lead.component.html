@@ -130,13 +130,16 @@
                             </div> -->
 
                             <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
-                                <input class="custom-date-range-input" type="datetime-local"
-                                    formControlName="scheduleStartDtm" [min]="minDate" placeholder="YYYY-MM-DD">
-                            </div>
-                            <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
-                                <input class="custom-date-range-input" type="datetime-local"
-                                    formControlName="scheduleEndDtm" [min]="minDate" placeholder="YYYY-MM-DD">
-                            </div>
+                                <label for="scheduleStartDtm" class="custom-date-label">Start Date:</label>
+                                <input id="scheduleStartDtm" class="custom-date-range-input" type="datetime-local"
+                                       formControlName="scheduleStartDtm" [min]="minDate" placeholder="YYYY-MM-DD">
+                              </div>
+                              <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
+                                <label for="scheduleEndDtm" class="custom-date-label">End Date:</label>
+                                <input id="scheduleEndDtm" class="custom-date-range-input" type="datetime-local"
+                                       formControlName="scheduleEndDtm" [min]="minDate" placeholder="YYYY-MM-DD">
+                              </div>
+                              
                             <div class="col-sm-4">
                                 <button class="btn btn-success submit" type="submit" id="smbtbtn"
                                     [disabled]="leadForm.status === 'INVALID'">{{actionBtn}}</button>
