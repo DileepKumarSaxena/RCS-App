@@ -23,14 +23,15 @@ export class LeadService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'leadInfo'}`, formData);
   }
 
-  getLeadlistDetails(userId, fromDate, toDate) {
+  getLeadlistDetails(userId, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
     httpParams = httpParams.append("userId", userId);
-    httpParams = httpParams.append("start","100");
-    httpParams = httpParams.append("limit","1000");
-
+    httpParams = httpParams.append("limit", limit);
+    httpParams = httpParams.append("start", start);
+    httpParams = httpParams.append("pageIndex", pageIndex.toString());
+    httpParams = httpParams.append("pageSize", pageSize.toString());
     return this.http.get(`${this.baseUrlData + 'leadInfoList'}`, { params: httpParams });
   }
 
@@ -56,7 +57,7 @@ export class LeadService extends BaseService {
     return this.campaignListSubject$.asObservable();
   }
   setCampaignList() {
-    let userId = 1;
+    let userId = sessionStorage.getItem('userId');
     this.getAllTheCampaignTypesList(userId).subscribe((res) => {
       return this.campaignListSubject$.next(res);
     });

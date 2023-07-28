@@ -34,41 +34,10 @@ export class TemplateListComponent {
     this.paginator.pageSize = 5;
     this.getTemplateList();
   }
-
-  // getTemplateList() {
-  //   this.showLoader=true
-  //   let templateUserId = sessionStorage.getItem('userId');
-  //   let limit = "20";
-  //   let start = "1";
-  //   // let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
-  //   // let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
-  //   this.ngxService.start();
-  //   this.templateService.getTemplatelistDetails(templateUserId, limit, start).subscribe({
-  //     next: (res: any) => {
-  //       this.templateData = res.template;
-  //       this.dataSource.data = this.templateData;
-  //       this.dataSource.paginator = this.paginator;
-  //       this.dataSource.sort = this.sort;
-  //       this.showLoader=false
-    
-  //     },
-  //     error: (err) => {
-  //       this.templateData = [];
-  //       this.dataSource.data = this.templateData;
-  //       this.dataSource.paginator = this.paginator;
-  //       this.dataSource.sort = this.sort;
-  //       console.log(err, "Error while fetching the records.");
-  //       this.showLoader=false
-  //     }
-  //   });
-  // }
-
   getTemplateList() {
     this.showLoader = true;
     let templateUserId = sessionStorage.getItem('userId');
-    let limit = this.paginator.pageSize.toString();
-    // let start = (this.paginator.pageIndex * this.paginator.pageSize).toString();
-    
+    let limit = this.paginator.pageSize.toString();  
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
     this.templateService.getTemplatelistDetails(templateUserId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({

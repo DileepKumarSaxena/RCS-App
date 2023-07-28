@@ -61,10 +61,11 @@ export class LoginComponent implements OnInit {
 
                 next: (res) => {
                     sessionStorage.setItem('userId', res.userId);
+                    sessionStorage.setItem('username', res.result.username);
                     sessionStorage.setItem('botId', res.botId);
                     
                     console.log(res, "Data===>");
-                    this.router.navigate(['/templateList']);
+                    this.router.navigate(['/dasboard']);
 
                 },
 

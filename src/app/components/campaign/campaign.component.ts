@@ -12,7 +12,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader'
 import { Location } from '@angular/common';
 import { data } from 'jquery';
 import { Subscription } from 'rxjs';
-
 @Component({
   selector: 'app-campaign',
   templateUrl: './campaign.component.html',
@@ -36,7 +35,7 @@ export class CampaignComponent {
   dataSource!: MatTableDataSource<any>;
   config: any;
   currentPage: number = 1;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   // ngAfterViewInit() {
@@ -77,6 +76,8 @@ export class CampaignComponent {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<any>();
+    this.paginator.pageIndex =0;
+    this.paginator.pageSize = 5;
     this.createCampaignForm();
     this.getCampaignList();
   }
@@ -94,6 +95,8 @@ export class CampaignComponent {
 
     this.showLoader = true;
     // let userId = 1;
+    let limit = this.paginator.pageSize.toString();  
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
     this.ngxService.start();
@@ -101,13 +104,14 @@ export class CampaignComponent {
     // const pageSize = this.paginator.pageSize;
 
 
-        this.subscription.add(this.campaignservice.getCampaignlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal,this.currentPage, this.config.itemsPerPage)
+        this.subscription.add(this.campaignservice.getCampaignlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal,limit, start, this.paginator.pageIndex, this.paginator.pageSize)
       .subscribe({
        
         next: (res: any) => {
           this.campaignData = res.Campaign;
           this.dataSource.data = this.campaignData;
           this.totalItems = res.campaignData
+          this.paginator.length = res.totalCount;
           this.showLoader = false;
           // this.pageIndex = res.campaignData;
         },
@@ -204,10 +208,11 @@ export class CampaignComponent {
   }
 
 
-  pageChanged(event){
-    this.config.currentPage = event;
-    this.currentPage = 1 + ((event - 1) * this.config.itemsPerPage);
+  onPageChanged(event: PageEvent) {
     this.getCampaignList();
   }
 
+  
+
+ 
 }

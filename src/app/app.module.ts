@@ -47,8 +47,8 @@ import { HttpConfigInterceptor } from './_interceptors/http-config.interceptor';
 import { SpinnerInterceptorService } from './_interceptors/spinner.interceptor';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import {NgxPaginationModule} from 'ngx-pagination'
-
+import { DasboardComponent } from './components/dasboard/dasboard.component';
+import { NgChartsModule } from 'ng2-charts';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
     bgsPosition: POSITION.bottomCenter,
@@ -87,7 +87,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
         MatTabsModule,
         MatTooltipModule,
-        NgxPaginationModule
+        NgChartsModule
         
         
     ],
@@ -111,7 +111,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         LoaderComponent,
         TemplateListComponent,
         ResetPasswordComponent,
-        ForgotPasswordComponent
+        ForgotPasswordComponent,
+        DasboardComponent
     
     ],
     providers: [

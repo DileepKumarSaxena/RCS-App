@@ -1,67 +1,52 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="currentUser && !isLoginPage() && !isResetPage()">
-  <a class="navbar-brand" href="#">Fonada - Digital SMS </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/templateList']" [ngClass]="{ 'active': isActive('/templateList') }">Template</a>
-      </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/template']" [ngClass]="{ 'active': isActive('/template') }">Template Old</a>
-      </li> -->
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/campaignList']" [ngClass]="{ 'active': isActive('/campaignList') }">Campaign</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/leadList']" [ngClass]="{ 'active': isActive('/leadList') }">Lead</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/detailreport']" [ngClass]="{ 'active': isActive('/detailreport') }">Detailed Report</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/Summary']" [ngClass]="{ 'active': isActive('/Summary') }">Summary Report</a>
-      </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="tel:7479574795"><i class="fa fa-phone"></i> 7479574795</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="mailto:info@fonada.com"><i class="fa fa-envelope"></i> info@fonada.com</a>
-      </li> -->
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <button class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-2" (click)="resetPassword()">Change Password</button>
-         <button class="btn btn-outline-success btn-sm my-2 my-sm-0" (click)="logout()">Logout</button>
-
-         <!-- <mat-form-field >
-          <div class="dropdown" (click)="toggleDropdown()">
-            <i class="fa fa-user dropdown-icon" style="font-size: 48px; color: white;"></i>
-            <div class="dropdown-content" *ngIf="showDropdown" (click)="closeDropdown($event)">
-              <mat-select>
-                <mat-option value="option1">            <button class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-5" (click)="resetPassword()">Change Password</button></mat-option>
-                <mat-option value="option2">     <button class="btn btn-outline-success btn-sm my-2 my-sm-0" (click)="logout()">Logout</button></mat-option>
-      
-              </mat-select>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar" *ngIf="currentUser && !isLoginPage() && !isResetPage()">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="../assets/logo.svg" alt="Logo" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/dasboard']" [ngClass]="{ 'active': isActive('/dasboard') }">Dasboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/templateList']" [ngClass]="{ 'active': isActive('/templateList') }">Template</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/campaignList']" [ngClass]="{ 'active': isActive('/campaignList') }">Campaign</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/leadList']" [ngClass]="{ 'active': isActive('/leadList') }">Lead</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reports
+          </a>
+          <div class="dropdown-menu custom-dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="nav-link" [routerLink]="['/detailreport']" [ngClass]="{ 'active': isActive('/detailreport') }">Detailed Report</a>
+            <a class="nav-link" [routerLink]="['/Summary']" [ngClass]="{ 'active': isActive('/Summary') }">Summary Report</a>
           </div>
-       
-        </mat-form-field> -->
-    </form>
+        </li>
+      </ul>
+    </div>
+    <!-- User Profile Section -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <strong>{{ currentUser.result.username | uppercase}}</strong>  <i class="fa fa-user-circle"></i>
+        </a>
+        <div class="dropdown-menu custom-dropdown-menu dropdown-menu-right" aria-labelledby="userProfileDropdown">
+          <a class="dropdown-item" (click)="resetPassword()">Change Password</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+        </div>
+      </li>
+    </ul>
   </div>
 </nav>
 
-<!-- <div class="container-fluid h-100">
-  <div class="row">
-    <div class="col-sm-3">
-      <app-navigation></app-navigation>
-    </div>
-    <div class="col-sm-9">
-      <app-xiaomircs></app-xiaomircs>
-    </div>
-  </div>
-</div> -->
 
 
 

@@ -74,15 +74,15 @@ export class CampaignService extends BaseService {
 
   //http://fuat.flash49.com/rcsmsg/campaign/findAllCapmaingList?userId=1&startDate=2023-07-24&endDate=2023-07-24&limit=5&start=0
 
-  getCampaignlistDetails(userId: any, startDate: string, endDate: string, start: number, limit: number): Observable<any> {
+  getCampaignlistDetails(userId: any, startDate: string, endDate: string, limit, start, pageIndex: number, pageSize: number): Observable<any> {
     let httpParams = new HttpParams()
     .append("from", startDate)
     .append("to", endDate)
       .append("userId", userId)
       .append("limit", limit)
       .append("start", start)
-      
-
+      httpParams = httpParams.append("pageIndex", pageIndex.toString());
+      httpParams = httpParams.append("pageSize", pageSize.toString());
     return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
     
   }
@@ -97,6 +97,18 @@ export class CampaignService extends BaseService {
 
   getCampaignData(campaignId: any) {
     return this.http.get(`${this.baseUrlData + 'findCampaignById?Id=' + campaignId}`);
+  }
+
+  getData(startDate: string, endDate: string): Observable<any> {
+    let httpParams = new HttpParams()
+    .append("from", startDate)
+    .append("to", endDate)
+      .append("userId", 1)
+      .append("start", 0)
+      .append("limit", 0)
+    
+    return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
+    
   }
 
 }

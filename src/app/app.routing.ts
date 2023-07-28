@@ -15,9 +15,11 @@ import { TemplateComponent } from './components/template/template.component';
 import { TemplateListComponent } from './components/template-list/template-list.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { DasboardComponent } from './components/dasboard/dasboard.component';
 
 const routes: Routes = [
-    { path: '', component: TemplateListComponent, canActivate: [AuthGuard] },
+    { path: '', component: DasboardComponent, canActivate: [AuthGuard] },
+    { path: 'dasboard', component: DasboardComponent, canActivate: [AuthGuard] },
     { path: 'templateList', component: TemplateListComponent, canActivate: [AuthGuard] },
     { path: 'addTemplate', component: XiaomircsComponent, canActivate: [AuthGuard] },
     { path: 'Summary', component: GooglercsComponent, canActivate: [AuthGuard] },

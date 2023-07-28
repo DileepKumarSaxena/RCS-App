@@ -7,7 +7,7 @@ import { ReportsService } from 'src/app/services/reports.service';
 import { Location } from '@angular/common';
 import moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
@@ -21,7 +21,7 @@ import { CampaignService } from '@app/services/campaign.service';
 export class CampaignlogsComponent {
   detailListForm: FormGroup;
   public showLoader = false;
-  @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
+  @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   detailData: any;
   moment: any = moment;
   
@@ -31,7 +31,6 @@ export class CampaignlogsComponent {
   displayedColumns: string[] = ['id', 'created_by', 'created_date', 'last_modified_date', 'lead_id', 'phone_number', 'phone_number_status', 'status'];
   dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
@@ -44,8 +43,10 @@ export class CampaignlogsComponent {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<any>();
+    this.paginator.pageIndex =0;
+    this.paginator.pageSize = 5;
     this.detailReport();
-    this.getdetailList();
+    this.getDetailList();
   }
 
 
@@ -57,19 +58,20 @@ export class CampaignlogsComponent {
       endDate: moment().format('YYYY-MM-DD')
     })
   }
-  getdetailList() {
+  getDetailList() {
     this.showLoader=true
-    let username = 'Admin';
+    let username = sessionStorage.getItem('username');
     let startDateVal = moment(this.detailListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.detailListForm.value.endDate).format('YYYY-MM-DD');
+    let limit = this.paginator.pageSize.toString();  
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
-    this.reportservice.getDeatilReport(username, startDateVal, endDateVal).subscribe({
+    this.reportservice.getDeatilReport(username, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
        
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.paginator.length = res.request_status;
         // this.ngxService.stop();
         this.showLoader=false
     
@@ -85,6 +87,9 @@ export class CampaignlogsComponent {
         this.showLoader=false
       }
     });
+  }
+  onPageChanged(event: PageEvent) {
+    this.getDetailList();
   }
   editRow(data) {
     this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });

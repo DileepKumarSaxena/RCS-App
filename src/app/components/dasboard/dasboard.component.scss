@@ -1,0 +1,117 @@
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(0, 34, 51, 0.1);
+    box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
+    border-radius: 0.15rem;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+h2.custom-header-title {
+    margin-bottom: 0;
+    color: var(--heading-color);
+
+    small {
+        font-size: 12px;
+        color: #959595;
+    }
+}
+
+.custom-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-fields-container {
+    mat-form-field+mat-form-field {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    button {
+        position: relative;
+        top: 10px;
+    }
+}
+
+// ::ng-deep .mat-mdc-text-field-wrapper {
+//     height: 40px !important;
+// }
+
+// ::ng-deep .mat-mdc-form-field-flex {
+//     margin-top: -7px !important;
+// }
+
+.input-fields-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.custom-card-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    font-size: 13px;
+    color: #959595;
+
+    div {
+        width: 100%;
+        padding: 24px;
+        background-color: var(--dasboard-card-bg);
+        box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
+        margin-right: 15px;
+        text-align: center;
+        border-top-right-radius: 30px;
+        border-bottom-left-radius: 30px;
+
+        &:hover{
+            border-top-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        strong {
+            font-size: 36px;
+            margin-bottom: 15px;
+            float: left;
+            width: 100%;
+        }
+
+        .total-message-sent {
+            color: #343a40;
+        }
+
+        .total-submited {
+            color: #f3bb45;
+        }
+
+        .total-delivered {
+            color: #68b3c8;
+        }
+
+        .total-rejected {
+            color: #eb5e28;
+        }
+
+        .total-balance {
+            color: #7ac29a;
+        }
+    }
+}
+
+.chart-section {
+    padding: 24px;
+}

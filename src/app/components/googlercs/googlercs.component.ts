@@ -4,7 +4,7 @@ import { ReportsService } from 'src/app/services/reports.service';
 import { Location } from '@angular/common';
 import moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 export class GooglercsComponent {
   summaryListForm: FormGroup;
   public showLoader = false;
-  @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
+  @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   summaryData: any;
   moment: any = moment;
   
@@ -24,7 +24,6 @@ export class GooglercsComponent {
   displayedColumns: string[] = ['id','created_date', 'lead_name', 'last_modified_date', 'status', 'TOTAL', 'campaing_name'];
   dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
@@ -37,6 +36,8 @@ export class GooglercsComponent {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<any>();
+    this.paginator.pageIndex =0;
+    this.paginator.pageSize = 5;
     this.summaryReport();
     this.getSummaryList();
   }
@@ -55,14 +56,15 @@ export class GooglercsComponent {
     let username = 'Admin';
     let startDateVal = moment(this.summaryListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.summaryListForm.value.endDate).format('YYYY-MM-DD');
+    let limit = this.paginator.pageSize.toString();  
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
-    this.reportservice.getSummaryReport(username, startDateVal, endDateVal).subscribe({
+    this.reportservice.getSummaryReport(username, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
        
         this.summaryData = res.data;
         this.dataSource.data = this.summaryData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.paginator.length = res.request_status;
         // this.ngxService.stop();
         this.showLoader=false
     
@@ -78,6 +80,9 @@ export class GooglercsComponent {
         this.showLoader=false
       }
     });
+  }
+  onPageChanged(event: PageEvent) {
+    this.getSummaryList();
   }
   // editRow(data) {
   //   this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });

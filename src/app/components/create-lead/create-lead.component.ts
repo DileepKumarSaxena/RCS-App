@@ -92,7 +92,7 @@ export class CreateLeadComponent {
 
   createLeadForm() {
     this.leadForm = this.formbuilder.group({
-      userId: [1],
+      userId: sessionStorage.getItem('userId'),
       campaignId: ['', [Validators.required]],
       leadName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       file: [null, [Validators.required, this.validateFileFormat()]],
@@ -238,8 +238,8 @@ export class CreateLeadComponent {
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;
       let isDuplicateValue = this.leadForm.get('isDuplicate').value;
-      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
-      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DD HH:mm:ss') : null;
+      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ss') : null;
       let formData = this.createLeadData(data);
 
       if (this.leadID) {
@@ -337,10 +337,10 @@ export class CreateLeadComponent {
       }
     } else if (dataVal['leadExecutionType'] == 'save') {
       obj["leadSchedule"] = {
-        "scheduleStartDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
+        "scheduleStartDtm": moment().format('YYYY-MM-DD HH:mm:ss'),
         "windowRequired": "N",
         "scheduleDay": "6",
-        "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
+        "scheduleEndDtm": moment().format('YYYY-MM-DD HH:mm:ss'),
         "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }

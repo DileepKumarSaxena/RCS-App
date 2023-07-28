@@ -1,0 +1,50 @@
+.dropdown-menu.show {
+    a {
+        color: #333;
+    }
+}
+
+.dropdown-menu-right {
+    a {
+        cursor: pointer;
+    }
+}
+
+.custom-navbar {
+    background-color: #ECFFFB;
+    min-height: 80px;
+
+}
+
+
+.custom-navbar .navbar-brand {
+    font-size: 24px;
+}
+
+.custom-dropdown-menu {
+    background-color: #5FC29F;
+}
+
+.custom-dropdown-menu a {
+    color: #fff;
+}
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+    background-color: #5fc29f;
+}
+
+.dropdown-menu.show a {
+    color: #fff;
+
+}
+
+.dropdown-toggle {
+    i {
+        font-size: 18px;
+    }
+
+    strong {
+        margin-right: 5px;
+    }
+}

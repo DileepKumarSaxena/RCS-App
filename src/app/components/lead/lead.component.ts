@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -33,10 +33,10 @@ export class LeadComponent {
   campaignList: any;
   moment: any = moment;
 
-  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm'];
+  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers'];
   dataSource!: MatTableDataSource<any>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
 
@@ -53,10 +53,13 @@ export class LeadComponent {
 
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<any>();
+    this.paginator.pageIndex =0;
+    this.paginator.pageSize = 5;
     this.createCampaignForm();
     this.campaignListData();
     this.getLeadList();
-    this.dataSource = new MatTableDataSource<any>();
+   
   }
 
   
@@ -89,13 +92,14 @@ export class LeadComponent {
     // let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
-    this.leadService.getLeadlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal).subscribe({
+    let limit = this.paginator.pageSize.toString();  
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    this.leadService.getLeadlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         console.log(res['Lead Info'], "REEEEEE");
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.paginator.length = res.totalCount;
         this.showLoader = false;
       },
       error: (err) => {
@@ -103,6 +107,9 @@ export class LeadComponent {
         this.showLoader = false
       }
     });
+  }
+  onPageChanged(event: PageEvent) {
+    this.getLeadList();
   }
   editRow(data) {
     this.router.navigate(['/lead/edit'], { queryParams: { id: data } });

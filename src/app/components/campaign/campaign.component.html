@@ -51,15 +51,9 @@
 
       <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
-        <br>
-        <p class="show-entries ml-3">Show Entries
-          <select class="pagination-length" (change)="pageSizeChange($event)" #paginationCount>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        </p>
+        
         <div class="card-body">
+          
           <mat-form-field>
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="filterDataByCampaignName()" placeholder="Ex. Campaign Name" #input>
@@ -137,28 +131,22 @@
 
             </table>
             <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div>
-            <br><br>
-         
+             
             <!-- <mat-paginator #paginatorRef (page)="onPaginateChange($event)" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" [length]="totalItems"></mat-paginator> -->
             <div>
-              <!-- <pagination-controls (pageChange)="pageChanged($event)"
-              [length]="totalItems"
-            responsive="true" #paginatorRef 
-            previousLabel="Prev"
-            nextLabel="Next"></pagination-controls> -->
+              <mat-paginator #paginatorRef
+              [pageIndex]="paginator.pageIndex"
+              [pageSize]="paginator.pageSize"
+              [pageSizeOptions]="[5, 10, 20, 50]"
+              [length]="paginator.length" 
+              (page)="onPageChanged($event)">
+            </mat-paginator>
 
             </div>
             
           </div>
          <br>
-
-
-         <div class="page">
-          <button class="paging" (click)="getCampaignList()">Prev</button>&nbsp;
-          <button class="paging" (click)="getCampaignList()" >Next</button>
-         </div>
-      
-         
+        
         </div>
       </div>
     </div>
