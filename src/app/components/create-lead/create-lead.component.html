@@ -38,7 +38,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Lead Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Lead name"
-                                        (blur)="checkDuplicateName()"  maxlength="255" formControlName="leadName" />
+                                        (blur)="checkDuplicateName()" maxlength="50" formControlName="leadName" />
                                     <!-- <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
                                         Lead name is required
                                     </mat-error> -->
@@ -62,14 +62,17 @@
                             <div class=" col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group custom-file-button">
-                                      <input type="file" class="form-control" id="inputGroupFile" formControlName="file" accept=".csv" required (change)="uploadCsvFile($event)">
-                                      <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                        <input type="file" class="form-control" id="inputGroupFile"
+                                            formControlName="file" accept=".csv" required
+                                            (change)="uploadCsvFile($event)">
+                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
-                                  </div>
-                                  <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent" class="text-danger invalid-format">
+                                </div>
+                                <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent"
+                                    class="text-danger invalid-format">
                                     Invalid column value. Please ensure all values in the CSV file column are numbers.
-                                  </div>
-                                  
+                                </div>
+
                                 <div class="toggleRow">
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" [(ngModel)]="switchState" class="custom-control-input"
@@ -91,12 +94,15 @@
                                 </div>
                                 <ng-template #validFileContent>
                                     <div class="progress">
-                                      <div class="progress-bar progress-bar-green" role="progressbar" [style.width.%]="leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress" [style.display]="leadForm.get('file').hasError('invalidColumnValue') ? 'none' : 'block'">
-                                        {{ leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress }}%
-                                      </div>
+                                        <div class="progress-bar progress-bar-green" role="progressbar"
+                                            [style.width.%]="leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress"
+                                            [style.display]="leadForm.get('file').hasError('invalidColumnValue') ? 'none' : 'block'">
+                                            {{ leadForm.get('file').hasError('invalidColumnValue') ? 0 : uploadProgress
+                                            }}%
+                                        </div>
                                     </div>
-                                  </ng-template>
-                                  
+                                </ng-template>
+
                             </div>
                         </div>
                         <br>
@@ -110,7 +116,7 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
+                            <!-- <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker" [min]="minDate">
@@ -121,12 +127,17 @@
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
+                            </div> -->
+
+                            <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
+                                <input class="custom-date-range-input" type="datetime-local"
+                                    formControlName="scheduleStartDtm" [min]="minDate" placeholder="YYYY-MM-DD">
                             </div>
-
-
-
+                            <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
+                                <input class="custom-date-range-input" type="datetime-local"
+                                    formControlName="scheduleEndDtm" [min]="minDate" placeholder="YYYY-MM-DD">
+                            </div>
                             <div class="col-sm-4">
-
                                 <button class="btn btn-success submit" type="submit" id="smbtbtn"
                                     [disabled]="leadForm.status === 'INVALID'">{{actionBtn}}</button>
 
@@ -138,7 +149,7 @@
             </div>
             <br>
             <br>
-            <div class="card bg-light text-dark">
+            <!-- <div class="card bg-light text-dark">
                 <div class="card-body">
                     <form [formGroup]="testLeadForm">
                         <div class="row">
@@ -172,7 +183,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> -->
             <br>
         </div>
     </div>

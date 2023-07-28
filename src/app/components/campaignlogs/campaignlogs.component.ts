@@ -28,7 +28,7 @@ export class CampaignlogsComponent {
  
  
 
-  displayedColumns: string[] = ['id', 'created_by', 'created_date', 'last_modified_date', 'lead_id', 'phone_number', 'phone_number_status', 'status'];
+  displayedColumns: string[] = ['id', 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;

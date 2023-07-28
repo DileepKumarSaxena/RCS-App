@@ -42,9 +42,16 @@
 .dropdown-toggle {
     i {
         font-size: 18px;
+        color: #5FC29F !important;
     }
 
     strong {
         margin-right: 5px;
+        color: #5FC29F !important;
     }
+}
+
+.active{
+    color: #5FC29F !important;
+    font-weight: 500;
 }

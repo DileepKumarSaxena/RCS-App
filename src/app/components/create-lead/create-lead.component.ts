@@ -37,7 +37,7 @@ export class CreateLeadComponent {
   selectedFile: any = null;
   numberList: any = [];
   file: File;
-  minDate: any = moment().format('YYYY-MM-DD');
+  minDate: string = moment().format('YYYY-MM-DDTHH:mm');
   allowedFileExtensions = ['csv'];
   uploadProgress: number = 0;
 
@@ -100,7 +100,9 @@ export class CreateLeadComponent {
       isDuplicate: [false],
       leadExecutionType: [],
       scheduleStartDtm: [],
-      scheduleEndDtm: []
+      scheduleEndDtm: [],
+      startTime: [],
+      endTime: []
     })
   }
   testLeadNumber() {
@@ -238,8 +240,8 @@ export class CreateLeadComponent {
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;
       let isDuplicateValue = this.leadForm.get('isDuplicate').value;
-      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DD HH:mm:ss') : null;
-      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ss') : null;
+      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       let formData = this.createLeadData(data);
 
       if (this.leadID) {
@@ -337,10 +339,10 @@ export class CreateLeadComponent {
       }
     } else if (dataVal['leadExecutionType'] == 'save') {
       obj["leadSchedule"] = {
-        "scheduleStartDtm": moment().format('YYYY-MM-DD HH:mm:ss'),
+        "scheduleStartDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowRequired": "N",
         "scheduleDay": "6",
-        "scheduleEndDtm": moment().format('YYYY-MM-DD HH:mm:ss'),
+        "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }

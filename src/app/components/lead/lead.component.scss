@@ -20,12 +20,16 @@ mat-form-field {
     }
 }
 
-.horizontal-scroll-table {
-    overflow-x: auto;
-    white-space: nowrap;
-  }  
+// .horizontal-scroll-table {
+//     overflow-x: auto;
+//     white-space: nowrap;
+//   }  
 
-  .mdc-data-table__cell{
-    white-space: normal;
-    word-break: break-word;
+//   .mdc-data-table__cell{
+//     white-space: normal;
+//     word-break: break-word;
+// }
+.action-list{
+  display: flex;
+  align-items: center;
 }

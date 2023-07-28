@@ -31,7 +31,7 @@ export class CampaignComponent {
   pageIndex = 0;
   existingCampaignNames: any = [];
   pageTotal:number
-  displayedColumns: string[] = ['id', 'campaignName','createdDate', 'description', 'templateName', 'usageType', 'actions'];
+  displayedColumns: string[] = ['id', 'campaignName','createdDate', 'description', 'templateName', 'actions'];
   dataSource!: MatTableDataSource<any>;
   config: any;
   currentPage: number = 1;

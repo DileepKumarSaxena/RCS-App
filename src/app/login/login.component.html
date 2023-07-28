@@ -29,7 +29,7 @@
                                             class="input-group-text">
                                             <i _ngcontent-xvv-c46="" aria-hidden="true" class="fa fa-user"></i>
                                         </span>
-                                        <input _ngcontent-xvv-c46="" type="text" formControlName="username"
+                                        <input _ngcontent-xvv-c46="" type="text" maxlength="30" formControlName="username"
                                             class="form-control"
                                             [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
                                             placeholder="Enter here"
@@ -46,7 +46,7 @@
                                     <div _ngcontent-xvv-c46="" class="input-group mb-3"><span _ngcontent-xvv-c46=""
                                             class="input-group-text"><i _ngcontent-xvv-c46="" aria-hidden="true"
                                                 class="fa fa-lock"></i></span><input _ngcontent-xvv-c46=""
-                                            type="password" formControlName="password" class="form-control"
+                                            type="password" formControlName="password" minlength="5" maxlength="30" class="form-control"
                                             [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                             placeholder="Enter here"
                                             class="form-control ps-0 ng-pristine ng-valid ng-touched">

@@ -28,7 +28,7 @@ import { CampaignComponent } from './components/campaign/campaign.component';
 import {MatIconModule} from '@angular/material/icon';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { MatInputModule } from '@angular/material/input';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {TextFieldModule} from '@angular/cdk/text-field';
@@ -76,8 +76,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatRadioModule,
         MatIconModule,
         MatInputModule,
-        OwlNativeDateTimeModule,
-        OwlDateTimeModule,
+        // OwlDateTimeModule,
+        // OwlNativeDateTimeModule,
         MatDatepickerModule,
         MatNativeDateModule,
         TextFieldModule,

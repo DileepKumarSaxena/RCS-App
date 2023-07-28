@@ -19,6 +19,14 @@ export class LeadService extends BaseService {
     return this.http.get(`${this.baseUrlData + 'checkIfLeadNameExists'}`, { params: httpParams });
   }
 
+
+  private URLS = 'http://fuat.flash49.com/rcsmsg/lead/action';
+  performActionOnLead(leadId: string, action: string): Observable<any> {
+    console.log(this.URLS, 'performActionOnLead');
+    return this.http.get(`${this.URLS}?action=${action}&leadId=${leadId}`);
+  }
+
+
   leadDataSubmit(formData: any): Observable<any> {
     return this.http.post(`${this.baseUrlData + 'leadInfo'}`, formData);
   }

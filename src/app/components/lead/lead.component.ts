@@ -10,11 +10,19 @@ import { NgxUiLoaderService } from 'ngx-ui-loader'
 import moment from 'moment';
 import { Location } from '@angular/common';
 
+interface LeadData {
+  leadId: string;
+  isStartDisabled: boolean;
+  isPauseDisabled: boolean;
+  isStopDisabled: boolean;
+}
+
 @Component({
   selector: 'app-lead',
   templateUrl: './lead.component.html',
   styleUrls: ['./lead.component.scss']
 })
+
 
 
 export class LeadComponent {
@@ -32,8 +40,9 @@ export class LeadComponent {
   leadForm: FormGroup;
   campaignList: any;
   moment: any = moment;
+  leadList: LeadData[] = [];
 
-  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers'];
+  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
@@ -86,7 +95,8 @@ export class LeadComponent {
     let val = this.campaignList.find(el => el.campaignId == id);
     return val['campaignName'];
   }
-
+ 
+  
   getLeadList() {
     this.showLoader = true
     // let userId = 1;
@@ -110,6 +120,49 @@ export class LeadComponent {
   }
   onPageChanged(event: PageEvent) {
     this.getLeadList();
+  }
+
+  performAction(leadId: string, action: string, data: LeadData) {
+    this.showLoader = true;
+  
+    this.leadService.performActionOnLead(leadId, action).subscribe({
+      next: (res: any) => {
+        this.updateButtonStates(action, data);
+        this.showLoader = false;
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+        this.showLoader = false;
+      },
+    });
+  }
+  
+  updateButtonStates(action: string, data: LeadData) {
+    // Reset all button states for all items
+    this.leadList.forEach((leadData) => {
+      leadData.isStartDisabled = false;
+      leadData.isPauseDisabled = false;
+      leadData.isStopDisabled = false;
+    });
+  
+    // Update the button state for the clicked item
+    switch (action) {
+      case 'Start':
+        data.isStartDisabled = true;
+        data.isPauseDisabled = false;
+        data.isStopDisabled = false;
+        break;
+      case 'Pause':
+        data.isStartDisabled = false;
+        data.isPauseDisabled = true;
+        data.isStopDisabled = false;
+        break;
+      case 'Stop':
+        data.isStartDisabled = true;
+        data.isPauseDisabled = true;
+        data.isStopDisabled = true;
+        break;
+    }
   }
   editRow(data) {
     this.router.navigate(['/lead/edit'], { queryParams: { id: data } });

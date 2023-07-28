@@ -17,7 +17,7 @@ export class TemplateListComponent {
   public showLoader = false;
   moment: any = moment;
   campaignListForm: FormGroup;
-  displayedColumns: string[] = ['id','templateCode', 'templateType', 'templateMsgType', 'status', 'inserttime', 'actions'];
+  displayedColumns: string[] = ['id','templateCode', 'templateType', 'templateMsgType', 'status', 'inserttime'];
   dataSource!: MatTableDataSource<any>;
   templateData:any;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
