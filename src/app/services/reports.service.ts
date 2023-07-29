@@ -14,8 +14,6 @@ export class ReportsService extends BaseService{
 
 
   //Api for Detail_Report
-  // http://fuat.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange?from=2023-05-29&to=2023-07-28&userId=1%27
-  // 'http://fuat.flash49.com/rcsmsg/lead/leadNameAndIdList?userId=1&campaignId=1' 
   private URLS = ' http://fuat.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange';
   dateRangeFilter(from: string, to: string, userId:string): Observable<any> {
     return this.http.get(`${this.URLS}?from=${from}&to=${to}&userId=${userId}`);
@@ -48,28 +46,48 @@ export class ReportsService extends BaseService{
   
     return this.http.post(url, data, httpOptions);
   }
-
-  // getDeatilReport(username, fromDate, toDate, clientId, limit, start, pageIndex: number, pageSize: number ) {
-  //   let httpParams = new HttpParams()
-  //   httpParams = httpParams.append("username", username);
-  //   httpParams = httpParams.append("fromDate", fromDate);
-  //   httpParams = httpParams.append("toDate", toDate);
-  //   httpParams = httpParams.append("clientId", clientId);
-  //   httpParams = httpParams.append("limit", limit);
-  //   httpParams = httpParams.append("start", start);
-  //   httpParams = httpParams.append("pageIndex", pageIndex.toString());
-  //   httpParams = httpParams.append("pageSize", pageSize.toString());
+  getSummaryData(username, fromDate, toDate) {
+    const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
+    const data = {
+      fromDate: fromDate,
+      toDate: toDate,
+      username: username,
+      clientId: 0,
+      role :0,
+       camId :0,
+    };
   
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json'
-  //     }),
-  //     params: httpParams
-  //   };
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
   
-  //   return this.http.get(`${this.baseUrlData}getRcsDetailedSmsReport`, httpOptions);
-  // }
+    return this.http.post(url, data, httpOptions);
+  }
+  getDetailData(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
+    const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+    const data = {
+      fromDate: fromDate,
+      toDate: toDate,
+      username: username,
+      camType:camType,
+      clientId: leadId,
+      camId: 0,
+      role: 0,
+      pageIndex: pageIndex,
+      pageSize: pageSize
+      
+    };
   
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+  
+    return this.http.post(url, data, httpOptions);
+  }
   
 //Api for Summary_Report
 

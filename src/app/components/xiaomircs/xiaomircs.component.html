@@ -182,13 +182,16 @@
                                                             <input type="text" formControlName="cardtitle"
                                                                 class="form-control" autocomplete="off"
                                                                 (input)="cardTitleCharacterCount($event)"
-                                                                (keyup)="displayVariables($event, 'cardTitleCustomParam', 2, i)">
+                                                                (keyup)="displayVariables($event, 'cardTitleCustomParam', 2, i)" required>
                                                             <div class="countAndVariable">
                                                                 <small>{{ templateForm.get('cardtitle').value.length
                                                                     }}/200 Characters used</small>
                                                                 <small>Add your custom variable like this <span
                                                                         class="variableName">variableName</span>.</small>
                                                             </div>
+                                                            <div *ngIf="templateCodeVal && templateForm.get('cardtitle').invalid" class="text-danger">
+                                                                Card Title is required.
+                                                              </div>
                                                         </div>
 
 
@@ -206,6 +209,9 @@
                                                                 <small>Add your custom variable like this <span
                                                                         class="variableName">variableName</span>.</small>
                                                             </div>
+                                                            <div *ngIf="templateCodeVal && templateForm.get('cardDescription').invalid" class="text-danger">
+                                                                Card Description is required.
+                                                              </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -225,13 +231,16 @@
                                         <label>Message Content <i class="fa fa-info-circle"></i></label>
                                         <textarea class="form-control" formControlName="messageContent" rows="3"
                                             (input)="messageContentCharacterCount($event)" 
-                                            (keyup)="displayVariables($event, 'messageContentCustomParam', 1)"></textarea>
+                                            (keyup)="displayVariables($event, 'messageContentCustomParam', 1)" required></textarea>
                                         <div class="countAndVariable">
                                             <small>{{ templateForm.get('messageContent').value.length }}/2500 Characters
                                                 used</small>
                                             <small>Add your custom variable like this <span
                                                     class="variableName">variableName</span>.</small>
                                         </div>
+                                        <div *ngIf="templateCodeVal && templateForm.get('messageContent').invalid" class="text-danger">
+                                            Message Content is required.
+                                          </div>
                                     </div>
                                 </div>
                             </div>

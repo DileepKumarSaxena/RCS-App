@@ -8,6 +8,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
+import * as Papa from 'papaparse';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-googlercs',
   templateUrl: './googlercs.component.html',
@@ -125,5 +127,89 @@ export class GooglercsComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  exportExcel(paginatorRef) {
+    this.showLoader = true
+    return this.get_download_Rcs_Summary_Details_file(paginatorRef);
+  
+  }
+  
+  
+  get_download_Rcs_Summary_Details_file(paginatorRef) {
+    this.showLoader = true
+    let username = sessionStorage.getItem('username');
+    let startDateVal = moment(this.summaryListForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.summaryListForm.value.endDate).format('YYYY-MM-DD');
+    let limit = this.paginator.pageSize.toString();  
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    this.ngxService.start();
+  
+    if (this.summaryListForm.value.fromDate !== '' && this.summaryListForm.value.toDate !== '') {
+      return this.reportservice.getSummaryData(username, startDateVal, endDateVal).subscribe((data_ar: any) => {
+        if (data_ar.data.length > 0) {
+          console.log("Campaign List::=>" + JSON.stringify(data_ar.data))
+          this.showLoader = false
+          data_ar = data_ar.data.map((e, i) => {
+  
+            const startingSerialNo = paginatorRef.pageIndex * paginatorRef.pageSize + 1;
+            // Map only the desired properties with custom header names
+            return {
+              // 'campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED',
+              'SL No.': startingSerialNo + i,
+              'Campaign Name': e.campaing_name,
+              'Lead Name': e.lead_name,
+              'Created Date': moment(e.Created_date).format('MM/DD/YYYY'),
+              'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
+              'Status': e.status,
+              'Total': e.TOTAL,
+              'SUBMITTED': e.SUBMITTED,
+              'Delivered': e.Delivered,
+              'Non RCS FAILED': e.NonRCS_FAILED,
+           
+              // Add more properties and header names as needed
+            };
+  
+  
+          });
+          console.log("Campaign List::=>" + JSON.stringify(data_ar))
+  
+          var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
+          var csvData = new Blob(['\uFEFF' + csv], {
+            type: 'text/csv;charset=utf-8;'
+          });
+          var downloadUrl = document.createElement('a');
+          downloadUrl.download = 'RCS_Summary_Report.csv';
+          downloadUrl.href = window.URL.createObjectURL(csvData);
+          downloadUrl.click();
+          this.showLoader = false
+        } else {
+          Swal.fire({
+            title: 'Data Not Found',
+            width: '250px',
+            icon: 'error',
+          });
+        }
+        this.showLoader = false
+      }, error => {
+        console.log(error)
+        Swal.fire({
+          title: 'Data Not Found',
+          width: '250px',
+          icon: 'error',
+          // position: 'top-end',
+  
+  
+        });
+      });
+    } else {
+      Swal.fire({
+        title: 'Please Select the date',
+        width: '250px',
+        icon: 'error',
+      });
+      this.showLoader = false
+    }
+    return null;
   }
 }

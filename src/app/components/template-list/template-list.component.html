@@ -56,10 +56,18 @@
       <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
         <div class="card-body">
-          <mat-form-field>
-              <mat-label>Filter</mat-label>
-              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Template Name/Code" #input>
-            </mat-form-field>
+          <div class="row">
+            <div class="col-sm-10">
+              <mat-form-field>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Template Name/Code" #input>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button type="text" class="btn btn-primary download" placeholder="Download"
+                (click)="downloadTemplateFile()" readonly>Download &nbsp;<mat-icon>download</mat-icon></button>
+            </div>
+          </div>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
               <!-- SLNo Column -->
@@ -126,13 +134,9 @@
 
             <!-- <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"
                             aria-label="Select page of users"></mat-paginator> -->
-                            <mat-paginator #paginatorRef
-                            [pageIndex]="paginator.pageIndex"
-                            [pageSize]="paginator.pageSize"
-                            [pageSizeOptions]="[5, 10, 25]"
-                            [length]="paginator.length" 
-                            (page)="onPageChanged($event)">
-                          </mat-paginator>
+            <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
+              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)">
+            </mat-paginator>
           </div>
 
         </div>

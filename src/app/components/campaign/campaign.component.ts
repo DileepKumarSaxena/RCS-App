@@ -12,6 +12,8 @@ import { NgxUiLoaderService } from 'ngx-ui-loader'
 import { Location } from '@angular/common';
 import { data } from 'jquery';
 import { Subscription } from 'rxjs';
+import * as Papa from 'papaparse';
+
 @Component({
   selector: 'app-campaign',
   templateUrl: './campaign.component.html',
@@ -189,22 +191,73 @@ export class CampaignComponent {
   // }
 
 
-  filterDataByCampaignName() {
-    this.existingCampaignNames = [];
-    const userId = sessionStorage.getItem('userId');
-    
-    const campName = this.campaignListForm.value.campaignName;
-    this.campaignservice.getAllTheCampaignList(userId, campName).subscribe({
-      next: (res) => {
-        console.log("Campaign Created Successfully.");
-      },
-      error: (err) => {
-        let msgVal = err.includes("Campaign Doesn't Exist")
-        if (!msgVal) {
-          this.campaignListForm.get('campaignName').setErrors({ duplicateName: true });
+  downloadFile() {
+    this.showLoader = true
+    return this.get_download_Rcs_Campaign_Details_file();
+
+  }
+
+  get_download_Rcs_Campaign_Details_file() {
+    const startDate = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
+    const endDate = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
+    if (this.campaignListForm.value.startDate != null && this.campaignListForm.value.endDate != "") {
+      return this.campaignservice.getData(startDate, endDate, sessionStorage.getItem('userId')).subscribe(data_ar => {
+        if (data_ar.Campaign.length > 0) {
+          console.log("Campaign List::=>" + JSON.stringify(data_ar.Campaign))
+          this.showLoader = false
+          data_ar = data_ar.Campaign.map((e) => {
+            // Map only the desired properties with custom header names
+            return {
+
+              'Campaign Name': e.campaignName,
+              'Created Date': moment(e.createdDate).format('MM/DD/YYYY'),
+              'Description': e.description,
+              'Template Name': e.templateName
+             
+              // Add more properties and header names as needed
+            };
+
+
+          });
+          console.log("Campaign List::=>" + JSON.stringify(data_ar))
+
+          var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
+          var csvData = new Blob(['\uFEFF' + csv], {
+            type: 'text/csv;charset=utf-8;'
+          });
+          var downloadUrl = document.createElement('a');
+          downloadUrl.download = 'RCS_Campaign_Detail_Report.csv';
+          downloadUrl.href = window.URL.createObjectURL(csvData);
+          downloadUrl.click();
+          this.showLoader = false
+        } else {
+          Swal.fire({
+            title: 'Data Not Found',
+             width: '250px',
+          icon: 'error',
+          });
         }
-      }
-    });
+        this.showLoader = false
+      }, error => {
+        console.log(error)
+        Swal.fire({
+          title: 'Data Not Found',
+          width: '250px',
+          icon: 'error',
+          // position: 'top-end',
+
+
+        });
+      });
+    } else {
+      Swal.fire({
+        title: 'Please Select the date',
+        width: '250px',
+        icon: 'error',
+      });
+      this.showLoader = false
+    }
+    return null;
   }
 
 

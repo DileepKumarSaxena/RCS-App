@@ -27,5 +27,13 @@ export class TemplateService extends BaseService{
     return this.http.get(`${this.baseUrlData + 'findAllTemplate'}`, { params: httpParams });
   }
  
-
+  getTemplateData(templateUserId, limit, start, pageIndex: number, pageSize: number ) {
+    let httpParams = new HttpParams()
+    httpParams = httpParams.append("limit", 0);
+    httpParams = httpParams.append("start", 0);
+    httpParams = httpParams.append("templateUserId", templateUserId);
+    httpParams = httpParams.append("pageIndex", pageIndex.toString());
+    httpParams = httpParams.append("pageSize", pageSize.toString());
+    return this.http.get(`${this.baseUrlData + 'findAllTemplate'}`, { params: httpParams });
+  }
 }

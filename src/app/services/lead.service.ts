@@ -82,4 +82,15 @@ export class LeadService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'leadInfo/upload'}`, formData, { params: httpParams });
   }
   
+  getLeadListData(userId, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
+    let httpParams = new HttpParams()
+    httpParams = httpParams.append("from", fromDate);
+    httpParams = httpParams.append("to", toDate);
+    httpParams = httpParams.append("userId", userId);
+    httpParams = httpParams.append("limit", 0);
+    httpParams = httpParams.append("start", 0);
+    httpParams = httpParams.append("pageIndex", pageIndex.toString());
+    httpParams = httpParams.append("pageSize", pageSize.toString());
+    return this.http.get(`${this.baseUrlData + 'leadInfoList'}`, { params: httpParams });
+  }
 }

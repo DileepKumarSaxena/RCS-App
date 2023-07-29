@@ -48,10 +48,18 @@
             <div class="card bg-light text-dark" style="margin-top: 50px;">
                 <!-- <div use *ngIf="" for table condition  ></div> -->
                 <div class="card-body">
-                    <mat-form-field>
-                        <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Campaign Name" #input>
-                      </mat-form-field>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <mat-form-field>
+                                <mat-label>Filter</mat-label>
+                                <input matInput (keyup)="applyFilter($event)"  placeholder="Ex. Campaign Name" #input>
+                              </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+
+                            <button  title="Export to Excel" class="btn btn-primary download" (click)="exportExcel(paginatorRef)">Download &nbsp;<mat-icon>download</mat-icon></button>
+                        </div>
+                    </div>
                     <div class="mat-elevation-z8">
                         <table style="display: inline-table;" mat-table [dataSource]="dataSource" matSort
                             class="horizontal-scroll-table">

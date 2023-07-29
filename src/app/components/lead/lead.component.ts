@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { NgxUiLoaderService } from 'ngx-ui-loader'
 import moment from 'moment';
 import { Location } from '@angular/common';
-
+import * as Papa from 'papaparse';
 interface LeadData {
   leadId: string;
   isStartDisabled: boolean;
@@ -91,9 +91,9 @@ export class LeadComponent {
       }
     })
   }
-  getCampaignName(id: any) {
-    let val = this.campaignList.find(el => el.campaignId == id);
-    return val['campaignName'];
+  getCampaignNameById(campaignId) {
+    const campaign = this.campaignList.find(el => el.campaignId == campaignId);
+    return campaign ? campaign.campaignName : 'N/A'; // Return the campaign name if found, otherwise 'N/A'
   }
  
   
@@ -212,6 +212,80 @@ export class LeadComponent {
   }
   goBack(): void {
     this.location.back();
+  }
+
+  DownloadLeadFile() {
+    this.showLoader = true
+    return this.get_download_Rcs_Lead_Details_file();
+
+  }
+
+  get_download_Rcs_Lead_Details_file() {
+    let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
+    let limit = this.paginator.pageSize.toString();
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+  
+    if (this.leadForm.value.startDate != null && this.leadForm.value.endDate != "") {
+      return this.leadService.getLeadListData(sessionStorage.getItem('userId'), startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((response: any) => {
+        const leadInfoArray = response['Lead Info']; // Access the 'Lead Info' array
+  
+        if (leadInfoArray.length > 0) {
+          console.log("Lead List::=>" + JSON.stringify(leadInfoArray));
+          this.showLoader = false;
+          const data_ar = leadInfoArray.map((e) => {
+            // Map only the desired properties with custom header names
+            return {
+
+              
+              'Campaign Name': this.getCampaignNameById(e.campaignId),
+              'Lead Name': e.leadName,
+              'Schedule Start Date': moment(e.leadSchedule.scheduleStartDtm).format('MM/DD/YYYY'),
+              'Schedule End Date': moment(e.leadSchedule.scheduleEndDtm).format('MM/DD/YYYY'),
+              'Total No.': e.countOfNumbers,
+              'Total Invalid No.': e.countOfInvalidNumbers,
+              'Total Duplicate No.': e.countOfDuplicateNumbers,
+              'Total BlackList No.': e.countOfBlackListNumbers,
+              // Add more properties and header names as needed
+            };
+          });
+  
+          console.log("Lead List::=>" + JSON.stringify(data_ar));
+  
+          var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
+          var csvData = new Blob(['\uFEFF' + csv], {
+            type: 'text/csv;charset=utf-8;'
+          });
+          var downloadUrl = document.createElement('a');
+          downloadUrl.download = 'RCS_Lead_Detail_Report.csv';
+          downloadUrl.href = window.URL.createObjectURL(csvData);
+          downloadUrl.click();
+          this.showLoader = false;
+        } else {
+          Swal.fire({
+            title: 'Data Not Found',
+            width: '250px',
+            icon: 'error',
+          });
+        }
+        this.showLoader = false;
+      }, error => {
+        console.log(error);
+        Swal.fire({
+          title: 'Data Not Found',
+          width: '250px',
+          icon: 'error',
+        });
+      });
+    } else {
+      Swal.fire({
+        title: 'Please Select the date',
+        width: '250px',
+        icon: 'error',
+      });
+      this.showLoader = false;
+    }
+    return null;
   }
 }
 

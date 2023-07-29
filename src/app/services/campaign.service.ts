@@ -99,11 +99,23 @@ export class CampaignService extends BaseService {
     return this.http.get(`${this.baseUrlData + 'findCampaignById?Id=' + campaignId}`);
   }
 
-  getData(startDate: string, endDate: string): Observable<any> {
+  // getData(startDate: string, endDate: string): Observable<any> {
+  //   let httpParams = new HttpParams()
+  //   .append("from", startDate)
+  //   .append("to", endDate)
+  //     .append("userId", 1)
+  //     .append("start", 0)
+  //     .append("limit", 0)
+    
+  //   return this.http.get(`${this.baseUrlData + 'findAllCapmaingList'}`, { params: httpParams });
+    
+  // }
+
+  getData(startDate: string, endDate: string,userId): Observable<any> {
     let httpParams = new HttpParams()
     .append("from", startDate)
     .append("to", endDate)
-      .append("userId", 1)
+      .append("userId", userId)
       .append("start", 0)
       .append("limit", 0)
     

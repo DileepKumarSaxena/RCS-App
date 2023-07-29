@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
 import { CampaignService } from '@app/services/campaign.service';
-
+import * as Papa from 'papaparse';
 @Component({
   selector: 'app-campaignlogs',
   templateUrl: './campaignlogs.component.html',
@@ -82,7 +82,6 @@ export class CampaignlogsComponent {
   }
 
   getLeadName(event:any){
-  debugger;
     let userId = sessionStorage.getItem('userId');
     let campaignId = event.source.value;
     this.reportservice.getLeadList(userId, campaignId).subscribe({
@@ -100,7 +99,6 @@ export class CampaignlogsComponent {
   }
   
   getDetailList() {
-    debugger;
     this.showLoader=true
     let username = sessionStorage.getItem('username');
     let camType = this.detailListForm.value.campaignId;
@@ -178,5 +176,97 @@ export class CampaignlogsComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  exportExcel(paginatorRef) {
+    this.showLoader = true
+    return this.get_download_Rcs_Details_file(paginatorRef);
+  
+  }
+  
+  
+  get_download_Rcs_Details_file(paginatorRef) {
+    this.showLoader = true
+    let username = sessionStorage.getItem('username');
+    let fromDate = moment(this.detailListForm.value.fromDate).format('YYYY-MM-DD');
+    let toDate = moment(this.detailListForm.value.toDate).format('YYYY-MM-DD');
+    this.ngxService.start();
+  
+
+    if (this.detailListForm.value.fromDate !== '' && this.detailListForm.value.toDate !== '') {
+
+      let username = sessionStorage.getItem('username');
+      let camType = this.detailListForm.value.campaignId;
+      let leadId = this.detailListForm.value.leadId;
+      let startDateVal = moment(this.detailListForm.value.startDate).format('YYYY-MM-DD');
+      let endDateVal = moment(this.detailListForm.value.endDate).format('YYYY-MM-DD');
+      let limit = this.paginator.pageSize.toString();  
+      let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+
+      return this.reportservice.getDetailData(username, startDateVal, endDateVal, camType, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
+        if (data_ar.data.length > 0) {
+          console.log("Detail List::=>" + JSON.stringify(data_ar.data))
+          this.showLoader = false
+          data_ar = data_ar.data.map((e, i) => {
+  
+            const startingSerialNo = paginatorRef.pageIndex * paginatorRef.pageSize + 1;
+            // Map only the desired properties with custom header names
+            return {
+           			
+              // 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'
+              'SL No.': startingSerialNo + i,
+              'Created By':e.created_by,
+              'Created Date': moment(e.created_date).format('MM/DD/YYYY'),
+              'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
+              'Lead Name': e.leadname,
+              'Campaign Name': e.campName,
+              'Language': e.language,
+              'Phone Number': e.phone_number,
+              'Phone Number Status': e.phone_number_status,
+              'Status' : e.status
+              // Add more properties and header names as needed
+            };
+  
+  
+          });
+          console.log("Campaign List::=>" + JSON.stringify(data_ar))
+  
+          var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
+          var csvData = new Blob(['\uFEFF' + csv], {
+            type: 'text/csv;charset=utf-8;'
+          });
+          var downloadUrl = document.createElement('a');
+          downloadUrl.download = 'RCS_Detailed_Report.csv';
+          downloadUrl.href = window.URL.createObjectURL(csvData);
+          downloadUrl.click();
+          this.showLoader = false
+        } else {
+          Swal.fire({
+            title: 'Data Not Found',
+            width: '250px',
+            icon: 'error',
+          });
+        }
+        this.showLoader = false
+      }, error => {
+        console.log(error)
+        Swal.fire({
+          title: 'Data Not Found',
+          width: '250px',
+          icon: 'error',
+          // position: 'top-end',
+  
+  
+        });
+      });
+    } else {
+      Swal.fire({
+        title: 'Please Select the date',
+        width: '250px',
+        icon: 'error',
+      });
+      this.showLoader = false
+    }
+    return null;
   }
 }
