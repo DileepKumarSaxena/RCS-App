@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/_services';
 declare var require: any;
 import { Location } from '@angular/common';
@@ -9,6 +9,7 @@ import { Template, TemplateJson } from '@app/_models';
 import { AlertService } from '@app/services';
 import moment from 'moment';
 import { Router } from '@angular/router';
+import { Conditional } from '@angular/compiler';
 @Component({
   selector: 'app-xiaomircs',
   templateUrl: './xiaomircs.component.html',
@@ -64,7 +65,13 @@ export class XiaomircsComponent implements OnInit {
   }
 
   ngOnInit() {
+  
     this.createTemplateForm();
+    this.templateForm.get('templateType').valueChanges
+    .subscribe(value => {
+        this.templateForm.get('cardtitle').updateValueAndValidity();
+        this.templateForm.get('cardDescription').updateValueAndValidity();
+   });
   }
   createTemplateForm() {
     this.templateForm = this.fb.group({
@@ -72,11 +79,11 @@ export class XiaomircsComponent implements OnInit {
       templateType: ['rich_card'],
       fileName: null,
       mediaFileOriginalName: [''],
-      cardtitle: ['', [Validators.required, Validators.maxLength(200)]],
+      cardtitle: ['', [this.requiredCondtionalVal, Validators.maxLength(200)]],
       cardTitleCustomParam: [],
       cardDescriptionCustomParam: [],
       messageContentCustomParam: [],
-      cardDescription: ['', [Validators.required, Validators.maxLength(2000)]],
+      cardDescription: ['', [this.requiredCondtionalVal, Validators.maxLength(2000)]],
       messageContent: [''],
       cardOrientation: ['VERTICAL'],
       mediaHeight: ['SHORT_HEIGHT'],
@@ -84,6 +91,17 @@ export class XiaomircsComponent implements OnInit {
       suggestions: new FormArray([]),
       cardDetails: new FormArray([])
     })
+  }
+  
+  requiredCondtionalVal(formControl: AbstractControl){
+    if (!formControl.parent) {
+      return null;
+    }
+    if(formControl.parent.get('templateType').value === 'text_message'){
+      return null;
+    } else {
+      return Validators.required(formControl);
+    }
   }
   createItem(): FormGroup {
     return this.fb.group({
@@ -113,6 +131,7 @@ export class XiaomircsComponent implements OnInit {
   }
   tabs = [];
   addTab() {
+
     this.cardDetails = this.templateForm.get('cardDetails') as FormArray;
     if (this.cardDetails.value.length < 5) {
       this.cardDetails.push(this.createCards());
@@ -290,16 +309,15 @@ export class XiaomircsComponent implements OnInit {
       const body = JSON.stringify(tempData);
       const formData = new FormData();
       const cardDetails = this.templateForm.get('cardDetails').value;
+      const richCardDetails = this.templateForm.get('templateType').value === 'rich_card'
       if (cardDetails?.length) {
         cardDetails?.forEach(element => {
           formData.append('files', element?.fileNameDisplay);
-        });
-      } else {
-        console.log(this.fileUrl, "files");
-        // let fName = this.updateFiles(this.fileUrl);
+        })
+      } else if(richCardDetails) {
         formData.append('files', this.templateForm.get('fileName').value);
+      } 
 
-      }
       formData.append('addTemplate', body?.toString());
       console.log(formData, "templateForm");
       this.templateService.templateDataSubmit(formData).subscribe({
@@ -400,7 +418,7 @@ export class XiaomircsComponent implements OnInit {
     // console.log('cardDetailsArrayToString....', String(temp) );
     // console.log('Extracted Variables:', convertArrayToString);
   }
-
+ 
   dataCreate(val: any) {
     let xyz: any = [];
     const cardTitleCustomParam = this.extractVariables(this.templateForm.get('cardtitle').value);
@@ -432,12 +450,6 @@ export class XiaomircsComponent implements OnInit {
       }
     });
 
-   
-
-
-
-
-
     // this.templateForm.get('cardTitleCustomParam').value;
     const component = this;
     console.log(val, "VAAAA");
@@ -446,9 +458,9 @@ export class XiaomircsComponent implements OnInit {
       templateType: val?.templateType,
       templateMsgType: val.templateMsgType,
       templateCustomParam: String(xyz),
+      botId: sessionStorage.getItem('botId'),
       templateJson: {
-        botId: val.botId,
-        suggestions: val.suggestions
+       suggestions: val.suggestions
       }
     }
 

@@ -7,17 +7,17 @@
 
         <div class="col-sm-12">
             <br><br>
-            <!-- <div class="go-back-section">
+            <div class="go-back-section">
           <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-          <h5 class="text-center">DETAILED REPORT</h5>
-      </div> -->
+          <h5 class="text-center">SUMMARY REPORT</h5>
+      </div>
             <form [formGroup]="summaryListForm">
 
                 <div class="card bg-light text-dark">
                     <div class="card-body">
                         <div class="filter-section">
                             <div class="date-range-section">
-                                <mat-form-field appearance="fill">
+                                <mat-form-field appearance="outline">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker">
                                         <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
@@ -119,7 +119,7 @@
                         <mat-paginator #paginatorRef
                             [pageIndex]="paginator.pageIndex"
                             [pageSize]="paginator.pageSize"
-                            [pageSizeOptions]="[5, 10, 20, 50, 75, 100]"
+                            [pageSizeOptions]="[5, 10, 25]"
                             [length]="paginator.length" 
                             (page)="onPageChanged($event)">
                           </mat-paginator>

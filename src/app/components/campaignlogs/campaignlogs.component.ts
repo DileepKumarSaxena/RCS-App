@@ -24,14 +24,14 @@ export class CampaignlogsComponent {
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   detailData: any;
   moment: any = moment;
-  
- 
- 
-
+  campaignList: any = [];
+  leadList: any = [];
   displayedColumns: string[] = ['id', 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;
+
+  
 
   constructor(
     private reportservice: ReportsService,
@@ -55,23 +55,68 @@ export class CampaignlogsComponent {
   detailReport() {
     this.detailListForm = this.formbuilder.group({
       startDate: moment().format('YYYY-MM-DD'),
-      endDate: moment().format('YYYY-MM-DD')
+      endDate: moment().format('YYYY-MM-DD'),
+      campaignId:[],
+      leadId:[],
     })
   }
+  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement){
+    this.showLoader=true
+    let userId = sessionStorage.getItem('userId');
+    let from = moment(startDate.value).format('YYYY-MM-DD');
+    let to = moment(endDate.value).format('YYYY-MM-DD');
+    this.reportservice.dateRangeFilter(from, to, userId).subscribe({
+      next: (res: any) => {
+        console.log(res, "CampaigList");
+        this.detailData = res.data;
+        this.dataSource.data = this.detailData;
+        if (res) {
+          this.campaignList = res;
+        }
+        this.showLoader=false
+      },
+      error:(err) =>{
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+  getLeadName(event:any){
+  debugger;
+    let userId = sessionStorage.getItem('userId');
+    let campaignId = event.source.value;
+    this.reportservice.getLeadList(userId, campaignId).subscribe({
+      next: (res: any) => {
+        console.log(res, "LeadList....")
+        if (res) {
+          this.leadList = res;
+        }
+      },
+      error:(err) =>{
+        console.log(err, "Error while fetching the records.");
+      }
+
+    })
+  }
+  
   getDetailList() {
+    debugger;
     this.showLoader=true
     let username = sessionStorage.getItem('username');
+    let camType = this.detailListForm.value.campaignId;
+    let leadId = this.detailListForm.value.leadId;
     let startDateVal = moment(this.detailListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.detailListForm.value.endDate).format('YYYY-MM-DD');
     let limit = this.paginator.pageSize.toString();  
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
-    this.reportservice.getDeatilReport(username, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.reportservice.getDeatilReport(username, startDateVal, endDateVal, camType, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
        
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
         this.paginator.length = res.request_status;
+       
         // this.ngxService.stop();
         this.showLoader=false
     

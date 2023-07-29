@@ -14,14 +14,25 @@ export class ReportsService extends BaseService{
 
 
   //Api for Detail_Report
-
-  getDeatilReport(username, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
+  // http://fuat.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange?from=2023-05-29&to=2023-07-28&userId=1%27
+  // 'http://fuat.flash49.com/rcsmsg/lead/leadNameAndIdList?userId=1&campaignId=1' 
+  private URLS = ' http://fuat.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange';
+  dateRangeFilter(from: string, to: string, userId:string): Observable<any> {
+    return this.http.get(`${this.URLS}?from=${from}&to=${to}&userId=${userId}`);
+  }
+  private URLS_Lead = ' http://fuat.flash49.com/rcsmsg/lead/leadNameAndIdList';
+  getLeadList(userId:string, campaignId:string): Observable<any> {
+    return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
+  }
+  
+  getDeatilReport(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
     const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
       username: username,
-      clientId: "0",
+      camType:camType,
+      clientId: leadId,
       camId: limit,
       role: start,
       pageIndex: pageIndex,

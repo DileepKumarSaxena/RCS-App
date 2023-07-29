@@ -28,7 +28,7 @@ import { CampaignComponent } from './components/campaign/campaign.component';
 import {MatIconModule} from '@angular/material/icon';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { MatInputModule } from '@angular/material/input';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {TextFieldModule} from '@angular/cdk/text-field';
@@ -87,7 +87,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
         MatTabsModule,
         MatTooltipModule,
-        NgChartsModule
+        NgChartsModule,
+        MatAutocompleteModule
         
         
     ],
