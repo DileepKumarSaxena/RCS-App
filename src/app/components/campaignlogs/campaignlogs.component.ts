@@ -26,10 +26,11 @@ export class CampaignlogsComponent {
   moment: any = moment;
   campaignList: any = [];
   leadList: any = [];
-  displayedColumns: string[] = ['id', 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'];
+  displayedColumns: string[] = ['id', 'created_date', 'created_by',  'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'];
   dataSource!: MatTableDataSource<any>;
-
+  selectedCampaign: any; 
   @ViewChild(MatSort) sort: MatSort;
+  currentDate = new Date();
 
   
 
@@ -42,11 +43,13 @@ export class CampaignlogsComponent {
   ) { }
 
   ngOnInit(): void {
+    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex =0;
     this.paginator.pageSize = 5;
     this.detailReport();
     this.getDetailList();
+    this.getDateFilter();
   }
 
 
@@ -58,6 +61,27 @@ export class CampaignlogsComponent {
       endDate: moment().format('YYYY-MM-DD'),
       campaignId:[],
       leadId:[],
+    })
+  }
+
+  getDateFilter(){
+    this.showLoader=true
+    let userId = sessionStorage.getItem('userId');
+    let from = moment(this.currentDate).format('YYYY-MM-DD');
+    let to = moment(this.currentDate).format('YYYY-MM-DD');
+    this.reportservice.dateRangeFilter(from, to, userId).subscribe({
+      next: (res: any) => {
+        console.log(res, "CampaigList");
+        this.detailData = res.data;
+        this.dataSource.data = this.detailData;
+        if (res) {
+          this.campaignList = res;
+        }
+        this.showLoader=false
+      },
+      error:(err) =>{
+        console.log(err, "Error while fetching the records.");
+      }
     })
   }
   dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement){
@@ -97,7 +121,9 @@ export class CampaignlogsComponent {
 
     })
   }
-  
+  displayCampaignName(campaign: any): string {
+    return campaign ? campaign.campaignName : '';
+  }
   getDetailList() {
     this.showLoader=true
     let username = sessionStorage.getItem('username');
@@ -214,7 +240,7 @@ export class CampaignlogsComponent {
             return {
            			
               // 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'
-              'SL No.': startingSerialNo + i,
+              // 'SL No.': startingSerialNo + i,
               'Created By':e.created_by,
               'Created Date': moment(e.created_date).format('MM/DD/YYYY'),
               'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),

@@ -22,6 +22,7 @@ export class CreateLeadComponent {
   existingLeadNames: any = [];
   isHidden: any;
   isHidden2: any;
+  isHidden3:any;
   actionBtn: string = "Submit";
   leadID: any;
   campaignList: any = [];
@@ -40,7 +41,7 @@ export class CreateLeadComponent {
   minDate: string = moment().format('YYYY-MM-DDTHH:mm');
   allowedFileExtensions = ['csv'];
   uploadProgress: number = 0;
-
+  public showLoader = false;
 
   constructor(
     private formbuilder: FormBuilder,
@@ -109,6 +110,9 @@ export class CreateLeadComponent {
     this.testLeadForm = this.formbuilder.group({
       testingNumber: ['', [Validators.required, this.validateNumericInput]]
     })
+  }
+  testLead(){
+    
   }
 
   validateNumericInput(control) {
@@ -204,7 +208,18 @@ export class CreateLeadComponent {
   }
   
   
-  
+  onCampaignNameInputBlur() {
+    const leadNameControl = this.leadForm.get('leadName');
+    if (leadNameControl.value && leadNameControl.value.trim().length === 0) {
+      leadNameControl.setErrors({ spacesNotAllowed: true });
+    } else {
+      leadNameControl.setErrors(null);
+    }
+    leadNameControl.updateValueAndValidity();
+
+    // Call the checkDuplicateName() method
+    this.checkDuplicateName();
+  }
 
 
 
@@ -236,6 +251,7 @@ export class CreateLeadComponent {
 
 
   onSubmit() {
+    this.showLoader=true
     let data = this.leadForm.value;
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;
@@ -248,6 +264,7 @@ export class CreateLeadComponent {
         formData['leadId'] = this.leadID;
         this.campaignService.campaignDataUpdate(formData).subscribe({
           next: (res) => {
+            this.showLoader=false
             Swal.fire({
               title: 'Lead Updated Successfully',
               icon: 'success',
@@ -354,6 +371,7 @@ export class CreateLeadComponent {
     this.location.back();
   }
 
+ 
 }
 
 

@@ -13,7 +13,7 @@
                 <h5 class="text-center">ADD LEAD</h5>
             </div>
 
-
+            <app-loader *ngIf="showLoader"></app-loader>
             <div class="card bg-light text-dark">
                 <div class="card-body">
                     <form [formGroup]="leadForm" (ngSubmit)="onSubmit()">
@@ -35,13 +35,13 @@
 
 
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Lead Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Lead name"
                                         (blur)="checkDuplicateName()" maxlength="50" formControlName="leadName" />
-                                    <!-- <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('required')">
                                         Lead name is required
-                                    </mat-error> -->
+                                    </mat-error>
                                     <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">
                                         Lead name already exists
                                     </mat-error>
@@ -49,8 +49,26 @@
                                         <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
                                             (mouseleave)="isHidden2 = !isHidden2">info</span>
                                     </mat-icon>
-                                </mat-form-field>
+                                </mat-form-field> -->
 
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Lead Name</mat-label>
+                                    <input
+                                      matInput
+                                      autocomplete="off"
+                                      placeholder="Lead name"
+                                      formControlName="leadName"
+                                      maxlength="50"
+                                      (blur)="onCampaignNameInputBlur();"
+                                    />
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('required')">Lead name is required</mat-error>
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('spacesNotAllowed')">Lead name cannot be empty or contain only spaces</mat-error>
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('pattern')">Lead name can only contain letters, numbers, underscores, and dashes</mat-error>
+                                    <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">Lead name already exists</mat-error>
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                      <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2" (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                    </mat-icon>
+                                  </mat-form-field>
 
                                 <ng-container *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
                                     <div style="margin-top: -20px; font-size: small; color: red;  margin-left: 4px">
@@ -139,7 +157,7 @@
                                 <input id="scheduleEndDtm" class="custom-date-range-input" type="datetime-local"
                                        formControlName="scheduleEndDtm" [min]="minDate" placeholder="YYYY-MM-DD">
                               </div>
-                              
+                              <br>
                             <div class="col-sm-4">
                                 <button class="btn btn-success submit" type="submit" id="smbtbtn"
                                     [disabled]="leadForm.status === 'INVALID'">{{actionBtn}}</button>
@@ -152,7 +170,7 @@
             </div>
             <br>
             <br>
-            <!-- <div class="card bg-light text-dark">
+            <div class="card bg-light text-dark">
                 <div class="card-body">
                     <form [formGroup]="testLeadForm">
                         <div class="row">
@@ -160,20 +178,18 @@
                                 <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
                             </div>
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline">   
+                                    <mat-label>Enter Testing Number</mat-label>
                                     <input matInput formControlName="testingNumber">
                                     <mat-icon matSuffix aria-hidden="true" container="body">
-                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
-                                            class="material-symbols-outlined">
-                                            info
-                                        </span>
-                                    </mat-icon>
+                                        <span class="material-symbols-outlined" (mouseenter)="isHidden3 = !isHidden3" (mouseleave)="isHidden3 = !isHidden3">info</span>
+                                      </mat-icon>
                                 </mat-form-field>
                                 <div
                                     *ngIf="testLeadForm.controls.testingNumber.errors && testLeadForm.controls.testingNumber.errors.invalidNumericInput">
                                     Please enter a valid numeric value with a single comma separated.
                                 </div>
-                                <ng-container *ngIf="isHidden && !leadForm.get('leadName')">
+                                <ng-container *ngIf="isHidden3 && !testLeadForm.get('testingNumber')">
                                     <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                         Numbers(S) on which test call to be given.
                                     </div>
@@ -186,7 +202,7 @@
                         </div>
                     </form>
                 </div>
-            </div> -->
+            </div>
             <br>
         </div>
     </div>

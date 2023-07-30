@@ -101,7 +101,7 @@ export class TemplateListComponent {
             'Template Name/Code': e.templateCode,
             'Template Type': e.templateType,
             'Template Message Type': e.templateMsgType,
-            'Status': e.status,
+            'Status': e.status === '0' ? 'Pending' : 'Approved',
             'Creation Date': moment(e.inserttime).format('MM/DD/YYYY'),
             // Add more properties and header names as needed
           };

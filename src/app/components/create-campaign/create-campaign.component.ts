@@ -19,6 +19,7 @@ export class CreateCampaignComponent {
   isHidden: any;
   isHidden2: any;
   actionBtn: string = "Submit";
+  heading:string = "ADD";
   cmpId: any;
   
   selectedOption: any;
@@ -59,6 +60,7 @@ export class CreateCampaignComponent {
         this.cmpId = res['id'];
         this.getCampaignInfo();
         this.actionBtn = 'Update';
+        this.heading = 'UPDATE';
       }
     })
 
@@ -98,6 +100,18 @@ export class CreateCampaignComponent {
 
 
   }
+ onCampaignNameInputBlur() {
+    const campaignNameControl = this.campaignForm.get('campaignName');
+    if (campaignNameControl.value && campaignNameControl.value.trim().length === 0) {
+      campaignNameControl.setErrors({ spacesNotAllowed: true });
+    } else {
+      campaignNameControl.setErrors(null);
+    }
+    campaignNameControl.updateValueAndValidity();
+
+    // Call the checkDuplicateName() method
+    this.checkDuplicateName();
+  }
 
   checkDuplicateName() {
     this.existingCampaignNames = [];
@@ -106,16 +120,19 @@ export class CreateCampaignComponent {
     this.campaignService.getAllTheCampaignList(userId, campName).subscribe({
       next: (res) => {
         console.log("Campaign Created Successfully.");
+        if(res.message.includes('Record Already Exist.')){
+          this.campaignForm.get('campaignName').setErrors({ duplicateName: true })
+        }
       },
       error: (err) => {
-        let msgVal = err.includes("Campaign Doesn't Exist")
+        let msgVal = err.includes("Record Already Exist.")
         if (!msgVal) {
           this.campaignForm.get('campaignName').setErrors({ duplicateName: true });
         }
       }
     });
   }
-
+ 
   messageTypeList() {
     this.campaignService.getMessageList().subscribe(res => {
       if (res) {

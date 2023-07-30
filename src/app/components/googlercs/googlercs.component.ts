@@ -23,7 +23,7 @@ export class GooglercsComponent {
   moment: any = moment;
   
  
-  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED',];
+  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED','Invalid'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;
@@ -156,16 +156,17 @@ export class GooglercsComponent {
             // Map only the desired properties with custom header names
             return {
               // 'campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED',
-              'SL No.': startingSerialNo + i,
+              // 'SL No.': startingSerialNo + i,
               'Campaign Name': e.campaing_name,
               'Lead Name': e.lead_name,
               'Created Date': moment(e.Created_date).format('MM/DD/YYYY'),
               'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
-              'Status': e.status,
+              'Status': e.status === '0' ? 'Pending' : 'Approved',
               'Total': e.TOTAL,
               'SUBMITTED': e.SUBMITTED,
               'Delivered': e.Delivered,
               'Non RCS FAILED': e.NonRCS_FAILED,
+              'Invalid': e.Invalid,
            
               // Add more properties and header names as needed
             };

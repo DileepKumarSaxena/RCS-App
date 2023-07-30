@@ -25,7 +25,7 @@ h2.custom-header-title {
 .custom-header-section {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 
 .input-fields-container {
@@ -107,11 +107,22 @@ h2.custom-header-title {
         }
 
         .total-balance {
-            color: #7ac29a;
+            color: #a70606;
         }
     }
 }
 
 .chart-section {
     padding: 24px;
+}
+
+.date-range-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 20px;
+
+    .input-fields-container{
+        margin-right: 10px;
+    }
 }

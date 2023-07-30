@@ -4,58 +4,82 @@
             <!-- <h1>Hi {{user?.firstName}}!</h1>
             <p>You're logged in with Angular 15...............!!</p>
             <p><a routerLink="/users">Manage Users</a></p> -->
-    
+
+
             <div class="card">
                 <div class="card-header custom-header-section">
                     <h2 class="custom-header-title">Dashboard</h2>
-                    <div class="date-range-section">
-                        <div class="input-fields-container">
-                            <mat-form-field appearance="fill">
-                                <mat-label>Enter a date range</mat-label>
-                                <mat-date-range-input [rangePicker]="picker">
-                                    <input matStartDate placeholder="Start date">
-                                    <input matEndDate placeholder="End date">
-                                </mat-date-range-input>
-                                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #picker></mat-date-range-picker>
-                            </mat-form-field>
-                            <mat-form-field appearance="fill">
+                    <form [formGroup]="dashBoardForm">
+                        <div class="date-range-section">
+                            <div class="input-fields-container">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Enter a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input formControlName="startDate" #startDate matStartDate
+                                            placeholder="Start date" [value]="currentDate">
+                                        <input formControlName="endDate" #endDate matEndDate placeholder="End date"
+                                            [value]="currentDate">
+                                    </mat-date-range-input>
+                                    <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+                                <!-- <mat-form-field appearance="fill">
                                 <mat-label>Select me</mat-label>
                                 <mat-select>
                                     <mat-option value="option">All Senders</mat-option>
                                     <mat-option value="option">Fonada</mat-option>
                                 </mat-select>
     
-                            </mat-form-field>
-                            <button class="btn btn-success">Submit</button>
+                            </mat-form-field> -->
+
+
+                            </div>
+                            <button class="btn btn-success btn-lg"
+                                (click)="getSummaryData(startDate, endDate)">Submit</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
+                <!-- *ngFor="let item of dashboardData" -->
+                <app-loader *ngIf="showLoader"></app-loader>
                 <div class="card-body">
-                    <div class="custom-card-section">
-                        <div><strong class="total-message-sent counter" data-target="10500"></strong><br>Total Message Sent</div>
-                        <div><strong class="total-submited counter" data-target="10300"></strong><br>Total Submitted</div>
-                        <div><strong class="total-delivered counter" data-target="10300"></strong><br>Total Delivered </div>
-                        <div><strong class="total-rejected counter" data-target="10100"></strong><br>Total Rejected</div>
-                        <div><strong class="total-balance counter" data-target="25000"></strong><br>Balance(Trans)</div>
+                    <div class="custom-card-section" *ngIf="dashboardData">
+                        <div><strong class="total-message-sent counter">{{ getSum('TOTAL') }}</strong><br>Total Request
+                        </div>
+                        <div><strong class="total-submited counter">{{ getSum('SUBMITTED') }}</strong><br>Total
+                            Submitted</div>
+                        <div><strong class="total-delivered counter">{{ getSum('Delivered') }}</strong><br>Total
+                            Delivered </div>
+                        <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED') }}</strong><br>Total
+                            Rejected - NonRCS</div>
+                        <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br>Total Invalid
+                            Number</div>
                     </div>
+
+                    <div class="custom-card-section" *ngIf="!dashboardData">
+                        <div><strong class="total-message-sent counter">0</strong><br>Total Message Sent</div>
+                        <div><strong class="total-submited counter">0</strong><br>Total Submitted</div>
+                        <div><strong class="total-delivered counter">0</strong><br>Total Delivered </div>
+                        <div><strong class="total-rejected counter">0</strong><br>Total Rejected - NonRCS</div>
+                        <div><strong class="total-balance counter">0</strong><br>Total Invalid Number</div>
+                    </div>
+
+
+                    <!-- <div class="custom-card-section">
+                        <div><strong class="total-submited">{{ totalSum }}</strong><br>Total Sum</div>
+                      </div> -->
                 </div>
             </div>
+
             <br>
-            <div class="card">
+            <div class="card" style="display: none;">
                 <div class="card-header custom-header-section">
                     <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend for today</small></h2>
-    
+
                 </div>
                 <div class="card-body chart-section">
-                    <canvas class="chart" 
-                    baseChart 
-                    [data]="barChartData" 
-                    [options]="barChartOptions" 
-                    [type]="barChartType"
-                    (chartHover)="chartHovered($event)" 
-                    (chartClick)="chartClicked($event)">
+                    <canvas class="chart" baseChart [data]="barChartData" [options]="barChartOptions"
+                        [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
                     <!-- <button class="btn btn-primary" (click)="randomize()">Update</button> -->
                 </div>
