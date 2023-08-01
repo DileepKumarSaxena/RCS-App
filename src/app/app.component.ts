@@ -41,10 +41,10 @@ export class AppComponent {
     return this.router.url === route;
   }
   
-  isResetPage(): boolean {
-    return this.router.url === '/reset/password';
+  // isResetPage(): boolean {
+  //   return this.router.url === '/reset/password';
     
-  }
+  // }
 
   resetPassword(){
     this.router.navigate(['/reset/password'])

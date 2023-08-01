@@ -57,7 +57,6 @@ export class CreateLeadComponent {
     this.createLeadForm();
     this.campaignListData();
     this.getRouteParams();
-    this.testLeadNumber();
     this.leadExecutionType = this.formbuilder.control('');
   }
 
@@ -99,20 +98,60 @@ export class CreateLeadComponent {
       file: [null, [Validators.required, this.validateFileFormat()]],
       isDND: [false],
       isDuplicate: [false],
-      leadExecutionType: [],
+      leadExecutionType: ['', Validators.required],
       scheduleStartDtm: [],
       scheduleEndDtm: [],
       startTime: [],
-      endTime: []
+      endTime: [],
+      testingNumber: ['']
     })
   }
-  testLeadNumber() {
-    this.testLeadForm = this.formbuilder.group({
-      testingNumber: ['', [Validators.required, this.validateNumericInput]]
-    })
-  }
+
+  
   testLead(){
+    this.showLoader=true;
+    let data = this.leadForm.value;
+    if (this.leadForm.valid) {
+      let dndValue = this.leadForm.get('isDND').value;
+      data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      data['scheduleEndDtm'] = this.leadForm.value.scheduleEndDtm ? moment(this.leadForm.value.scheduleEndDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
+      let formData = this.createTestLead(data);
+
+    this.leadService.testNumber(dndValue, formData).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+      
+      }
+    })
+  }
+  }
+  createTestLead(dataVal){
+    let obj = {
+        "campaignId": dataVal['campaignId'],
+        "userId": sessionStorage.getItem('userId'),
+        "leadName":  dataVal['leadName'],
+        "leadSchedule": {
+            "scheduleStartDtm": dataVal['scheduleStartDtm'],
+            "windowRequired": "N",
+            "scheduleEndDtm": dataVal['scheduleEndDtm'],
+            "scheduleDay": "1"
+        },
+        "leadInfoDetails": [
+            {
+                "createdDate": new Date(),
+                "lastModifiedDate": new Date(),
+                "status": "Created",
+                "createdBy": sessionStorage.getItem('username'),
+                "lastModifiedBy": sessionStorage.getItem('username'),
+                "phoneNumber": dataVal['testingNumber']
+            }
+        ]
     
+    
+    }
+    return obj;
   }
 
   validateNumericInput(control) {
@@ -208,7 +247,7 @@ export class CreateLeadComponent {
   }
   
   
-  onCampaignNameInputBlur() {
+  onLeadNameInputBlur() {
     const leadNameControl = this.leadForm.get('leadName');
     if (leadNameControl.value && leadNameControl.value.trim().length === 0) {
       leadNameControl.setErrors({ spacesNotAllowed: true });
@@ -294,6 +333,7 @@ export class CreateLeadComponent {
       } else {
         this.leadService.uploadCSVFile(formData, this.file, dndValue, isDuplicateValue).subscribe({
           next: (res) => {
+            this.showLoader=true
             Swal.fire({
               title: 'Lead Created Successfully',
               icon: 'success',
@@ -308,6 +348,7 @@ export class CreateLeadComponent {
             });
           },
           error: () => {
+            this.showLoader=false
             Swal.fire({
               title: 'Error',
               text: 'Error while adding the Lead Details.',

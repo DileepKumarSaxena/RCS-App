@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light custom-navbar" *ngIf="currentUser && !isLoginPage() && !isResetPage()">
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar" *ngIf="currentUser && !isLoginPage()">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="assets/logo.svg" alt="Logo" height="40">
@@ -51,6 +51,9 @@
 
 
 <!-- main app container -->
-
+<div class="content">
 <router-outlet></router-outlet>
+</div>
 <!-- <app-loader></app-loader> -->
+
+<app-footer></app-footer>

@@ -4,7 +4,14 @@ body {
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
 }
-
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.content {
+    flex: 1;
+}
 .h5,
 h5 {
     font-size: 1.25rem !important;
@@ -218,12 +225,48 @@ i {
 
 }
 .download{
-    padding: 12px;
-    width: 95%;
+    padding: 11px;
+    // width: 95%;
     font-size: larger;
     font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
     
+}
+
+
+.template-back{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #e2ebe9;
+    padding: 10px 30px;
+
+    h5{
+     margin-bottom: 0;
+    }
+   .mat-icon {
+        margin-top: -10px
+    }
+    .back-icon{
+        display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+}
+
+.go-back-section.template-back.add-inner-padding {
+    padding: 20px 30px;
+}
+.bottom-space{
+    padding-bottom: 0;
+}
+
+.min-width-set{
+    min-width: 28% !important;
+}
+.downoLoadSection {
+    display: flex;
+    justify-content: flex-end;
 }

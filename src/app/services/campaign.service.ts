@@ -40,6 +40,7 @@ export class CampaignService extends BaseService {
   // Template List
   getAllTemplateList(): Observable<any> {
     return this.http.get('http://fuat.flash49.com/rcsmsg/template/getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
+    // return this.http.get('https://app.flash49.com/rcsmsg/template/getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
   }
 
   private templateListSubject$ = new BehaviorSubject(null);
@@ -91,8 +92,15 @@ export class CampaignService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'updateCampaign'}`, formData);
   }
 
+  // http://fuat.flash49.com/rcsmsg/deleteCampaignById?Id=1
+  // http://fuat.flash49.com/rcsmsg/campaign/deleteCampaignById?Id=1&status=1 
   deleteCampaignById(campaignId: any): Observable<any> {
     return this.http.delete(`${this.baseUrlData + 'deleteCampaignById?Id=' + campaignId}`);
+  }
+
+  activeDeactiveCampaignById(campaignId: any, status: any): Observable<any> {
+    const dynamicApiUrl = `${this.baseUrlData}deleteCampaignById?Id=${campaignId}&status=${status == 'Active'? 0:1}`;
+    return this.http.delete(dynamicApiUrl);
   }
 
   getCampaignData(campaignId: any) {

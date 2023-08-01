@@ -21,6 +21,7 @@ export class CreateCampaignComponent {
   actionBtn: string = "Submit";
   heading:string = "ADD";
   cmpId: any;
+  descriptionPattern = /^[a-zA-Z0-9_]*$/;
   
   selectedOption: any;
   minDate: any = moment().format('YYYY-MM-DD');
@@ -33,7 +34,7 @@ export class CreateCampaignComponent {
     { campaignSend: 'Static', campaignName: 'Stat' },
     { campaignSend: 'Dynamic', campaignName: 'Dyan' }
   ]
-
+  public showLoader = false;
 
   campType: FormControl;
   campSend :FormControl;
@@ -52,6 +53,8 @@ export class CreateCampaignComponent {
     this.messageTypeList();
     this.templateList();
     this.getRouteParams();
+
+    
   }
   getRouteParams() {
 
@@ -84,7 +87,6 @@ export class CreateCampaignComponent {
       userId: sessionStorage.getItem('userId'),
       campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       description: [],
-      // messageJson: [],
       campaignStartTime: [],
       campaignEndTime: [],
       campaignStatus: ['Active'],
@@ -93,10 +95,7 @@ export class CreateCampaignComponent {
       channelPriorityScheme: ['Auto'],
       messageId: 1,
       templateId: [],
-      // campSend:[]
-     
-
-    })
+     })
 
 
   }
@@ -133,6 +132,24 @@ export class CreateCampaignComponent {
     });
   }
  
+ // Custom method to check if the description is invalid.
+ isDescriptionInvalid() {
+  const descriptionControl = this.campaignForm.get('description');
+  return descriptionControl.invalid && descriptionControl.touched;
+}
+hasSpecialCharacters(value: string) {
+  const pattern = /^[A-Za-z0-9_]+$/;
+  return !pattern.test(value);
+}
+onDescriptionBlur() {
+  const descriptionControl = this.campaignForm.get('description');
+  if (this.hasSpecialCharacters(descriptionControl.value)) {
+      descriptionControl.setErrors({ specialCharacters: true });
+  } else {
+      descriptionControl.setErrors(null);
+  }
+}
+
   messageTypeList() {
     this.campaignService.getMessageList().subscribe(res => {
       if (res) {
@@ -154,6 +171,7 @@ export class CreateCampaignComponent {
   }
 
   onSubmit() {
+    this.showLoader=true
     let data = this.campaignForm.value;
     data['campaignStartTime'] = this.campaignForm.value.campaignStartTime ? moment(this.campaignForm.value.campaignStartTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
     data['campaignEndTime'] = this.campaignForm.value.campaignEndTime ? moment(this.campaignForm.value.campaignEndTime).format('YYYY-MM-DDTHH:mm:ssZ') : null;
@@ -164,6 +182,7 @@ export class CreateCampaignComponent {
         formData['campaignId'] = this.cmpId;
         this.campaignService.campaignDataUpdate(this.campaignForm.value).subscribe({
           next: (res) => {
+            this.showLoader=false
             console.log(res, "Create Form....");
             Swal.fire({
               title: 'Campaign Updated Successfully',
@@ -176,6 +195,7 @@ export class CreateCampaignComponent {
             });
           },
           error: () => {
+            this.showLoader=false
             Swal.fire({
               title: 'Error',
               text: 'Error while updating the Campaign Details.',
@@ -191,6 +211,7 @@ export class CreateCampaignComponent {
       } else {
         this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
           next: (res) => {
+            this.showLoader=true
             console.log(res, "Create Form....");
             Swal.fire({
               title: 'Campaign Created Successfully',
@@ -206,6 +227,7 @@ export class CreateCampaignComponent {
             });
           },
           error: () => {
+            this.showLoader=false
             Swal.fire({
               title: 'Error',
               text: 'Error while adding the Campaign Details.',

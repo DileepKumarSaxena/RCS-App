@@ -356,7 +356,7 @@ export class XiaomircsComponent implements OnInit {
   removeTab(index: number) {
     // this.tabs.splice(index, 1);
     console.log(index, "Index..........");
-    if (this.cardDetails.length > 2) {
+    if (this.cardDetails.length > 1) {
       this.cardDetails.removeAt(index);
       this.tabs.splice(index, 1);
     }

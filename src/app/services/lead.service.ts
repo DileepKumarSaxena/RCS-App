@@ -21,6 +21,7 @@ export class LeadService extends BaseService {
 
 
   private URLS = 'http://fuat.flash49.com/rcsmsg/lead/action';
+  // private URLS = 'https://app.flash49.com/rcsmsg/lead/action';
   performActionOnLead(leadId: string, action: string): Observable<any> {
     console.log(this.URLS, 'performActionOnLead');
     return this.http.get(`${this.URLS}?action=${action}&leadId=${leadId}`);
@@ -80,6 +81,13 @@ export class LeadService extends BaseService {
     formData.append("file", file, file.name);
     formData.append("leadInfoJson", JSON.stringify(leadInfoJson));
     return this.http.post(`${this.baseUrlData + 'leadInfo/upload'}`, formData, { params: httpParams });
+  }
+
+  testNumber(isDND: any, formObj:any): Observable<any> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append("isDND", isDND);
+    console.log(formObj, "data..............");
+    return this.http.post(`${this.baseUrlData + 'leadInfo'}`, formObj, { params: httpParams });
   }
   
   getLeadListData(userId, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {

@@ -9,6 +9,7 @@ import { fakeBackendProvider } from './_helpers';
 
 import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 import { BasicAuthInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
@@ -49,6 +50,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DasboardComponent } from './components/dasboard/dasboard.component';
 import { NgChartsModule } from 'ng2-charts';
+import { FooterComponent } from './components/footer/footer.component';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
     bgsPosition: POSITION.bottomCenter,
@@ -88,7 +90,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatTabsModule,
         MatTooltipModule,
         NgChartsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatSlideToggleModule
         
         
     ],
@@ -113,7 +116,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         TemplateListComponent,
         ResetPasswordComponent,
         ForgotPasswordComponent,
-        DasboardComponent
+        DasboardComponent,
+        FooterComponent
     
     ],
     providers: [

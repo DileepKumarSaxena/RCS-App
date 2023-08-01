@@ -12,6 +12,7 @@ export class AuthenticationService {
 
 
   baseUrl = 'http://fuat.flash49.com/rcsmsg/';
+  // baseUrl = 'https://app.flash49.com/rcsmsg/';
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<any>(

@@ -1,3 +1,13 @@
+<div class="go-back-section template-back">
+  <div class="back-icon">
+    <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+    <h5 class="text-center">LEAD LIST</h5>
+  </div>
+  <button type="button" class="btn btn-info btn-lg" routerLink="/lead/create">+ Add
+    Lead</button>
+</div>
+<br>
+
 <div class="container-fluid h-100">
 
   <div class="row">
@@ -6,40 +16,30 @@
     </div> -->
 
     <div class="col-sm-12">
-      <br><br>
-      <div class="go-back-section">
-        <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-        <h5 class="text-center">ADD LEAD</h5>
-    </div>
-     
+    
       <form [formGroup]="leadForm">
 
         <div class="card bg-light text-dark">
 
-          <div class="card-body">
+          <div class="card-body bottom-space">
 
             <div class="filter-section">
               <div class="date-range-section">
                 <mat-form-field appearance="outline">
                   <mat-label>Enter a date range</mat-label>
                   <mat-date-range-input [rangePicker]="picker">
-                    <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" formControlName="startDate">
-                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" formControlName="endDate">
+                    <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" formControlName="startDate" required>
+                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" formControlName="endDate" required>
                   </mat-date-range-input>
-                  <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
-                <button type="button" class="btn btn-success btn-lg" (click)="getLeadList()">Search</button>
+                <button type="button" class="btn btn-success btn-lg" [disabled]="leadForm.status === 'INVALID'" (click)="getLeadList()">Search</button>
               </div>
-              <button type="button" style="width: 20%;" class="btn btn-info btn-lg" routerLink="/lead/create">+ Add
-                Lead</button>
+              <button *ngIf="dataSource['data']['length'] > 0" [disabled]="leadForm.status === 'INVALID'" type="text" class="btn btn-success download" placeholder="Download" (click)="DownloadLeadFile()" 
+            readonly>Export &nbsp;<mat-icon>download</mat-icon></button>
             </div>
-
-            <div>
-
-            </div>
-
           </div>
         </div>
       </form>
@@ -50,7 +50,7 @@
       <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
         <div class="card-body">
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-sm-10">
               <mat-form-field appearance="outline">
                 <mat-label>Filter</mat-label>
@@ -59,10 +59,9 @@
           </div>
           <div class="col-sm-2">
   
-            <button   type="text" class="btn btn-success download" placeholder="Download" (click)="DownloadLeadFile()" 
-            readonly>Download &nbsp;<mat-icon>download</mat-icon></button>
+           
           </div>
-          </div>
+          </div> -->
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
                 <!-- SLNo Column -->
@@ -94,14 +93,14 @@
               <!-- scheduleStartDtm -->
               <ng-container matColumnDef="scheduleStartDtm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule Start Date</th>
-                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('MM/DD/YYYY')}}
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('YYYY/MM/DD')}}
                 </td>
               </ng-container>
 
               <!-- scheduleEndDtm -->
               <ng-container matColumnDef="scheduleEndDtm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule End Date</th>
-                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('MM/DD/YYYY')}}
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('YYYY/MM/DD')}}
                 </td>
               </ng-container>
 

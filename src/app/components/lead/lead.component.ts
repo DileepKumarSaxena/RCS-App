@@ -110,6 +110,7 @@ export class LeadComponent {
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;
         this.paginator.length = res.totalCount;
+        this.checkDataSource();
         this.showLoader = false;
       },
       error: (err) => {
@@ -206,6 +207,25 @@ export class LeadComponent {
       }
     });
   }
+
+  checkDataSource() {
+    this.showLoader = true
+    if (this.dataSource['data']['length'] === 0) {
+      this.showNoRecordsFoundAlert();
+    }
+
+    this.showLoader = false
+  }
+
+  showNoRecordsFoundAlert() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Data Not Found',
+      width: '250px'
+
+    });
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

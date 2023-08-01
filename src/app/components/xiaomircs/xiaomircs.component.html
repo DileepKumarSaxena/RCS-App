@@ -1,38 +1,41 @@
+<div class="go-back-section template-back add-inner-padding">
+    <div class="back-icon">
+      <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+      <h5 class="text-center">ADD TEMPLATE</h5>
+    </div>
+
+  </div>
 <div class="container-fluid h-100">
     <form [formGroup]="templateForm">
         <div class="row">
             <div class="col-sm-12 mx-auto spacing">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="go-back-section">
-                            <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-                            <h5 class="text-center">Add Template</h5>
-                        </div>
-                        <hr>
-                        <h4>Bot message type : <span>Transactional </span> <span
+                     
+                        <!-- <h4>Bot message type : <span>Transactional </span> <span
                                 matTooltip="Notifications & information sent to existing customers of a business to provide relevant information for a customer’s existing services."><i
                                     class="fa fa-info-circle"></i></span></h4>
                         <p>As your bot is of type ‘Transactional’, please ensure that you create a template of the same
                             type. For details, hover on the ‘Info’ icon above.
-                        </p>
+                        </p> -->
                     </div>
 
 
                 </div>
-                <br>
+                
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-7">
 
                         <div class="card bg-light text-dark">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Template Name/Code<span class="requireField">*</span> <i class="fa fa-info-circle"
+                                    <label>Template Name<span class="requireField">*</span> <i class="fa fa-info-circle"
                                         matTooltip="Give your message template a name e.g Account update, OTP, etc in 2-3 words"></i></label>
                                     <input type="text" formControlName="templateCode" class="form-control" autocomplete="off"
                                       (input)="templateNameCharacterCount($event)" required>
                                     <small>{{ templateForm.get('templateCode').value.length }}/20 Characters used</small>
                                     <div *ngIf="templateCodeVal && templateForm.get('templateCode').invalid" class="text-danger">
-                                      Template Name/Code is required.
+                                      Template Name is required.
                                     </div>
                                   </div>
 
@@ -134,13 +137,13 @@
                                             [disabled]="this.cardDetails.value.length > 5">
                                             <mat-icon>add</mat-icon>
                                         </button>
-                                        <mat-tab-group [selectedIndex]="">
+                                        <mat-tab-group [selectedIndex]="" class="form-tab-section">
                                             <mat-tab formArrayName="cardDetails" class="cardRowSection"
                                                 *ngFor="let item of templateForm.get('cardDetails')['controls']; let i = index;"
                                                 label={{getName(i+1)}}>
                                                 <div class="removeButtonRow">
                                                     <button mat-mini-fab color="warn"
-                                                        (click)="removeTab(i)">
+                                                        (click)="removeTab(i)" [disabled]="this.cardDetails.length <= 1">
                                                         <mat-icon>remove</mat-icon>
                                                     </button>
                                                 </div>
@@ -247,7 +250,7 @@
                         </div>
 
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
 
                         <div class="card bg-light text-dark">
                             <div class="card-body">
@@ -372,7 +375,7 @@
                                         </div>
                                     </div>
                                     </mat-tab>
-                                    <!-- <mat-tab label="Business Info">
+                                    <mat-tab label="Business Info">
                                         <div class="devicePreview">
                                             <div class="contents">
                                                 <div class="headingSection">
@@ -383,7 +386,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="profile-section">
-                                                    <img src="../../../assets/logo.svg">
+                                                    <img src="assets/logo.svg">
                                                     <div class="description-row">
                                                         <h5>Fonada</h5>
                                                         <p>At Fonada, we understand that each organization is unique, as
@@ -450,7 +453,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </mat-tab> -->
+                                    </mat-tab>
                                 </mat-tab-group>
 
 

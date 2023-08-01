@@ -10,7 +10,7 @@ mat-form-field {
 
 .date-range-section {
     display: flex;
-    justify-content: flex-start;
+    // justify-content: flex-start;
     align-items: baseline;
 
     mat-form-field {
@@ -39,4 +39,16 @@ mat-form-field {
     margin-left: 88%;
 }
   
-  
+.mat-mdc-slide-toggle.mat-primary {
+    --mdc-switch-selected-focus-state-layer-color: #5fc29f;
+    --mdc-switch-selected-handle-color: #5fc29f;
+    --mdc-switch-selected-hover-state-layer-color: #5fc29f;
+    --mdc-switch-selected-pressed-state-layer-color: #a7f6da;
+    --mdc-switch-selected-focus-handle-color: #a7f6da;
+    --mdc-switch-selected-hover-handle-color: #a7f6da;
+    --mdc-switch-selected-pressed-handle-color: #a7f6da;
+    --mdc-switch-selected-focus-track-color: #d2f9eb;
+    --mdc-switch-selected-hover-track-color: #d2f9eb;
+    --mdc-switch-selected-pressed-track-color: #d2f9eb;
+    --mdc-switch-selected-track-color: #d2f9eb;
+}

@@ -1,23 +1,26 @@
+<div class="go-back-section template-back">
+  <div class="back-icon">
+    <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+    <h5 class="text-center">CAMPAIGN LIST</h5>
+  </div>
+  <button type="button" class="btn btn-info btn-lg" routerLink="/campaign/create">+ Add
+    Campaign</button>
+</div>
+<br>
 <div class="container-fluid h-100">
-
   <div class="row">
     <!-- <div class="col-sm-3">
       <app-navigation></app-navigation>
     </div> -->
 
     <div class="col-sm-12">
-      <br><br>
-      <div class="go-back-section">
-        <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-        <h5 class="text-center">CAMPAIGN LIST</h5>
-      </div>
-      <form [formGroup]="campaignListForm">
+       <form [formGroup]="campaignListForm">
 
         <div class="card bg-light text-dark">
 
 
 
-          <div class="card-body">
+          <div class="card-body bottom-space">
 
             <div class="filter-section">
               <div class="date-range-section">
@@ -29,14 +32,14 @@
                     <input required ng-disabled="true" readonly="true" matEndDate placeholder="End date"
                       formControlName="endDate">
                   </mat-date-range-input>
-                  <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
                 <button type="button" class="btn btn-success btn-lg"  [disabled]="campaignListForm.status === 'INVALID'" (click)="getCampaignList()">Search</button>
               </div>
-              <button type="button" class="btn btn-info btn-lg" routerLink="/campaign/create">+ Add
-                Campaign</button>
+              <button *ngIf="dataSource['data']['length'] > 0" [disabled]="campaignListForm.status === 'INVALID'" type="text" class="btn btn-success download" placeholder="Download" (click)="downloadFile()" 
+              readonly>Export &nbsp;<mat-icon>download</mat-icon></button>
             </div>
 
             <div>
@@ -56,18 +59,17 @@
           
           <div class="row">
             <div class="col-sm-10">
-              <mat-form-field appearance="outline">
+              <!-- <mat-form-field appearance="outline">
                 <mat-label>Filter</mat-label>
                 <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Campaign Name" #input>
-              </mat-form-field>
+              </mat-form-field> -->
           </div>
           <div class="col-sm-2">
   
-            <button  [disabled]="campaignListForm.status === 'INVALID'" type="text" class="btn btn-success download" placeholder="Download" (click)="downloadFile()" 
-            readonly>Download &nbsp;<mat-icon>download</mat-icon></button>
+            
           </div>
           </div>
-          
+          <br>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
               <!-- SLNo Column -->
@@ -81,16 +83,17 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
                 <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
               </ng-container> -->
+              <ng-container matColumnDef="createdDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+                <td mat-cell *matCellDef="let row">{{moment(row.createdDate).format('YYYY/MM/DD')}}</td>
+              </ng-container>
               <!-- campaignName -->
               <ng-container matColumnDef="campaignName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
                 <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
               </ng-container>
 
-              <ng-container matColumnDef="createdDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
-                <td mat-cell *matCellDef="let row">{{moment(row.createdDate).format('MM/DD/YYYY')}}</td>
-              </ng-container>
+            
 
               <!-- description -->
               <ng-container matColumnDef="description">
@@ -129,9 +132,32 @@
                   <button mat-icon-button matTooltip="Edit" color="primary" (click)="editRow(data.campaignId)">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteRow(data.campaignId)">
+                  <!-- <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteRow(data.campaignId)">
                     <mat-icon>delete</mat-icon>
-                  </button>
+                  </button> -->
+
+                
+                  <mat-slide-toggle color="primary" [checked]="(data.isDeleted == 0 ? true : false)" (change)="toggleCampaignStatus(data)">
+                    {{ data.isDeleted == 0 ? 'Active' : 'InActive'}}
+                  </mat-slide-toggle>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                 </td>
               </ng-container>
 
@@ -141,6 +167,7 @@
 
 
             </table>
+            
             <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div>
              
             <!-- <mat-paginator #paginatorRef (page)="onPaginateChange($event)" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" [length]="totalItems"></mat-paginator> -->

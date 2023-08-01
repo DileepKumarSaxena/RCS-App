@@ -21,7 +21,7 @@ mat-form-field {
 
 .lead{
 width:70%;
- padding: 5%;
+ padding: 4%;
 }
 
 .testingNumber{
@@ -34,7 +34,7 @@ width:70%;
 }
 
 .submit{
-  width: 100%; padding: 5%;
+  width: 100%; padding: 4%;
 }
 
 .custom-file-button {
@@ -156,4 +156,15 @@ width:70%;
 .custom-date-range-input {
   border: 1px solid #ccc;
   padding: 8px;
+}
+
+.custom-card-width{
+  width: 32%;
+  float: right;
+  margin-bottom: 30px;
+
+  .lead {
+    width: 100%;
+    padding: 4%;
+  }
 }

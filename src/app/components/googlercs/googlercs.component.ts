@@ -23,7 +23,7 @@ export class GooglercsComponent {
   moment: any = moment;
   
  
-  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED','Invalid'];
+  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED','Invalid'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;
@@ -55,7 +55,7 @@ export class GooglercsComponent {
   }
   getSummaryList() {
     this.showLoader=true
-    let username = 'Admin';
+    let username = sessionStorage.getItem('username');
     let startDateVal = moment(this.summaryListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.summaryListForm.value.endDate).format('YYYY-MM-DD');
     let limit = this.paginator.pageSize.toString();  
@@ -67,6 +67,7 @@ export class GooglercsComponent {
         this.summaryData = res.data;
         this.dataSource.data = this.summaryData;
         this.paginator.length = res.request_status;
+        this.checkDataSource();
         // this.ngxService.stop();
         this.showLoader=false
     
@@ -121,6 +122,25 @@ export class GooglercsComponent {
   //     }
   //   });
   // }
+
+  checkDataSource() {
+    this.showLoader = true
+    if (this.dataSource['data']['length'] === 0) {
+      this.showNoRecordsFoundAlert();
+    }
+
+    this.showLoader = false
+  }
+
+  showNoRecordsFoundAlert() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Data Not Found',
+      width: '250px'
+
+    });
+  }
+
   goBack(): void {
     this.location.back();
   }
@@ -155,13 +175,12 @@ export class GooglercsComponent {
             const startingSerialNo = paginatorRef.pageIndex * paginatorRef.pageSize + 1;
             // Map only the desired properties with custom header names
             return {
-              // 'campaing_name', 'lead_name', 'created_date', 'last_modified_date', 'status', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED',
-              // 'SL No.': startingSerialNo + i,
+              // 'campaing_name', 'lead_name', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED','Invalid'              // 'SL No.': startingSerialNo + i,
               'Campaign Name': e.campaing_name,
               'Lead Name': e.lead_name,
-              'Created Date': moment(e.Created_date).format('MM/DD/YYYY'),
-              'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
-              'Status': e.status === '0' ? 'Pending' : 'Approved',
+              // 'Created Date': moment(e.Created_date).format('MM/DD/YYYY'),
+              // 'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
+              // 'Status': e.status === '0' ? 'Pending' : 'Approved',
               'Total': e.TOTAL,
               'SUBMITTED': e.SUBMITTED,
               'Delivered': e.Delivered,

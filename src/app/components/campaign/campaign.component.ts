@@ -33,7 +33,7 @@ export class CampaignComponent {
   pageIndex = 0;
   existingCampaignNames: any = [];
   pageTotal:number
-  displayedColumns: string[] = ['id', 'campaignName','createdDate', 'description', 'templateName', 'actions'];
+  displayedColumns: string[] = ['id', 'createdDate', 'campaignName', 'description', 'templateName', 'actions'];
   dataSource!: MatTableDataSource<any>;
   config: any;
   currentPage: number = 1;
@@ -82,6 +82,7 @@ export class CampaignComponent {
     this.paginator.pageSize = 5;
     this.createCampaignForm();
     this.getCampaignList();
+    
   }
 
 
@@ -114,6 +115,7 @@ export class CampaignComponent {
           this.dataSource.data = this.campaignData;
           this.totalItems = res.campaignData
           this.paginator.length = res.totalCount;
+          this.checkDataSource();
           this.showLoader = false;
           // this.pageIndex = res.campaignData;
         },
@@ -177,6 +179,104 @@ export class CampaignComponent {
       }
     });
   }
+
+   
+  // toggleCampaignStatus(data: any) {
+  //   Swal.fire({
+  //     title: data.campaignStatus === 'Active' ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes',
+  //     cancelButtonText: 'No',
+  //     icon: 'warning',
+  //     confirmButtonColor: '#F34335',
+  //     customClass: {
+  //       icon: 'custom-icon-class',
+  //     },
+  //     width: '300px',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const newActiveState = data.campaignStatus === 'Active' ? 'Inactive' : 'Active'; // Toggle the active state
+  
+  //       this.campaignservice.campaignDataUpdate({ campaignId: data.campaignId, campaignStatus: newActiveState }).subscribe(
+  //         (res: any) => {
+  //           console.log(res,"Res....");
+  //           this.getCampaignList();
+  //         },
+  //         (err) => {
+  //           Swal.fire({
+  //             title: `Error while ${newActiveState === 'Active' ? 'activating' : 'deactivating'} the campaign.`,
+  //             customClass: {
+  //               icon: 'custom-icon-class',
+  //             },
+  //             width: '300px',
+  //           });
+  //         }
+  //       );
+  //     }
+  //   });
+  // }
+  toggleCampaignStatus(data: any) {
+    Swal.fire({
+      title: data.isDeleted === 'Active' ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      icon: 'warning',
+      confirmButtonColor: '#F34335',
+      customClass: {
+        icon: 'custom-icon-class',
+      },
+      width: '300px',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newActiveState = data.isDeleted == 0 ? 'InActive' : 'Active'; // Toggle the active state
+        
+        this.campaignservice.activeDeactiveCampaignById(data.campaignId, newActiveState).subscribe(
+          (res: any) => {
+            console.log(res, "Res....");
+            this.getCampaignList();
+          },
+          (err) => {
+            Swal.fire({
+              title: `Error while ${newActiveState == "Active" ? 'InActive' : 'Active'} the campaign.`,
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
+            });
+          }
+        );
+      }
+    });
+  }
+
+
+  test(flag){
+    return flag == 'Active' ? true : false;
+  }
+  
+  
+  
+  
+  
+  checkDataSource() {
+    this.showLoader = true
+    if (this.dataSource['data']['length'] === 0) {
+      this.showNoRecordsFoundAlert();
+    }
+
+    this.showLoader = false
+  }
+
+  showNoRecordsFoundAlert() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Data Not Found',
+      width: '250px'
+
+    });
+  }
+  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -208,9 +308,8 @@ export class CampaignComponent {
           data_ar = data_ar.Campaign.map((e) => {
             // Map only the desired properties with custom header names
             return {
-
-              'Campaign Name': e.campaignName,
               'Created Date': moment(e.createdDate).format('MM/DD/YYYY'),
+              'Campaign Name': e.campaignName,
               'Description': e.description,
               'Template Name': e.templateName
              

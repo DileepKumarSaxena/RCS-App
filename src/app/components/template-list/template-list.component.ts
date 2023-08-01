@@ -19,7 +19,7 @@ export class TemplateListComponent {
   public showLoader = false;
   moment: any = moment;
   campaignListForm: FormGroup;
-  displayedColumns: string[] = ['id','templateCode', 'templateType', 'templateMsgType', 'status', 'inserttime'];
+  displayedColumns: string[] = ['id', 'inserttime','templateCode', 'templateType', 'templateMsgType', 'status'];
   dataSource!: MatTableDataSource<any>;
   templateData:any;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
@@ -97,12 +97,12 @@ export class TemplateListComponent {
           // Map only the desired properties with custom header names
           return {
 
-
+            'Creation Date': moment(e.inserttime).format('MM/DD/YYYY'),
             'Template Name/Code': e.templateCode,
             'Template Type': e.templateType,
             'Template Message Type': e.templateMsgType,
             'Status': e.status === '0' ? 'Pending' : 'Approved',
-            'Creation Date': moment(e.inserttime).format('MM/DD/YYYY'),
+           
             // Add more properties and header names as needed
           };
 

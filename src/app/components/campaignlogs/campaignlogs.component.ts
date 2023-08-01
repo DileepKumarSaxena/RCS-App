@@ -26,13 +26,13 @@ export class CampaignlogsComponent {
   moment: any = moment;
   campaignList: any = [];
   leadList: any = [];
-  displayedColumns: string[] = ['id', 'created_date', 'created_by',  'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'];
+  displayedColumns: string[] = ['id', 'created_date', 'campName', 'leadname', 'language', 'phone_number', 'status'];
   dataSource!: MatTableDataSource<any>;
-  selectedCampaign: any; 
+  selectedCampaign: any;
   @ViewChild(MatSort) sort: MatSort;
   currentDate = new Date();
 
-  
+
 
   constructor(
     private reportservice: ReportsService,
@@ -45,7 +45,7 @@ export class CampaignlogsComponent {
   ngOnInit(): void {
     this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
     this.dataSource = new MatTableDataSource<any>();
-    this.paginator.pageIndex =0;
+    this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
     this.detailReport();
     this.getDetailList();
@@ -59,13 +59,13 @@ export class CampaignlogsComponent {
     this.detailListForm = this.formbuilder.group({
       startDate: moment().format('YYYY-MM-DD'),
       endDate: moment().format('YYYY-MM-DD'),
-      campaignId:[],
-      leadId:[],
+      campaignId: [],
+      leadId: [],
     })
   }
 
-  getDateFilter(){
-    this.showLoader=true
+  getDateFilter() {
+    this.showLoader = true
     let userId = sessionStorage.getItem('userId');
     let from = moment(this.currentDate).format('YYYY-MM-DD');
     let to = moment(this.currentDate).format('YYYY-MM-DD');
@@ -77,15 +77,15 @@ export class CampaignlogsComponent {
         if (res) {
           this.campaignList = res;
         }
-        this.showLoader=false
+        this.showLoader = false
       },
-      error:(err) =>{
+      error: (err) => {
         console.log(err, "Error while fetching the records.");
       }
     })
   }
-  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement){
-    this.showLoader=true
+  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+    this.showLoader = true
     let userId = sessionStorage.getItem('userId');
     let from = moment(startDate.value).format('YYYY-MM-DD');
     let to = moment(endDate.value).format('YYYY-MM-DD');
@@ -97,15 +97,15 @@ export class CampaignlogsComponent {
         if (res) {
           this.campaignList = res;
         }
-        this.showLoader=false
+        this.showLoader = false
       },
-      error:(err) =>{
+      error: (err) => {
         console.log(err, "Error while fetching the records.");
       }
     })
   }
 
-  getLeadName(event:any){
+  getLeadName(event: any) {
     let userId = sessionStorage.getItem('userId');
     let campaignId = event.source.value;
     this.reportservice.getLeadList(userId, campaignId).subscribe({
@@ -115,7 +115,7 @@ export class CampaignlogsComponent {
           this.leadList = res;
         }
       },
-      error:(err) =>{
+      error: (err) => {
         console.log(err, "Error while fetching the records.");
       }
 
@@ -125,25 +125,25 @@ export class CampaignlogsComponent {
     return campaign ? campaign.campaignName : '';
   }
   getDetailList() {
-    this.showLoader=true
+    this.showLoader = true
     let username = sessionStorage.getItem('username');
     let camType = this.detailListForm.value.campaignId;
     let leadId = this.detailListForm.value.leadId;
     let startDateVal = moment(this.detailListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.detailListForm.value.endDate).format('YYYY-MM-DD');
-    let limit = this.paginator.pageSize.toString();  
+    let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
     this.reportservice.getDeatilReport(username, startDateVal, endDateVal, camType, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
-       
+
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
         this.paginator.length = res.request_status;
-       
+        this.checkDataSource();
         // this.ngxService.stop();
-        this.showLoader=false
-    
+        this.showLoader = false
+
       },
       error: (err) => {
         this.detailData = [];
@@ -153,7 +153,7 @@ export class CampaignlogsComponent {
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
 
-        this.showLoader=false
+        this.showLoader = false
       }
     });
   }
@@ -195,9 +195,30 @@ export class CampaignlogsComponent {
   //     }
   //   });
   // }
+
+  checkDataSource() {
+    this.showLoader = true
+    if (this.dataSource['data']['length'] === 0) {
+      this.showNoRecordsFoundAlert();
+    }
+
+    this.showLoader = false
+  }
+
+  showNoRecordsFoundAlert() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Data Not Found',
+      width: '250px'
+
+    });
+  }
+
   goBack(): void {
     this.location.back();
   }
+
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -207,17 +228,17 @@ export class CampaignlogsComponent {
   exportExcel(paginatorRef) {
     this.showLoader = true
     return this.get_download_Rcs_Details_file(paginatorRef);
-  
+
   }
-  
-  
+
+
   get_download_Rcs_Details_file(paginatorRef) {
     this.showLoader = true
     let username = sessionStorage.getItem('username');
     let fromDate = moment(this.detailListForm.value.fromDate).format('YYYY-MM-DD');
     let toDate = moment(this.detailListForm.value.toDate).format('YYYY-MM-DD');
     this.ngxService.start();
-  
+
 
     if (this.detailListForm.value.fromDate !== '' && this.detailListForm.value.toDate !== '') {
 
@@ -226,7 +247,7 @@ export class CampaignlogsComponent {
       let leadId = this.detailListForm.value.leadId;
       let startDateVal = moment(this.detailListForm.value.startDate).format('YYYY-MM-DD');
       let endDateVal = moment(this.detailListForm.value.endDate).format('YYYY-MM-DD');
-      let limit = this.paginator.pageSize.toString();  
+      let limit = this.paginator.pageSize.toString();
       let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
 
       return this.reportservice.getDetailData(username, startDateVal, endDateVal, camType, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
@@ -234,29 +255,28 @@ export class CampaignlogsComponent {
           console.log("Detail List::=>" + JSON.stringify(data_ar.data))
           this.showLoader = false
           data_ar = data_ar.data.map((e, i) => {
-  
+
             const startingSerialNo = paginatorRef.pageIndex * paginatorRef.pageSize + 1;
             // Map only the desired properties with custom header names
             return {
-           			
-              // 'created_by', 'created_date', 'last_modified_date', 'leadname', 'campName', 'language',  'phone_number', 'phone_number_status', 'status'
-              // 'SL No.': startingSerialNo + i,
-              'Created By':e.created_by,
+              // 'created_date', 'campName', 'leadname', 'language', 'phone_number', 'status'
+              // 'SL No.': startingSerialNo + i,  
+              // 'Created By':e.created_by,
               'Created Date': moment(e.created_date).format('MM/DD/YYYY'),
-              'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
-              'Lead Name': e.leadname,
+              // 'Last Modified Date': moment(e.last_modified_date).format('MM/DD/YYYY'),
               'Campaign Name': e.campName,
+              'Lead Name': e.leadname,
               'Language': e.language,
               'Phone Number': e.phone_number,
               'Phone Number Status': e.phone_number_status,
-              'Status' : e.status
+              'Status': e.status
               // Add more properties and header names as needed
             };
-  
-  
+
+
           });
           console.log("Campaign List::=>" + JSON.stringify(data_ar))
-  
+
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {
             type: 'text/csv;charset=utf-8;'
@@ -281,8 +301,8 @@ export class CampaignlogsComponent {
           width: '250px',
           icon: 'error',
           // position: 'top-end',
-  
-  
+
+
         });
       });
     } else {

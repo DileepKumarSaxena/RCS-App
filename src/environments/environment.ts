@@ -6,6 +6,8 @@ export const environment = {
   production: false,
   apiUrl: 'http://fuat.flash49.com/rcsmsg/auth/generateToken',
   baseUrl: 'http://fuat.flash49.com/rcsmsg/',
+  // apiUrl: 'https://app.flash49.com/rcsmsg/auth/generateToken',
+  // baseUrl: 'https://app.flash49.com/rcsmsg/',
 };
 
 /*

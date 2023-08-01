@@ -15,16 +15,19 @@ export class ReportsService extends BaseService{
 
   //Api for Detail_Report
   private URLS = ' http://fuat.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange';
+  // private URLS = ' https://app.flash49.com/rcsmsg/campaign/campaignNameAndIdListByDateRange';
   dateRangeFilter(from: string, to: string, userId:string): Observable<any> {
     return this.http.get(`${this.URLS}?from=${from}&to=${to}&userId=${userId}`);
   }
   private URLS_Lead = ' http://fuat.flash49.com/rcsmsg/lead/leadNameAndIdList';
+  // private URLS_Lead = ' https://app.flash49.com/rcsmsg/lead/leadNameAndIdList';
   getLeadList(userId:string, campaignId:string): Observable<any> {
     return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
   }
   
   getDeatilReport(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
     const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+    // const url = 'https://app.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -48,6 +51,7 @@ export class ReportsService extends BaseService{
   }
   getSummaryData(username, fromDate, toDate) {
     const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
+    // const url = 'https://app.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -66,7 +70,8 @@ export class ReportsService extends BaseService{
     return this.http.post(url, data, httpOptions);
   }
   getDetailData(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
-    const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+    const url = 'https://app.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+    // const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -93,6 +98,7 @@ export class ReportsService extends BaseService{
 
   getSummaryReport(username, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
     const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
+    // const url = 'https://app.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
