@@ -13,6 +13,7 @@ export class CampaignService extends BaseService {
   }
 
   baseUrlData = this.baseUrl + 'campaign/';
+  templateUrlData = this.baseUrl + 'template/';
 
   getAllTheCampaignList(userId: any, campaignName: any): Observable<any> {
     let httpParams = new HttpParams()
@@ -39,8 +40,8 @@ export class CampaignService extends BaseService {
 
   // Template List
   getAllTemplateList(): Observable<any> {
-    return this.http.get('http://fuat.flash49.com/rcsmsg/template/getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
-    // return this.http.get('https://app.flash49.com/rcsmsg/template/getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
+    return this.http.get(this.templateUrlData+'getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
+    // return this.http.get(this.templateUrlData+'getAllTemplateName?templateUserId='+sessionStorage.getItem('userId'));
   }
 
   private templateListSubject$ = new BehaviorSubject(null);

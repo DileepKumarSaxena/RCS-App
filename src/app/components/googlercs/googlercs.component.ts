@@ -67,7 +67,7 @@ export class GooglercsComponent {
         this.summaryData = res.data;
         this.dataSource.data = this.summaryData;
         this.paginator.length = res.request_status;
-        this.checkDataSource();
+        // this.checkDataSource();
         // this.ngxService.stop();
         this.showLoader=false
     

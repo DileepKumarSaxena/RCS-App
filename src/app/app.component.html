@@ -8,7 +8,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" [routerLink]="['/dasboard']" [ngClass]="{ 'active': isActive('/dasboard') }">Dasboard</a>
         </li>
         <li class="nav-item">
@@ -56,4 +56,4 @@
 </div>
 <!-- <app-loader></app-loader> -->
 
-<app-footer></app-footer>
+<app-footer *ngIf="currentUser && !isLoginPage()"></app-footer>

@@ -88,6 +88,7 @@
                                         <label class="input-group-text" for="inputGroupFile">Browse</label>
                                     </div>
                                 </div>
+                                <!-- <mat-error *ngIf="leadForm.get('file').hasError('required')">File is required</mat-error> -->
                                 <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent"
                                     class="text-danger invalid-format">
                                     Invalid column value. Please ensure all values in the CSV file column are numbers.
@@ -159,7 +160,7 @@
                             <div class="col-sm-4" *ngIf="f.leadExecutionType.value === 'schedule'">
                                 <label for="scheduleEndDtm" class="custom-date-label">End Date:</label>
                                 <input id="scheduleEndDtm" class="custom-date-range-input" type="datetime-local"
-                                    formControlName="scheduleEndDtm" [min]="minDate" placeholder="YYYY-MM-DD" required>
+                                    formControlName="scheduleEndDtm" [min]="f.scheduleStartDtm.value" placeholder="YYYY-MM-DD" required>
                             </div>
                          
                             <div class="col-sm-4">
@@ -184,23 +185,21 @@
                             <div class="col-sm-12">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Enter Testing Number</mat-label>
-                                    <input matInput formControlName="testingNumber" maxlength="10">
+                                    <input matInput formControlName="testingNumber" required>
                                     <mat-icon matSuffix aria-hidden="true" container="body">
                                         <span class="material-symbols-outlined" (mouseenter)="isHidden3 = !isHidden3"
                                             (mouseleave)="isHidden3 = !isHidden3">info</span>
                                     </mat-icon>
+                                    <mat-error *ngIf="leadForm.controls.testingNumber.errors" class="error-spacing">{{ getErrorMessage() }}</mat-error>
                                 </mat-form-field>
-
-                                <mat-error
-                                    *ngIf="leadForm.controls.testingNumber.errors && leadForm.controls.testingNumber.errors.invalidNumericInput">Please
-                                    enter a valid numeric value with a single comma separated.</mat-error>
+                                
 
                                 <ng-container *ngIf="isHidden3 && leadForm.get('testingNumber').invalid">
                                     <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                         Numbers(S) on which test call to be given.
                                     </div>
                                 </ng-container>
-                                <br>
+                                <br><br>
                                 <button class="btn btn-success lead" (click)="testLead()" >Test
                                     Lead</button>
                             </div>

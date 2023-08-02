@@ -115,7 +115,7 @@ export class CampaignComponent {
           this.dataSource.data = this.campaignData;
           this.totalItems = res.campaignData
           this.paginator.length = res.totalCount;
-          this.checkDataSource();
+          // this.checkDataSource();
           this.showLoader = false;
           // this.pageIndex = res.campaignData;
         },
@@ -148,7 +148,7 @@ export class CampaignComponent {
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
       icon: 'warning',
-      confirmButtonColor: '#F34335',
+      confirmButtonColor: '#5FC29F',
       customClass: {
         icon: 'custom-icon-class',
       },
@@ -188,7 +188,7 @@ export class CampaignComponent {
   //     confirmButtonText: 'Yes',
   //     cancelButtonText: 'No',
   //     icon: 'warning',
-  //     confirmButtonColor: '#F34335',
+  //     confirmButtonColor: '#5FC29F',
   //     customClass: {
   //       icon: 'custom-icon-class',
   //     },
@@ -217,12 +217,12 @@ export class CampaignComponent {
   // }
   toggleCampaignStatus(data: any) {
     Swal.fire({
-      title: data.isDeleted === 'Active' ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',
+      title: data.isDeleted === 0 ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
       icon: 'warning',
-      confirmButtonColor: '#F34335',
+      confirmButtonColor: '#5FC29F',
       customClass: {
         icon: 'custom-icon-class',
       },

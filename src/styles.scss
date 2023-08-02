@@ -270,3 +270,17 @@ i {
     display: flex;
     justify-content: flex-end;
 }
+
+// :ng-deep{
+.swal2-icon.swal2-error.custom-icon-class.swal2-icon-show {
+    width: 3em !important;
+    height: 3em !important;
+}
+.swal2-icon.swal2-error [class^=swal2-x-mark-line]  {
+    top: 23px !important;
+    width: 15.5px !important;
+    height: 2px !important;
+    border-radius: 0.125em;
+
+}
+// }

@@ -110,7 +110,7 @@ export class LeadComponent {
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;
         this.paginator.length = res.totalCount;
-        this.checkDataSource();
+        // this.checkDataSource();
         this.showLoader = false;
       },
       error: (err) => {
@@ -220,8 +220,11 @@ export class LeadComponent {
   showNoRecordsFoundAlert() {
     Swal.fire({
       icon: 'error',
-      title: 'Data Not Found',
-      width: '250px'
+      title: 'No records found',
+      width: '250px',
+      customClass: {
+        icon: 'custom-icon-class',
+      }
 
     });
   }

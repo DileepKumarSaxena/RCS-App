@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { LeadService } from 'src/app/services/lead.service';
@@ -98,18 +98,41 @@ export class CreateLeadComponent {
       file: [null, [Validators.required, this.validateFileFormat()]],
       isDND: [false],
       isDuplicate: [false],
-      leadExecutionType: ['', Validators.required],
+      leadExecutionType: ['',[Validators.required]],
       scheduleStartDtm: [],
       scheduleEndDtm: [],
       startTime: [],
       endTime: [],
-      testingNumber: ['']
+      testingNumber: [null, [Validators.required, this.validateNumericInput]],
     })
   }
 
-  
+  validateNumericInput(control) {
+    const value = control.value;
+    const regex = /^(\d{10})(,\d{10})*$/; // Regular expression to match valid comma-separated numbers with 10 digits each
+    if (value && !regex.test(value)) {
+      return { invalidNumericInput: true };
+    }
+    return null;
+  }
+
+
+  getErrorMessage() {
+    const testingNumberControl = this.leadForm.get('testingNumber');
+    if (testingNumberControl.hasError('required')) {
+      return 'You must enter a number.';
+    }
+    if (testingNumberControl.hasError('invalidNumericInput')) {
+      return 'Please enter a valid numeric value with a single comma separated, and each number should be exactly 10 digits.';
+    }
+    return '';
+  }
+
   testLead(){
     this.showLoader=true;
+    this.leadForm.get('file').clearValidators();
+    this.leadForm.get('file').updateValueAndValidity();
+
     let data = this.leadForm.value;
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;
@@ -119,48 +142,100 @@ export class CreateLeadComponent {
 
     this.leadService.testNumber(dndValue, formData).subscribe({
       next: (res) => {
-        console.log(res);
+        this.showLoader=true
+        Swal.fire({
+          title: 'Lead Tested Successfully',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            icon: 'custom-icon-class',
+          },
+          width: '300px'
+        }).then(() => {
+          this.leadForm.reset();
+          this.router.navigate(['/leadList']);
+        });
       },
-      error: (err) => {
-      
-      }
+      error: () => {
+        this.showLoader=false
+        Swal.fire({
+          title: 'Error',
+          text: 'Error while adding the Lead Details.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          customClass: {
+            icon: 'custom-icon-class',
+          },
+          width: '300px'
+        });
+      },
     })
   }
   }
-  createTestLead(dataVal){
+
+  createTestLead(dataVal) {
+    let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
+
+    let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
+        "createdDate": new Date(),
+        "lastModifiedDate": new Date(),
+        "status": "Created",
+        "createdBy": sessionStorage.getItem('username'),
+        "lastModifiedBy": sessionStorage.getItem('username'),
+        "phoneNumber": phoneNumber
+    }));
+
     let obj = {
         "campaignId": dataVal['campaignId'],
         "userId": sessionStorage.getItem('userId'),
-        "leadName":  dataVal['leadName'],
+        "leadName": dataVal['leadName'],
         "leadSchedule": {
             "scheduleStartDtm": dataVal['scheduleStartDtm'],
             "windowRequired": "N",
             "scheduleEndDtm": dataVal['scheduleEndDtm'],
             "scheduleDay": "1"
         },
-        "leadInfoDetails": [
-            {
-                "createdDate": new Date(),
-                "lastModifiedDate": new Date(),
-                "status": "Created",
-                "createdBy": sessionStorage.getItem('username'),
-                "lastModifiedBy": sessionStorage.getItem('username'),
-                "phoneNumber": dataVal['testingNumber']
-            }
-        ]
-    
-    
-    }
-    return obj;
-  }
+        "leadInfoDetails": leadInfoDetailsList
+    };
 
-  validateNumericInput(control) {
-    const numericPattern = /^[0-9]+(,[0-9]+)*$/; // Regular expression for numeric values with a single comma separated
-    if (control.value && !numericPattern.test(control.value)) {
-      return { invalidNumericInput: true };
-    }
-    return null;
-  }
+    return obj;
+}
+
+
+  // createTestLead(dataVal){
+  //   let obj = {
+  //       "campaignId": dataVal['campaignId'],
+  //       "userId": sessionStorage.getItem('userId'),
+  //       "leadName":  dataVal['leadName'],
+  //       "leadSchedule": {
+  //           "scheduleStartDtm": dataVal['scheduleStartDtm'],
+  //           "windowRequired": "N",
+  //           "scheduleEndDtm": dataVal['scheduleEndDtm'],
+  //           "scheduleDay": "1"
+  //       },
+  //       "leadInfoDetails": [
+  //           {
+  //               "createdDate": new Date(),
+  //               "lastModifiedDate": new Date(),
+  //               "status": "Created",
+  //               "createdBy": sessionStorage.getItem('username'),
+  //               "lastModifiedBy": sessionStorage.getItem('username'),
+  //               "phoneNumber": dataVal['testingNumber']
+  //           }
+  //       ]
+    
+    
+  //   }
+  //   return obj;
+  // }
+
+  // validateNumericInput(control) {
+  //   const numericPattern = /^[0-9]+(,[0-9]+)*$/; // Regular expression for numeric values with a single comma separated
+  //   if (control.value && !numericPattern.test(control.value)) {
+  //     return { invalidNumericInput: true };
+  //   }
+  //   return null;
+  // }
 
   uploadCsvFile(event) {
     this.file = event.target.files[0];
@@ -270,7 +345,6 @@ export class CreateLeadComponent {
         if (res['message'] == 'Y') {
           this.leadForm.get('leadName').setErrors({ duplicateName: true });
         }
-        console.log(res, "Lead Name Created Successfully.");
       },
       error: (err) => {
 

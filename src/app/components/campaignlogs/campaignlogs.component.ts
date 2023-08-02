@@ -140,7 +140,7 @@ export class CampaignlogsComponent {
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
         this.paginator.length = res.request_status;
-        this.checkDataSource();
+        // this.checkDataSource();
         // this.ngxService.stop();
         this.showLoader = false
 

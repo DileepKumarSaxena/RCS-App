@@ -20,8 +20,8 @@ export class LeadService extends BaseService {
   }
 
 
-  private URLS = 'http://fuat.flash49.com/rcsmsg/lead/action';
-  // private URLS = 'https://app.flash49.com/rcsmsg/lead/action';
+  private URLS = this.baseUrlData+'/action';
+  
   performActionOnLead(leadId: string, action: string): Observable<any> {
     console.log(this.URLS, 'performActionOnLead');
     return this.http.get(`${this.URLS}?action=${action}&leadId=${leadId}`);
