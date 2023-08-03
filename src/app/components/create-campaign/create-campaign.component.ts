@@ -138,9 +138,10 @@ export class CreateCampaignComponent {
   return descriptionControl.invalid && descriptionControl.touched;
 }
 hasSpecialCharacters(value: string) {
-  const pattern = /^[A-Za-z0-9_]+$/;
+  const pattern = /^[A-Za-z0-9\s]+$/;
   return !pattern.test(value);
 }
+
 onDescriptionBlur() {
   const descriptionControl = this.campaignForm.get('description');
   if (this.hasSpecialCharacters(descriptionControl.value)) {
