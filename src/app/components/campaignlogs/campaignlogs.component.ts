@@ -71,7 +71,6 @@ export class CampaignlogsComponent {
     let to = moment(this.currentDate).format('YYYY-MM-DD');
     this.reportservice.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
-        console.log(res, "CampaigList");
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
         if (res) {

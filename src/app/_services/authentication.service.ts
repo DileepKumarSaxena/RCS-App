@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-
-
+import jwt_decode from 'jwt-decode'
+import { StorageService } from './storage.service';
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
@@ -14,7 +14,7 @@ export class AuthenticationService {
   baseUrl = 'http://fuat.flash49.com/rcsmsg/';
   // baseUrl = 'https://app.flash49.com/rcsmsg/';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public storage: StorageService) {
     this.currentUserSubject = new BehaviorSubject<any>(
 
       this.currentUserSubject = JSON.parse(localStorage.getItem("currentUser"))
@@ -36,6 +36,14 @@ export class AuthenticationService {
         map(user => {
 
           user.authdata = user.result.token;
+          const decode = jwt_decode(user.authdata);
+          // console.log(val, "Value.......");
+          if (decode && decode['exp']) {
+            let expTime: any = (parseInt(decode['exp']) * 1000);
+            expTime = new Date(expTime);
+           this.storage.setItem('expireOn', expTime);
+      
+          }
           localStorage.setItem("currentUser", JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;

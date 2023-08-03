@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from './_services';
+import { AuthenticationService, JwtService } from './_services';
 // import { User } from './_models';
 
 @Component({
@@ -12,6 +12,25 @@ import { AuthenticationService } from './_services';
 export class AppComponent {
   title = 'FonadaRCS';
   showDropdown = false;
+  setTimeValue:any;
+  currentUser: any;
+
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private jwtserivce: JwtService,
+  ) {
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+  }
+
+  ngOnInit() {
+    this.setTimeIntervalToken();
+  }
+  setTimeIntervalToken(){
+    this.setTimeValue = setInterval(()=> {
+      console.log("Login time.......");
+      this.jwtserivce.checkTokenExpTime()}, 60000)
+  }
 
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
@@ -22,14 +41,7 @@ export class AppComponent {
       this.showDropdown = false;
     }
   }
-  currentUser: any;
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-  }
   isLoginPage(): boolean {
     return this.router.url === '/login';
   }

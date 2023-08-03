@@ -4,9 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-// used to create fake backend
-import { fakeBackendProvider } from './_helpers';
-
 import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -124,9 +121,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         // { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptorService, multi: true },
-
-        // provider used to create fake backend
-        fakeBackendProvider
+       
     ],
     bootstrap: [AppComponent]
 })

@@ -103,7 +103,7 @@ export class CreateLeadComponent {
       scheduleEndDtm: [],
       startTime: [],
       endTime: [],
-      testingNumber: [null, [Validators.required, this.validateNumericInput]],
+      testingNumber: [null, [this.validateNumericInput]],
     })
   }
 
@@ -185,6 +185,16 @@ export class CreateLeadComponent {
         "phoneNumber": phoneNumber
     }));
 
+    // Convert the provided strings to JavaScript Date objects
+    let scheduleStartDtm = new Date(dataVal['scheduleStartDtm']);
+    let scheduleEndDtm = new Date(dataVal['scheduleEndDtm']);
+
+    // Calculate the time difference between start and end dates
+    let timeDifference = scheduleEndDtm.getTime() - scheduleStartDtm.getTime();
+
+    // Calculate the number of days between start and end dates
+    let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
     let obj = {
         "campaignId": dataVal['campaignId'],
         "userId": sessionStorage.getItem('userId'),
@@ -193,13 +203,87 @@ export class CreateLeadComponent {
             "scheduleStartDtm": dataVal['scheduleStartDtm'],
             "windowRequired": "N",
             "scheduleEndDtm": dataVal['scheduleEndDtm'],
-            "scheduleDay": "1"
+            "scheduleDay": numDays.toString() // Set "scheduleDay" to the number of days between start and end dates
         },
         "leadInfoDetails": leadInfoDetailsList
     };
 
     return obj;
 }
+
+// createTestLead(dataVal) {
+//     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
+
+//     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
+//         "createdDate": new Date(),
+//         "lastModifiedDate": new Date(),
+//         "status": "Created",
+//         "createdBy": sessionStorage.getItem('username'),
+//         "lastModifiedBy": sessionStorage.getItem('username'),
+//         "phoneNumber": phoneNumber
+//     }));
+
+//     // Convert the provided strings to JavaScript Date objects
+//     let scheduleStartDtm = new Date(dataVal['scheduleStartDtm']);
+//     let scheduleEndDtm = new Date(dataVal['scheduleEndDtm']);
+
+//     // Calculate the time difference between start and end dates
+//     let timeDifference = scheduleEndDtm.getTime() - scheduleStartDtm.getTime();
+
+//     // Calculate the number of days between start and end dates
+//     let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+//     // Calculate the count of occurrences for "scheduleDay" (Monday) within the date range
+//     let countScheduleDay = Math.floor(numDays / 7);
+
+//     // Check if the start date itself falls on the schedule day (Monday)
+//     if (scheduleStartDtm.getDay() === 1) {
+//         countScheduleDay += 1;
+//     }
+
+//     let obj = {
+//         "campaignId": dataVal['campaignId'],
+//         "userId": sessionStorage.getItem('userId'),
+//         "leadName": dataVal['leadName'],
+//         "leadSchedule": {
+//             "scheduleStartDtm": dataVal['scheduleStartDtm'],
+//             "windowRequired": "N",
+//             "scheduleEndDtm": dataVal['scheduleEndDtm'],
+//             "scheduleDay": countScheduleDay.toString()  // Set the dynamic count of occurrences of "scheduleDay"
+//         },
+//         "leadInfoDetails": leadInfoDetailsList
+//     };
+
+//     return obj;
+// }
+
+//   createTestLead(dataVal) {
+//     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
+
+//     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
+//         "createdDate": new Date(),
+//         "lastModifiedDate": new Date(),
+//         "status": "Created",
+//         "createdBy": sessionStorage.getItem('username'),
+//         "lastModifiedBy": sessionStorage.getItem('username'),
+//         "phoneNumber": phoneNumber
+//     }));
+
+//     let obj = {
+//         "campaignId": dataVal['campaignId'],
+//         "userId": sessionStorage.getItem('userId'),
+//         "leadName": dataVal['leadName'],
+//         "leadSchedule": {
+//             "scheduleStartDtm": dataVal['scheduleStartDtm'],
+//             "windowRequired": "N",
+//             "scheduleEndDtm": dataVal['scheduleEndDtm'],
+//             "scheduleDay": "1"
+//         },
+//         "leadInfoDetails": leadInfoDetailsList
+//     };
+
+//     return obj;
+// }
 
 
   // createTestLead(dataVal){
@@ -460,11 +544,21 @@ export class CreateLeadComponent {
       }
     }
 
+     // Convert the provided strings to JavaScript Date objects
+     let scheduleStartDtm = new Date(dataVal['scheduleStartDtm']);
+     let scheduleEndDtm = new Date(dataVal['scheduleEndDtm']);
+ 
+     // Calculate the time difference between start and end dates
+     let timeDifference = scheduleEndDtm.getTime() - scheduleStartDtm.getTime();
+ 
+     // Calculate the number of days between start and end dates
+     let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
     if (dataVal['leadExecutionType'] == 'schedule') {
       obj["leadSchedule"] = {
         "scheduleStartDtm": dataVal['scheduleStartDtm'],
         "windowRequired": "N",
-        "scheduleDay": "6",
+        "scheduleDay": numDays.toString(),
         "scheduleEndDtm": dataVal['scheduleEndDtm'],
         "windowStartTime": "09:00",
         "windowEndTime": "21:00"
@@ -473,7 +567,7 @@ export class CreateLeadComponent {
       obj["leadSchedule"] = {
         "scheduleStartDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowRequired": "N",
-        "scheduleDay": "6",
+        "scheduleDay": numDays.toString(),
         "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
         "windowStartTime": "09:00",
         "windowEndTime": "21:00"
