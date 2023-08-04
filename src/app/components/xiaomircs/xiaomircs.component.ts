@@ -45,8 +45,9 @@ export class XiaomircsComponent implements OnInit {
   suggestions: FormArray;
   cardDetails: FormArray;
   templateTypeValue: any = [{ value: 'Rich Card Stand Alone', key: 'rich_card' }, { value: 'Rich Card Carousel', key: 'carousel' }, { value: 'Text Message', key: 'text_message' }]
-  cardOrientationValue: any = [{ value: 'HORIZONTAL', key: 'HORIZONTAL' }, { value: 'VERTICAL', key: 'VERTICAL' }]
+  cardOrientationValue: any = [{ value: 'VERTICAL', key: 'VERTICAL' }, { value: 'HORIZONTAL', key: 'HORIZONTAL' }]
   cardHeightValue: any = [{ value: 'SHORT', key: 'SHORT_HEIGHT' }, { value: 'MEDIUM', key: 'MEDIUM_HEIGHT' }]
+  cardAlignmentValue: any = [{ value: 'LEFT', key: 'LEFT' }, { value: 'RIGHT', key: 'RIGHT' }]
   cardWidthValue: any = [{ value: 'SMALL', key: 'SMALL_WIDTH' }, { value: 'MEDIUM', key: 'MEDIUM_WIDTH' }]
   suggestionActionValue: any = [{ value: 'URL Action', key: 'url_action' }, { value: 'Dialer Action', key: 'dialer_action' }, { value: 'Reply', key: 'reply' }]
 
@@ -87,6 +88,7 @@ export class XiaomircsComponent implements OnInit {
       messageContent: [''],
       cardOrientation: ['VERTICAL'],
       mediaHeight: ['SHORT_HEIGHT'],
+      cardAlignment: ['LEFT'],
       cardWidth: ['SMALL_WIDTH'],
       suggestions: new FormArray([]),
       cardDetails: new FormArray([])
@@ -120,13 +122,11 @@ export class XiaomircsComponent implements OnInit {
       cardWidth: ['SMALL_WIDTH'],
       mediaHeight: ['SHORT_HEIGHT'],
       fileName: [],
+      mediaFileOriginalName:[],
       mediaUrl: [null],
       fileNameDisplay: [],
       cardtitle: [],
       cardDescription: [],
-      // mediaFileOriginalName: [''],
-      // cardTitleCustomParam:[],
-      // cardDescriptionCustomParam:[],
     });
   }
   tabs = [];
@@ -250,7 +250,8 @@ export class XiaomircsComponent implements OnInit {
         this.cardDetails.at(index).get('fileName').patchValue(dataURL);
         this.cardDetails.at(index).get('fileNameDisplay').patchValue(input.files[0]);
         this.cardDetails.at(index).get('mediaFileOriginalName').patchValue(input.files[0].name);
-        console.log(this.cardDetails, "cardDetails")
+        console.log(this.cardDetails, "cardDetails");
+        
       };
       reader1.readAsDataURL(input.files[0]);
 
@@ -458,6 +459,7 @@ export class XiaomircsComponent implements OnInit {
       templateType: val?.templateType,
       templateMsgType: val.templateMsgType,
       templateCustomParam: String(xyz),
+      templateUserId: sessionStorage.getItem('userId'),
       botId: sessionStorage.getItem('botId'),
       templateJson: {
        suggestions: val.suggestions
@@ -468,25 +470,25 @@ export class XiaomircsComponent implements OnInit {
       obj['templateJson']["standAlone"] = {
         cardTitle: val.cardtitle,
         cardDescription: val.cardDescription,
-        mediaUrl: val.fileName,
+        mediaUrl: val.mediaFileOriginalName,
         mediaFileOriginalName: val.mediaFileOriginalName,
-        // templateCustomParam: this.cardDetailsArrayToString,
-        // cardTitleCustomParam:val.cardTitleCustomParam, 
-        // cardDescriptionCustomParam:val.cardDescriptionCustomParam, 
+        orientation:val.cardOrientation,
+        alignment:val.cardAlignment,
+        height:val.mediaHeight,
+
       }
 
     } else if (val['templateType'] == 'carousel') {
       obj['templateJson']["carouselList"] = val["cardDetails"].map(function (obj) {
         return {
-          cardWidth: obj.cardWidth,
-          mediaHeight: obj.mediaHeight,
           cardtitle: obj.cardtitle,
           cardDescription: obj.cardDescription,
+          mediaUrl: obj.mediaFileOriginalName,
           mediaFileOriginalName: obj.mediaFileOriginalName,
-
-          // templateCustomParam: component.cardDetailsArrayToString,
-          // cardTitleCustomParam:val.cardTitleCustomParam, 
-          // cardDescriptionCustomParam:val.cardDescriptionCustomParam, 
+          orientation:obj.cardOrientation,
+          width: obj.cardWidth,
+          height: obj.mediaHeight
+          
         };
       });
 

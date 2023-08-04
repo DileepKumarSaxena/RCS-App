@@ -23,7 +23,7 @@ export class GooglercsComponent {
   moment: any = moment;
   
  
-  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'TOTAL',  'SUBMITTED', 'Delivered', 'NonRCS_FAILED','Invalid'];
+  displayedColumns: string[] = ['id','campaing_name', 'lead_name', 'TOTAL',  'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED','Invalid'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;

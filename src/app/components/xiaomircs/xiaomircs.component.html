@@ -1,17 +1,17 @@
 <div class="go-back-section template-back add-inner-padding">
     <div class="back-icon">
-      <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
-      <h5 class="text-center">ADD TEMPLATE</h5>
+        <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+        <h5 class="text-center">ADD TEMPLATE</h5>
     </div>
 
-  </div>
+</div>
 <div class="container-fluid h-100">
     <form [formGroup]="templateForm">
         <div class="row">
             <div class="col-sm-12 mx-auto spacing">
                 <div class="row">
                     <div class="col-sm-12">
-                     
+
                         <!-- <h4>Bot message type : <span>Transactional </span> <span
                                 matTooltip="Notifications & information sent to existing customers of a business to provide relevant information for a customer’s existing services."><i
                                     class="fa fa-info-circle"></i></span></h4>
@@ -22,7 +22,7 @@
 
 
                 </div>
-                
+
                 <div class="row">
                     <div class="col-sm-7">
 
@@ -30,14 +30,16 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Template Name<span class="requireField">*</span> <i class="fa fa-info-circle"
-                                        matTooltip="Give your message template a name e.g Account update, OTP, etc in 2-3 words"></i></label>
-                                    <input type="text" formControlName="templateCode" class="form-control" autocomplete="off"
-                                      (input)="templateNameCharacterCount($event)" required>
-                                    <small>{{ templateForm.get('templateCode').value.length }}/20 Characters used</small>
-                                    <div *ngIf="templateCodeVal && templateForm.get('templateCode').invalid" class="text-danger">
-                                      Template Name is required.
+                                            matTooltip="Give your message template a name e.g Account update, OTP, etc in 2-3 words"></i></label>
+                                    <input type="text" formControlName="templateCode" class="form-control"
+                                        autocomplete="off" (input)="templateNameCharacterCount($event)" required>
+                                    <small>{{ templateForm.get('templateCode').value.length }}/20 Characters
+                                        used</small>
+                                    <div *ngIf="templateCodeVal && templateForm.get('templateCode').invalid"
+                                        class="text-danger">
+                                        Template Name is required.
                                     </div>
-                                  </div>
+                                </div>
 
 
 
@@ -48,9 +50,10 @@
                                         <option *ngFor="let item of templateTypeValue" [value]="item.key">{{item.value}}
                                         </option>
                                     </select>
-                                    <div *ngIf="templateCodeVal && templateForm.get('templateType').invalid" class="text-danger">
+                                    <div *ngIf="templateCodeVal && templateForm.get('templateType').invalid"
+                                        class="text-danger">
                                         Template Type is required.
-                                      </div>
+                                    </div>
                                 </div>
                                 <!-- Rich Card Stand Alone -->
                                 <div id="rich-card-div" *ngIf="templateForm.get('templateType').value === 'rich_card'">
@@ -62,12 +65,13 @@
                                             <option *ngFor="let item of cardOrientationValue" [value]="item.key">
                                                 {{item.value}}</option>
                                         </select>
-                                        <div *ngIf="templateCodeVal && templateForm.get('cardOrientation').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('cardOrientation').invalid"
+                                            class="text-danger">
                                             Card Orientation is required.
-                                          </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group" *ngIf="templateForm.get('cardOrientation').value === 'VERTICAL'">
                                         <label>Select Media Height<span class="requireField">*</span> <i
                                                 class="fa fa-info-circle"></i></label>
                                         <select class="form-control height-44" name="cardHeight"
@@ -75,23 +79,40 @@
                                             <option *ngFor="let item of cardHeightValue" [value]="item.key">
                                                 {{item.value}}</option>
                                         </select>
-                                        <div *ngIf="templateCodeVal && templateForm.get('mediaHeight').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('mediaHeight').invalid"
+                                            class="text-danger">
                                             Media Height is required.
-                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" *ngIf="templateForm.get('cardOrientation').value === 'HORIZONTAL'">
+                                        <label>Select Card Alignment<span class="requireField">*</span> <i
+                                                class="fa fa-info-circle"></i></label>
+                                        <select class="form-control height-44" name="cardAlignment"
+                                            formControlName="cardAlignment">
+                                            <option *ngFor="let item of cardAlignmentValue" [value]="item.key">
+                                                {{item.value}}</option>
+                                        </select>
+                                        <div *ngIf="templateCodeVal && templateForm.get('cardAlignment').invalid"
+                                            class="text-danger">
+                                            Card Alignment is required.
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label>Image<span class="requireField">*</span> <i class="fa fa-info-circle"
                                                 matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 2MB, have an optimal resolution of 1440 pixels x 480 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it. If you are uploading a video, the max file size is 10MB."></i></label>
                                         <div class="input-group custom-file-button">
-                                            <input type="file" class="form-control" accept="image/, video*" id="inputGroupFile"
-                                                (change)="validateFile($event.target)" formControlName="fileName">
+                                            <input type="file" class="form-control" accept="image/, video*"
+                                                id="inputGroupFile" (change)="validateFile($event.target)"
+                                                formControlName="fileName">
                                             <label class="input-group-text" for="inputGroupFile">Select</label>
                                         </div>
                                         <mat-error *ngIf="fileSizeError">{{ fileSizeErrorMessage }}</mat-error>
-                                        <div *ngIf="templateCodeVal && templateForm.get('fileName').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('fileName').invalid"
+                                            class="text-danger">
                                             Image is required.
-                                          </div>
+                                        </div>
                                     </div>
 
 
@@ -107,16 +128,17 @@
                                                     class="variableName">variableName</span>.</small>
                                             <!-- <p (click)="addCustomVariable('cardtitle')">+ Add Variable</p> -->
                                         </div>
-                                        <div *ngIf="templateCodeVal && templateForm.get('cardtitle').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('cardtitle').invalid"
+                                            class="text-danger">
                                             Card Title is required.
-                                          </div>
+                                        </div>
                                     </div>
 
 
                                     <div class="form-group">
                                         <label>Card Description<span class="requireField">*</span> </label>
                                         <textarea formControlName="cardDescription" class="form-control" rows="3"
-                                            (input)="cardDescriptionCharacterCount($event)"  
+                                            (input)="cardDescriptionCharacterCount($event)"
                                             (keyup)="displayVariables($event, 'cardDescriptionCustomParam', 1)"></textarea>
                                         <div class="countAndVariable">
                                             <small>{{ templateForm.get('cardDescription').value.length }}/2000
@@ -125,9 +147,10 @@
                                                     class="variableName">variableName</span>.</small>
                                             <!-- <p (click)="addCustomVariable('cardDescription')">+ Add Variable</p> -->
                                         </div>
-                                        <div *ngIf="templateCodeVal && templateForm.get('cardDescription').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('cardDescription').invalid"
+                                            class="text-danger">
                                             Card Description is required.
-                                          </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -142,8 +165,8 @@
                                                 *ngFor="let item of templateForm.get('cardDetails')['controls']; let i = index;"
                                                 label={{getName(i+1)}}>
                                                 <div class="removeButtonRow">
-                                                    <button mat-mini-fab color="warn"
-                                                        (click)="removeTab(i)" [disabled]="this.cardDetails.length <= 1">
+                                                    <button mat-mini-fab color="warn" (click)="removeTab(i)"
+                                                        [disabled]="this.cardDetails.length <= 1">
                                                         <mat-icon>remove</mat-icon>
                                                     </button>
                                                 </div>
@@ -185,16 +208,18 @@
                                                             <input type="text" formControlName="cardtitle"
                                                                 class="form-control" autocomplete="off"
                                                                 (input)="cardTitleCharacterCount($event)"
-                                                                (keyup)="displayVariables($event, 'cardTitleCustomParam', 2, i)" required>
+                                                                (keyup)="displayVariables($event, 'cardTitleCustomParam', 2, i)"
+                                                                required>
                                                             <div class="countAndVariable">
                                                                 <small>{{ templateForm.get('cardtitle').value.length
                                                                     }}/200 Characters used</small>
                                                                 <small>Add your custom variable like this <span
                                                                         class="variableName">variableName</span>.</small>
                                                             </div>
-                                                            <div *ngIf="templateCodeVal && templateForm.get('cardtitle').invalid" class="text-danger">
+                                                            <div *ngIf="templateCodeVal && templateForm.get('cardtitle').invalid"
+                                                                class="text-danger">
                                                                 Card Title is required.
-                                                              </div>
+                                                            </div>
                                                         </div>
 
 
@@ -202,7 +227,7 @@
                                                             <label>Card Description*</label>
                                                             <textarea formControlName="cardDescription"
                                                                 class="form-control" rows="3"
-                                                                (input)="cardDescriptionCharacterCount($event)" 
+                                                                (input)="cardDescriptionCharacterCount($event)"
                                                                 (keyup)="displayVariables($event, 'cardDescriptionCustomParam', 2, i)"></textarea>
                                                             <div class="countAndVariable">
                                                                 <small>{{
@@ -212,9 +237,10 @@
                                                                 <small>Add your custom variable like this <span
                                                                         class="variableName">variableName</span>.</small>
                                                             </div>
-                                                            <div *ngIf="templateCodeVal && templateForm.get('cardDescription').invalid" class="text-danger">
+                                                            <div *ngIf="templateCodeVal && templateForm.get('cardDescription').invalid"
+                                                                class="text-danger">
                                                                 Card Description is required.
-                                                              </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -233,17 +259,19 @@
                                     <div class="form-group">
                                         <label>Message Content <i class="fa fa-info-circle"></i></label>
                                         <textarea class="form-control" formControlName="messageContent" rows="3"
-                                            (input)="messageContentCharacterCount($event)" 
-                                            (keyup)="displayVariables($event, 'messageContentCustomParam', 1)" required></textarea>
+                                            (input)="messageContentCharacterCount($event)"
+                                            (keyup)="displayVariables($event, 'messageContentCustomParam', 1)"
+                                            required></textarea>
                                         <div class="countAndVariable">
                                             <small>{{ templateForm.get('messageContent').value.length }}/2500 Characters
                                                 used</small>
                                             <small>Add your custom variable like this <span
                                                     class="variableName">variableName</span>.</small>
                                         </div>
-                                        <div *ngIf="templateCodeVal && templateForm.get('messageContent').invalid" class="text-danger">
+                                        <div *ngIf="templateCodeVal && templateForm.get('messageContent').invalid"
+                                            class="text-danger">
                                             Message Content is required.
-                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -257,123 +285,171 @@
                                 <mat-tab-group>
                                     <mat-tab label="Conversation">
                                         <div class="deviceSection">
-                                        <div class="devicePreview">
-                                            <div class="contents">
-                                                <div class="headingSection">
-                                                    <div><i class="fa fa-arrow-left"></i>&nbsp; Fonada</div>
-                                                    <div>
-                                                        <i class="fa fa-shield"></i>&nbsp;
-                                                        <i class="fa fa-ellipsis-v"></i>
-                                                    </div>
-                                                </div>
-                                                <div id="rich-card-div" class="rich-card-section"
-                                                    [ngClass]="{'vertical':(templateForm.get('cardOrientation').value === 'VERTICAL'), 'horizontal': (templateForm.get('cardOrientation').value === 'HORIZONTAL'), 'shortHeight':(templateForm.get('mediaHeight').value === 'SHORT_HEIGHT'), 'mediumHeight':(templateForm.get('mediaHeight').value === 'MEDIUM_HEIGHT')}"
-                                                    *ngIf="(templateForm.get('templateType').value === 'rich_card')">
-
-                                                    <img [src]="fileName" alt="File preview"
-                                                        *ngIf="fileName && !fileSizeError">
-                                                    <h5>{{ templateForm.get('cardtitle').value }}</h5>
-                                                    <p class="messageContent">{{
-                                                        templateForm.get('cardDescription').value
-                                                        }}
-                                                    </p>
-                                                    <div formArrayName="suggestions"
-                                                        *ngFor="let item of templateForm.get('suggestions')['controls']; let i = index;">
-                                                        <div [formGroupName]="i">
-                                                            <div
-                                                                *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'url_action'">
-                                                                <a class="action-icon"
-                                                                    href="{{templateForm.get('suggestions').value[i]['url']}}"><i
-                                                                        class="fa fa-globe"></i>
-                                                                    {{templateForm.get('suggestions').value[i]['displayText']}}</a>
-                                                            </div>
-                                                            <div
-                                                                *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
-                                                                <a class="action-icon"
-                                                                    href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"><i
-                                                                        class="fa fa-globe"></i>
-                                                                    {{templateForm.get('suggestions').value[i]['displayText']}}</a>
-                                                            </div>
-                                                            <div
-                                                                *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
-                                                                <a href="#" class="action-icon"><i
-                                                                        class="fa fa-globe"></i>
-                                                                    {{templateForm.get('suggestions').value[i]['displayText']}}</a>
-                                                            </div>
+                                            <div class="devicePreview">
+                                                <div class="contents">
+                                                    <div class="headingSection">
+                                                        <div><i class="fa fa-arrow-left"></i>&nbsp; Fonada</div>
+                                                        <div>
+                                                            <i class="fa fa-shield"></i>&nbsp;
+                                                            <i class="fa fa-ellipsis-v"></i>
                                                         </div>
                                                     </div>
+                                                    <div id="rich-card-div" class="rich-card-section"
+                                                        [ngClass]="{'vertical':(templateForm.get('cardOrientation').value === 'VERTICAL'), 'horizontal': (templateForm.get('cardOrientation').value === 'HORIZONTAL'), 'shortHeight':(templateForm.get('mediaHeight').value === 'SHORT_HEIGHT'), 'mediumHeight':(templateForm.get('mediaHeight').value === 'MEDIUM_HEIGHT'), 'cardAlignmentLeft':(templateForm.get('cardAlignment').value === 'LEFT'),'cardAlignmentRight':(templateForm.get('cardAlignment').value === 'RIGHT')}"
+                                                        *ngIf="(templateForm.get('templateType').value === 'rich_card')">
 
-
-                                                </div>
-                                                <div id="carousel-div"
-                                                    *ngIf="templateForm.get('templateType').value === 'carousel'">
-                                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-
-                                                        <!-- Slides -->
-                                                        <div class="carousel-inner">
-                                                            <div formArrayName="cardDetails" class="carousel-item"
-                                                                *ngFor="let item of templateForm.get('cardDetails')['controls']; let i = index;"
-                                                                [ngClass]="(i === 0) ? 'active' : ''">
-                                                                <div [formGroupName]="i">
-                                                                    <img [src]="item.get('fileName').value"
-                                                                        *ngIf="item.get('fileName').value && !fileSizeError">
-                                                                    <h5>{{templateForm.get('cardDetails').value[i]['cardtitle']}}
-                                                                    </h5>
-                                                                    <p class="messageContent">
-                                                                        {{templateForm.get('cardDetails').value[i]['cardDescription']}}
-                                                                    </p>
-                                                                    <div
-                                                                        *ngIf="templateForm.get('suggestions').value.length > 0">
+                                                        <div class="image-horizontal" *ngIf="(templateForm.get('cardAlignment').value === 'LEFT')">
+                                                            <div class="devic-img"> 
+                                                                <img [src]="fileName" *ngIf="fileName && !fileSizeError">
+                                                            </div>
+                                                            <div class="device-desc">
+                                                                <h5>{{ templateForm.get('cardtitle').value }}</h5>
+                                                                <p class="messageContent">{{
+                                                                    templateForm.get('cardDescription').value
+                                                                    }}
+                                                                </p>
+                                                                <div formArrayName="suggestions"
+                                                                    *ngFor="let item of templateForm.get('suggestions')['controls']; let i = index;">
+                                                                    <div [formGroupName]="i">
                                                                         <div
-                                                                            *ngFor="let item1 of templateForm.get('suggestions').value; let j = index;">
-                                                                            <!-- <div [formGroupName]="j"> -->
-                                                                            <div
-                                                                                *ngIf="item1['suggestionType'] == 'url_action'">
-                                                                                <a href="{{item1['url']}}"><i
-                                                                                        class="fa fa-globe"></i>
-                                                                                    {{item1['displayText']}}</a>
-                                                                            </div>
-                                                                            <div
-                                                                                *ngIf="item1['suggestionType'] == 'dialer_action'">
-                                                                                <a class="action-icon"
-                                                                                    href="{{item1['phoneNumber']}}">
-                                                                                    <i class="fa fa-globe"></i>
-                                                                                    {{item1['displayText']}}</a>
-                                                                            </div>
-                                                                            <div
-                                                                                *ngIf="item1['suggestionType'] == 'reply'">
-                                                                                <a href="#" class="action-icon"><i
-                                                                                        class="fa fa-globe"></i>
-                                                                                    {{item1['displayText']}}</a>
-                                                                            </div>
-                                                                            <!-- </div> -->
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'url_action'">
+                                                                            <a class="action-icon"
+                                                                                href="{{templateForm.get('suggestions').value[i]['url']}}"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
+                                                                        </div>
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
+                                                                            <a class="action-icon"
+                                                                                href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
+                                                                        </div>
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
+                                                                            <a href="#" class="action-icon"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                         </div>
-                                                        <!-- Left and right controls -->
-                                                        <a class="carousel-control-prev" href="#myCarousel"
-                                                            data-slide="prev">
-                                                            <i class="fa fa-chevron-left"></i>
-                                                        </a>
-                                                        <a class="carousel-control-next" href="#myCarousel"
-                                                            data-slide="next">
-                                                            <i class="fa fa-chevron-right"></i>
-                                                        </a>
+                                                        <div class="image-horizontal" *ngIf="(templateForm.get('cardAlignment').value === 'RIGHT')">
+                                                           
+                                                            <div class="device-desc">
+                                                                <h5>{{ templateForm.get('cardtitle').value }}</h5>
+                                                                <p class="messageContent">{{
+                                                                    templateForm.get('cardDescription').value
+                                                                    }}
+                                                                </p>
+                                                                <div formArrayName="suggestions"
+                                                                    *ngFor="let item of templateForm.get('suggestions')['controls']; let i = index;">
+                                                                    <div [formGroupName]="i">
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'url_action'">
+                                                                            <a class="action-icon"
+                                                                                href="{{templateForm.get('suggestions').value[i]['url']}}"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
+                                                                        </div>
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
+                                                                            <a class="action-icon"
+                                                                                href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
+                                                                        </div>
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
+                                                                            <a href="#" class="action-icon"><i
+                                                                                    class="fa fa-globe"></i>
+                                                                                {{templateForm.get('suggestions').value[i]['displayText']}}</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="devic-img"> 
+                                                                <img [src]="fileName" *ngIf="fileName && !fileSizeError">
+                                                            </div>
+                                                        </div>
+
+
+
+
+
                                                     </div>
-                                                </div>
-                                                <div id="text-message-div" class="rich-card-section"
-                                                    *ngIf="templateForm.get('templateType').value === 'text_message'">
-                                                    <p class="messageContent">{{
-                                                        templateForm.get('messageContent').value
-                                                        }}
-                                                    </p>
-                                                    <a href="#"><i class="fa fa-globe"></i> Suggestion Text</a>
+                                                    <div id="carousel-div"
+                                                        *ngIf="templateForm.get('templateType').value === 'carousel'">
+                                                        <div id="myCarousel" class="carousel slide"
+                                                            data-ride="carousel">
+
+                                                            <!-- Slides -->
+                                                            <div class="carousel-inner">
+                                                                <div formArrayName="cardDetails" class="carousel-item"
+                                                                    *ngFor="let item of templateForm.get('cardDetails')['controls']; let i = index;"
+                                                                    [ngClass]="(i === 0) ? 'active' : ''">
+                                                                    <div [formGroupName]="i">
+                                                                        <img [src]="item.get('fileName').value"
+                                                                            *ngIf="item.get('fileName').value && !fileSizeError">
+                                                                        <h5>{{templateForm.get('cardDetails').value[i]['cardtitle']}}
+                                                                        </h5>
+                                                                        <p class="messageContent">
+                                                                            {{templateForm.get('cardDetails').value[i]['cardDescription']}}
+                                                                        </p>
+                                                                        <div
+                                                                            *ngIf="templateForm.get('suggestions').value.length > 0">
+                                                                            <div
+                                                                                *ngFor="let item1 of templateForm.get('suggestions').value; let j = index;">
+                                                                                <!-- <div [formGroupName]="j"> -->
+                                                                                <div
+                                                                                    *ngIf="item1['suggestionType'] == 'url_action'">
+                                                                                    <a href="{{item1['url']}}"><i
+                                                                                            class="fa fa-globe"></i>
+                                                                                        {{item1['displayText']}}</a>
+                                                                                </div>
+                                                                                <div
+                                                                                    *ngIf="item1['suggestionType'] == 'dialer_action'">
+                                                                                    <a class="action-icon"
+                                                                                        href="{{item1['phoneNumber']}}">
+                                                                                        <i class="fa fa-globe"></i>
+                                                                                        {{item1['displayText']}}</a>
+                                                                                </div>
+                                                                                <div
+                                                                                    *ngIf="item1['suggestionType'] == 'reply'">
+                                                                                    <a href="#" class="action-icon"><i
+                                                                                            class="fa fa-globe"></i>
+                                                                                        {{item1['displayText']}}</a>
+                                                                                </div>
+                                                                                <!-- </div> -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Left and right controls -->
+                                                            <a class="carousel-control-prev" href="#myCarousel"
+                                                                data-slide="prev">
+                                                                <i class="fa fa-chevron-left"></i>
+                                                            </a>
+                                                            <a class="carousel-control-next" href="#myCarousel"
+                                                                data-slide="next">
+                                                                <i class="fa fa-chevron-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div id="text-message-div" class="rich-card-section"
+                                                        *ngIf="templateForm.get('templateType').value === 'text_message'">
+                                                        <p class="messageContent">{{
+                                                            templateForm.get('messageContent').value
+                                                            }}
+                                                        </p>
+                                                        <a href="#"><i class="fa fa-globe"></i> Suggestion Text</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </mat-tab>
                                     <mat-tab label="Business Info">
                                         <div class="devicePreview">
@@ -494,8 +570,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Suggestion Text</label>
-                                <input type="text" class="form-control" formControlName="displayText" 
-                                (keyup)="displayVariables($event, 'displayTextCustomParam', 3, i)">
+                                <input type="text" class="form-control" formControlName="displayText"
+                                    (keyup)="displayVariables($event, 'displayTextCustomParam', 3, i)">
                                 <div class="countAndVariable">
                                     <small class="text-light-gray">0/25 characters used</small>
                                     <small>Add your custom variable like this <span
@@ -504,8 +580,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Suggestion Postback</label>
-                                <input type="text" class="form-control" formControlName="postback"  
-                                (keyup)="displayVariables($event, 'postbackCustomParam', 3, i)">
+                                <input type="text" class="form-control" formControlName="postback"
+                                    (keyup)="displayVariables($event, 'postbackCustomParam', 3, i)">
                                 <div class="countAndVariable">
                                     <small class="text-light-gray">0/120 characters used</small>
                                     <small>Add your custom variable like this <span
@@ -516,7 +592,7 @@
                                 *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] === 'url_action'">
                                 <label>URL/URI to open</label>
                                 <input type="text" class="form-control" maxlength="2048" formControlName="url"
-                                (keyup)="displayVariables($event, 'urlCustomParam', 3, i)">
+                                    (keyup)="displayVariables($event, 'urlCustomParam', 3, i)">
                                 <small class="text-light-gray">0/2048 characters used</small>
                                 <small>Add your custom variable like this <span
                                         class="variableName">variableName</span>.</small>
@@ -533,7 +609,8 @@
                                     <!-- <button mat-mini-fab color="primary">
                                     <mat-icon>add</mat-icon>
                                 </button> -->
-                                    <button matTooltip="Remove Suggestion" mat-mini-fab color="warn" (click)="removeRow(i)">
+                                    <button matTooltip="Remove Suggestion" mat-mini-fab color="warn"
+                                        (click)="removeRow(i)">
                                         <mat-icon>remove</mat-icon>
                                     </button>
                                 </div>

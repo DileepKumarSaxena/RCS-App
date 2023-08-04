@@ -64,7 +64,7 @@ h2.custom-header-title {
 
     div {
         width: 100%;
-        padding: 24px;
+        padding: 24px 16px;        
         background-color: var(--dasboard-card-bg);
         box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
         margin-right: 15px;
@@ -108,6 +108,9 @@ h2.custom-header-title {
 
         .total-balance {
             color: #a70606;
+        }
+        .total-failed {
+            color: #7438c0;
         }
     }
 }
