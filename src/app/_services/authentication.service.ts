@@ -41,10 +41,13 @@ export class AuthenticationService {
           if (decode && decode['exp']) {
             let expTime: any = (parseInt(decode['exp']) * 1000);
             expTime = new Date(expTime);
-           this.storage.setItem('expireOn', expTime);
+          this.storage.setItem('expireOn', expTime);
+          sessionStorage.setItem('expireOn', expTime);
+           
       
           }
           localStorage.setItem("currentUser", JSON.stringify(user));
+          // sessionStorage.setItem("currentUser", JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
         })

@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { TemplateService } from '@app/services/template.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -18,31 +18,125 @@ import * as Papa from 'papaparse';
 export class TemplateListComponent {
   public showLoader = false;
   moment: any = moment;
-  campaignListForm: FormGroup;
-  displayedColumns: string[] = ['id', 'inserttime','templateCode', 'templateType', 'templateMsgType', 'status'];
+  templateFilterForm: FormGroup;
+  displayedColumns: string[] = ['id', 'inserttime', 'templateCode', 'templateType', 'templateMsgType', 'status'];
   dataSource!: MatTableDataSource<any>;
-  templateData:any;
+  templateData: any;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  templateListbysearch: any = [];
+  currentDate = new Date();
 
-
-
-  constructor(private location: Location, private templateService: TemplateService,  private ngxService: NgxUiLoaderService,){
+  constructor(
+    private location: Location,
+    private templateService: TemplateService,
+    private ngxService: NgxUiLoaderService,
+    private formbuilder: FormBuilder) {
 
   }
   ngOnInit(): void {
+    this.templateFilters();
     this.dataSource = new MatTableDataSource<any>();
-    this.paginator.pageIndex =0;
+    this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
-    this.getTemplateList();
+  
+    this.getDateFilter();
+     this.getTemplateList();
   }
+
+
+  templateFilters() {
+    this.templateFilterForm = this.formbuilder.group({
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD'),
+      templateName: [],
+      templateStatus: [],
+    });
+  }
+  
+  
   getTemplateList() {
     this.showLoader = true;
     let templateUserId = sessionStorage.getItem('userId');
-    let limit = this.paginator.pageSize.toString();  
+    let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    let startDateVal = moment(this.templateFilterForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.templateFilterForm.value.endDate).format('YYYY-MM-DD');
+    let templateName = this.templateFilterForm.value.templateName;
+    let templateStatus = this.templateFilterForm.value.templateStatus;
     this.ngxService.start();
-    this.templateService.getTemplatelistDetails(templateUserId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.templateService.getTemplatelistDetails(templateUserId, limit, start, startDateVal, endDateVal,templateName,templateStatus, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+      next: (res: any) => {
+        this.templateData = res.template;
+        this.dataSource.data = this.templateData;
+        // Set the total length of the paginator based on the totalCount property
+        this.paginator.length = res.totalCount;
+        this.showLoader = false;
+      },
+
+      error: (err) => {
+        this.templateData = [];
+        this.dataSource.data = this.templateData;
+        this.showLoader = false;
+        console.log(err, "Error while fetching the records.");
+      }
+    });
+  }
+  getDateFilter() {
+    this.showLoader = true
+    let templateUserId = sessionStorage.getItem('UserId');
+    let from = moment(this.currentDate).format('YYYY-MM-DD');
+    let to = moment(this.currentDate).format('YYYY-MM-DD');
+    this.templateService.dateRangeFilter(from, to, templateUserId).subscribe({
+      next: (res: any) => {
+        this.templateData = res.data;
+        this.dataSource.data = this.templateData;
+        if (res) {
+          this.templateListbysearch = res.template;
+        }
+        
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+    // this.showLoader = true
+    let templateUserId = sessionStorage.getItem('UserId');
+    let from = moment(startDate.value).format('YYYY-MM-DD');
+    let to = moment(endDate.value).format('YYYY-MM-DD');
+    this.templateService.dateRangeFilter(from, to, templateUserId).subscribe({
+      next: (res: any) => {
+        console.log(res, "templateList");
+        this.templateData = res.template;
+        // this.dataSource.data = this.templateData;
+        if (res) {
+          this.templateListbysearch = res.template;
+        }
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+  
+
+  getTemplateListWithDateFilter() {
+    this.showLoader = true;
+    let templateUserId = sessionStorage.getItem('userId');
+    let limit = this.paginator.pageSize.toString();
+    let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    let startDateVal = moment(this.templateFilterForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.templateFilterForm.value.endDate).format('YYYY-MM-DD');
+    let templateName = this.templateFilterForm.value.templateName;
+    let templateStatus = this.templateFilterForm.value.templateStatus;
+
+    this.ngxService.start();
+    this.templateService.getTemplateSearchReport(templateUserId, limit, start, startDateVal, endDateVal, templateName, templateStatus, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         this.templateData = res.template;
         this.dataSource.data = this.templateData;
@@ -53,19 +147,24 @@ export class TemplateListComponent {
       error: (err) => {
         this.templateData = [];
         this.dataSource.data = this.templateData;
-        this.showLoader = false;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
         console.log(err, "Error while fetching the records.");
+        this.ngxService.stop();
+
+        this.showLoader = false;
       }
     });
   }
-  
+
 
   onPageChanged(event: PageEvent) {
     this.getTemplateList();
   }
 
-  editRow(data) {}
-  deleteRow(id: any){}
+  editRow(data) { }
+  deleteRow(id: any) { }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -74,7 +173,7 @@ export class TemplateListComponent {
     this.location.back();
   }
 
-  
+
 
   downloadTemplateFile() {
     this.showLoader = true
@@ -86,10 +185,14 @@ export class TemplateListComponent {
     let templateUserId = sessionStorage.getItem('userId');
     let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    let startDateVal = moment(this.templateFilterForm.value.startDate).format('YYYY-MM-DD');
+    let endDateVal = moment(this.templateFilterForm.value.endDate).format('YYYY-MM-DD');
+    let templateName = this.templateFilterForm.value.templateName;
+    let templateStatus = this.templateFilterForm.value.templateStatus;
     this.ngxService.start();
 
 
-    this.templateService.getTemplateData(templateUserId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
+    this.templateService.getTemplateData(templateUserId, limit, start, startDateVal, endDateVal,templateName,templateStatus, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
       if (data_ar.template.length > 0) {
         console.log("template::=>" + JSON.stringify(data_ar))
         this.showLoader = false
@@ -102,7 +205,7 @@ export class TemplateListComponent {
             'Template Type': e.templateType,
             'Template Message Type': e.templateMsgType,
             'Status': e.status === '0' ? 'Pending' : 'Approved',
-           
+
             // Add more properties and header names as needed
           };
 
@@ -148,4 +251,6 @@ export class TemplateListComponent {
     // }
     return null;
   }
+
+  
 }

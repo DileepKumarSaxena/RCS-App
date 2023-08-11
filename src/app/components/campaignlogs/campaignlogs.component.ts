@@ -42,14 +42,16 @@ export class CampaignlogsComponent {
     private location: Location
   ) { }
 
+  
   ngOnInit(): void {
-    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
+    this.detailReport();
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
-    this.detailReport();
-    this.getDetailList();
     this.getDateFilter();
+    this.getDetailList();
+    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
+
   }
 
 
@@ -84,10 +86,13 @@ export class CampaignlogsComponent {
     })
   }
   dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
-    this.showLoader = true
+
+    // this.showLoader = true
     let userId = sessionStorage.getItem('userId');
     let from = moment(startDate.value).format('YYYY-MM-DD');
     let to = moment(endDate.value).format('YYYY-MM-DD');
+    this.detailListForm.get('campaignId').setValue(null);
+    this.detailListForm.get('leadId').setValue(null);
     this.reportservice.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
         console.log(res, "CampaigList");
@@ -111,6 +116,7 @@ export class CampaignlogsComponent {
       next: (res: any) => {
         console.log(res, "LeadList....")
         if (res) {
+          this.detailListForm.get('leadId').setValue(null);
           this.leadList = res;
         }
       },

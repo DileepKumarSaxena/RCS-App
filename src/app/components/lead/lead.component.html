@@ -28,13 +28,35 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Enter a date range</mat-label>
                   <mat-date-range-input [rangePicker]="picker">
-                    <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" formControlName="startDate" required>
-                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" formControlName="endDate" required>
+                    <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" #startDate formControlName="startDate" required>
+                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" #endDate formControlName="endDate"  required>
+                    <!-- (dateChange)="dateFilter(startDate, endDate)" -->
                   </mat-date-range-input>
                   <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Campaign Name</mat-label>
+                  <mat-select formControlName="campaignId">
+                    <mat-option>None</mat-option>
+                      <mat-option *ngFor="let item of campaignList"
+                          (onSelectionChange)="getLeadName($event)"
+                          [value]="item.campaignId">{{item.campaignName}}</mat-option>
+                  </mat-select>
+              </mat-form-field>
+
+<!--               
+              <mat-form-field appearance="outline">
+                  <mat-label>Select Lead Name</mat-label>
+                  <mat-select formControlName="leadId">
+                      <mat-option *ngFor="let item of leadList"
+                          [value]="item.leadId">{{item.leadName}}</mat-option>
+                  </mat-select>
+              </mat-form-field> -->
+
+
                 <button type="button" class="btn btn-success btn-lg" [disabled]="leadForm.status === 'INVALID'" (click)="getLeadList()">Search</button>
               </div>
               <button *ngIf="dataSource['data']['length'] > 0" [disabled]="leadForm.status === 'INVALID'" type="text" class="btn btn-success download" placeholder="Download" (click)="DownloadLeadFile()" 
@@ -187,3 +209,4 @@
 
   </div>
 </div>
+<div class="body-spacing"></div>

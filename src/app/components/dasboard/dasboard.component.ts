@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportsService } from '@app/services/reports.service';
-import { ChartConfiguration, ChartData, ChartEvent, ChartOptions, ChartType } from 'chart.js';
+// import { ChartConfiguration, ChartData, ChartEvent, ChartOptions, ChartType } from 'chart.js';
 import moment from 'moment';
-import { BaseChartDirective } from 'ng2-charts';
+// import { BaseChartDirective } from 'ng2-charts';
 @Component({
   selector: 'app-dasboard',
   templateUrl: './dasboard.component.html',
@@ -14,7 +14,7 @@ export class DasboardComponent {
   currentDate = new Date();
   public showLoader = false;
   dashboardData: any[];
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  // @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   counters: NodeListOf<Element>;
   totalSum: number = 0;
   startDate:HTMLInputElement;
@@ -114,46 +114,46 @@ getSum(index: string)  {
 }
 
 
-  public barChartOptions: ChartConfiguration['options'] = {
-    elements: {
-      line: {
-        tension: 0.4
-      }
-    },
+  // public barChartOptions: ChartConfiguration['options'] = {
+  //   elements: {
+  //     line: {
+  //       tension: 0.4
+  //     }
+  //   },
     // We use these empty structures as placeholders for dynamic theming.
-    scales: {
-      x: {},
-      y: {
-        min: 10
-      }
-    },
-    plugins: {
-      legend: { display: true },
-    }
-  };
-  public barChartLabels: string[] = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
-  public barChartType: ChartType = 'bar';
+  //   scales: {
+  //     x: {},
+  //     y: {
+  //       min: 10
+  //     }
+  //   },
+  //   plugins: {
+  //     legend: { display: true },
+  //   }
+  // };
+  // public barChartLabels: string[] = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
+  // public barChartType: ChartType = 'bar';
 
-  public barChartData: ChartData<'bar'> = {
-    labels: this.barChartLabels,
-    datasets: [
-      { data: [ 65, 59, 80, 81, 56, 55, 40 ], label: 'Submitted' },
-      { data: [ 28, 48, 40, 19, 86, 27, 90 ], label: 'Delivered' }
-    ]
-  };
+  // public barChartData: ChartData<'bar'> = {
+  //   labels: this.barChartLabels,
+  //   datasets: [
+  //     { data: [ 65, 59, 80, 81, 56, 55, 40 ], label: 'Submitted' },
+  //     { data: [ 28, 48, 40, 19, 86, 27, 90 ], label: 'Delivered' }
+  //   ]
+  // };
 
-  // events
-  public chartClicked({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
-    console.log(event, active);
-  }
+  // // events
+  // public chartClicked({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
+  //   console.log(event, active);
+  // }
 
-  public chartHovered({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
-    console.log(event, active);
-  }
+  // public chartHovered({ event, active }: { event?: ChartEvent, active?: {}[] }): void {
+  //   console.log(event, active);
+  // }
 
-  public randomize(): void {
-    this.barChartType = this.barChartType === 'bar' ? 'line' : 'bar';
-  }  
+  // public randomize(): void {
+  //   this.barChartType = this.barChartType === 'bar' ? 'line' : 'bar';
+  // }  
 
 
 

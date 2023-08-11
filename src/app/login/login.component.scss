@@ -16,6 +16,7 @@
 
 .min-vh-100 {
     min-height: 100vh !important;
+    padding-bottom: 20px;
 }
 
 .d-flex {
@@ -40,6 +41,8 @@
 
 .d-flex {
     display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-container {
@@ -47,7 +50,7 @@
     height: auto;
 
     img.img-fluid {
-        max-width: 81%;
+        max-width: 74%;
         height: auto;
     }
 }

@@ -15,52 +15,70 @@
 
     <div class="col-sm-12">
       <br>
-    
-      <!-- <form [formGroup]="campaignListForm">
-  
-          <div class="card bg-light text-dark">
-  
-  
-  
-            <div class="card-body">
-  
-              <div class="filter-section">
-                <div class="date-range-section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>Enter a date range</mat-label>
-                    <mat-date-range-input [rangePicker]="picker">
-                      <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
-                        formControlName="startDate">
-                      <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
-                        formControlName="endDate">
-                    </mat-date-range-input>
-                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                  </mat-form-field>
-                  <button type="button" class="btn btn-success btn-lg" (click)="getCampaignList()">Search</button>
-                </div>
-                <button type="button" class="btn btn-info btn-lg" routerLink="/addTemplate">+ Add
-                  Template</button>
+
+      <form [formGroup]="templateFilterForm">
+
+        <div class="card bg-light text-dark">
+
+
+
+          <div class="card-body bottom-space">
+
+            <div class="filter-section">
+              <div class="date-range-section">
+                <mat-form-field appearance="outline">
+                  <mat-label>Enter a date range</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input #startDate ng-disabled="true" required readonly="true" matStartDate placeholder="Start date"
+                      formControlName="startDate">
+                    <input #endDate ng-disabled="true" required readonly="true" matEndDate placeholder="End date"
+                      formControlName="endDate" (dateChange)="dateFilter(startDate, endDate)">
+                  </mat-date-range-input>
+                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Template Name</mat-label>
+                  <mat-select formControlName="templateName">
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let item of templateListbysearch"
+                      [value]="item.templateCode">{{item.templateCode}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Template Status</mat-label>
+                  <mat-select formControlName="templateStatus">
+                    <mat-option>None</mat-option>
+                    <mat-option value="0">Pending</mat-option>
+                    <mat-option value="1">Approved</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <button type="button" [disabled]="templateFilterForm.status === 'INVALID'"
+                  (click)="getTemplateListWithDateFilter()" class="btn btn-success btn-lg">Search</button>
               </div>
-  
-              <div>
-  
+              <div class="downoLoadSection">
+                <button type="text" class="btn btn-success download" *ngIf="dataSource['data']['length'] > 0"
+                  placeholder="Download" (click)="downloadTemplateFile()" readonly>Export
+                  &nbsp;<mat-icon>download</mat-icon></button>
               </div>
-  
             </div>
+
+            <div>
+
+            </div>
+
           </div>
-        </form> -->
+        </div>
+      </form>
 
       <app-loader *ngIf="showLoader"></app-loader>
 
       <div class="card bg-light text-dark" style="margin-top: 30px;">
         <!-- <div use *ngIf="create_campaign"  ></div> -->
         <div class="card-body">
-          <div class="downoLoadSection">
-              <button type="text" class="btn btn-success download" *ngIf="dataSource['data']['length'] > 0" placeholder="Download"
-                (click)="downloadTemplateFile()" readonly>Export &nbsp;<mat-icon>download</mat-icon></button>
-         </div>
+
           <br>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
@@ -76,11 +94,11 @@
                   <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
                 </ng-container> -->
               <!-- templateCode -->
-                <!-- inserttime -->
-                <ng-container matColumnDef="inserttime">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                  <td mat-cell *matCellDef="let row">{{moment(row.inserttime).format('YYYY/MM/DD')}}</td>
-                </ng-container>
+              <!-- inserttime -->
+              <ng-container matColumnDef="inserttime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let row">{{moment(row.inserttime).format('YYYY/MM/DD')}}</td>
+              </ng-container>
               <ng-container matColumnDef="templateCode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Template Name </th>
                 <td mat-cell *matCellDef="let row">{{row.templateCode}}</td>
@@ -104,7 +122,7 @@
                 <td mat-cell *matCellDef="let row">{{row.status == '0'?'Pending':'Approved'}}</td>
               </ng-container>
 
-            
+
 
               <!-- Actions -->
               <!-- <ng-container matColumnDef="actions">
@@ -125,16 +143,20 @@
 
 
             </table>
-            <!-- <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div> -->
 
-            <!-- <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"
-                            aria-label="Select page of users"></mat-paginator> -->
+            <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div>
+
             <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
-              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)" showFirstLastButtons>
+              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)"
+              showFirstLastButtons>
             </mat-paginator>
+
+            
+
           </div>
 
         </div>
       </div>
     </div>
   </div>
+  <div class="body-spacing"></div>

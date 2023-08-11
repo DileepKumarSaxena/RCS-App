@@ -10,6 +10,11 @@ import { AlertService } from '@app/services';
 import moment from 'moment';
 import { Router } from '@angular/router';
 import { Conditional } from '@angular/compiler';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
+import { event } from 'jquery';
+
+
 @Component({
   selector: 'app-xiaomircs',
   templateUrl: './xiaomircs.component.html',
@@ -19,18 +24,15 @@ export class XiaomircsComponent implements OnInit {
   templateForm: FormGroup;
   templateName: string;
   fileName: string = '';
+  thumbnailFileSizeError: boolean = false;
+  thumbnailFileSizeErrorMessage: string = '';
   fileUrl: any;
+  cardArr: any = [];
   cardtitle: string;
   cardDescription: string;
   messagecontent: string;
   suggestionText: string;
   suggestionPostback: string;
-  actionButton1Title: string;
-  actionButton1URL: string;
-  actionButton2Title: string;
-  actionButton2URL: string;
-  actionButton3Title: string;
-  actionButton3URL: string;
 
   fileSizeError = false;
   fileSizeErrorMessage = '';
@@ -59,32 +61,33 @@ export class XiaomircsComponent implements OnInit {
     private templateService: TemplateService,
     private alertService: AlertService,
     private router: Router,
-    private location: Location) {
+    private location: Location,
+    private sanitizer: DomSanitizer) {
     this.templateForm = this.fb.group({
 
     })
   }
 
   ngOnInit() {
-  
     this.createTemplateForm();
-    this.templateForm.get('templateType').valueChanges
-    .subscribe(value => {
-        this.templateForm.get('cardtitle').updateValueAndValidity();
-        this.templateForm.get('cardDescription').updateValueAndValidity();
-   });
+    if (this.templateForm.get('templateType').value == 'rich_card') {
+      this.setValidation('cardtitle', Validators.required);
+      this.setValidation('cardDescription', Validators.required);
+      this.setValidation('fileName', Validators.required);
+
+    }
   }
+
   createTemplateForm() {
     this.templateForm = this.fb.group({
       templateCode: ['', [Validators.required, Validators.maxLength(20)]],
       templateType: ['rich_card'],
-      fileName: null,
+      fileName: [null],
+      thumbnailFileName: [''],
       mediaFileOriginalName: [''],
-      cardtitle: ['', [this.requiredCondtionalVal, Validators.maxLength(200)]],
-      cardTitleCustomParam: [],
-      cardDescriptionCustomParam: [],
-      messageContentCustomParam: [],
-      cardDescription: ['', [this.requiredCondtionalVal, Validators.maxLength(2000)]],
+      mediaContentType: [''],
+      cardtitle: [''],
+      cardDescription: [''],
       messageContent: [''],
       cardOrientation: ['VERTICAL'],
       mediaHeight: ['SHORT_HEIGHT'],
@@ -94,12 +97,12 @@ export class XiaomircsComponent implements OnInit {
       cardDetails: new FormArray([])
     })
   }
-  
-  requiredCondtionalVal(formControl: AbstractControl){
+
+  requiredCondtionalVal(formControl: AbstractControl) {
     if (!formControl.parent) {
       return null;
     }
-    if(formControl.parent.get('templateType').value === 'text_message'){
+    if (formControl.parent.get('templateType').value === 'text_message') {
       return null;
     } else {
       return Validators.required(formControl);
@@ -112,36 +115,66 @@ export class XiaomircsComponent implements OnInit {
       postback: [''],
       url: [''],
       phoneNumber: [''],
-      // displayTextCustomParam:[],
-      // postbackCustomParam:[],
-      // urlCustomParam:[]
     });
   }
   createCards(): FormGroup {
     return this.fb.group({
       cardWidth: ['SMALL_WIDTH'],
       mediaHeight: ['SHORT_HEIGHT'],
-      fileName: [],
-      mediaFileOriginalName:[],
-      mediaUrl: [null],
-      fileNameDisplay: [],
-      cardtitle: [],
-      cardDescription: [],
+      fileName: [null, Validators.required],
+      thumbnailFileName: [''],
+      mediaFileOriginalName: [''],
+      mediaContentType: [''],
+      cardtitle: ['', Validators.required],
+      cardDescription: ['', Validators.required],
     });
   }
   tabs = [];
-  addTab() {
 
+  setValidation(frmCtrl: any, validation: any) {
+    if (validation) {
+      this.templateForm.controls[frmCtrl].setValidators(validation);
+      this.templateForm.controls[frmCtrl].updateValueAndValidity();
+    } else {
+      this.templateForm.controls[frmCtrl].setValidators(null);
+      this.templateForm.controls[frmCtrl].updateValueAndValidity();
+    }
+
+  }
+  templateTypeChange(event: any) {
+    this.setValidation('cardtitle', null);
+    this.setValidation('cardDescription', null);
+    this.setValidation('messageContent', null);
+    this.setValidation('fileName', null);
+    if (this.cardDetails && this.cardDetails.length > 0) {
+      this.cardDetails.clear();
+    }
+
+    if (event.target.value == 'rich_card') {
+      this.setValidation('cardtitle', Validators.required);
+      this.setValidation('cardDescription', Validators.required);
+      this.setValidation('fileName', Validators.required);
+    }
+    else if (event.target.value == 'carousel') {
+      this.addTab();
+    } else {
+      this.setValidation('messageContent', Validators.required);
+    }
+  }
+
+  addTab() {
     this.cardDetails = this.templateForm.get('cardDetails') as FormArray;
     if (this.cardDetails.value.length < 5) {
       this.cardDetails.push(this.createCards());
       this.tabs.push('Card ' + this.cardDetails.value.length);
     }
   }
+
   getClassName(data) {
     console.log(data, "DDDDDDDD");
     return "Vertical"
   }
+
   // Function to add a new row
   addRow() {
     let loopCount = this.templateForm.get('templateType').value == 'text_message' ? 10 : 4;
@@ -161,151 +194,157 @@ export class XiaomircsComponent implements OnInit {
     }
   }
 
-  getImage(imagePath) {
-    console.log(imagePath, "imagePath");
-    return imagePath;
+  characterCounts(data: any) {
+    return data ? data.length : 0;
   }
-  templateNameCharacterCount(event: any) {
-    let value = event.target.value as string;
-    if (value.length > 20) {
-      value = value.substr(0, 20);
-    }
-    const templateNameControl = this.templateForm.get('templateCode');
-    templateNameControl.setValue(value);
-  }
-  cardTitleCharacterCount(event: any) {
-    let value = event.target.value as string;
-    if (value.length > 200) {
-      value = value.substr(0, 200);
-    }
-    const templateNameControl = this.templateForm.get('cardtitle');
-    templateNameControl.setValue(value);
-    // this.getStringBetweenBraces();
-  }
+  fileValidation(input: any, frmval: any, flag: any) {
+    const file = input.files && input.files[0];
+    let formatType;
+    if (file) {
 
-  cardDescriptionCharacterCount(event: any) {
-    let value = event.target.value as string;
-    if (value.length > 2000) {
-      value = value.substr(0, 2000);
-    }
-    const templateNameControl = this.templateForm.get('cardDescription');
-    templateNameControl.setValue(value);
-  }
-  messageContentCharacterCount(event: any) {
-    let value = event.target.value as string;
-    if (value.length > 2500) {
-      value = value.substr(0, 2500);
-    }
-    const templateNameControl = this.templateForm.get('messageContent');
-    templateNameControl.setValue(value);
-  }
-
-
-  validateFile(input: any) {
-    if (input.files && input.files[0]) {
-      this.templateForm.get('mediaFileOriginalName').patchValue(input.files[0].name);
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.fileName = e.target.result;
-        this.templateForm.get("fileName").setValue(input.files[0]);
-      };
-      reader.readAsDataURL(input.files[0]);
-
-      let maxImageSize = 2 * 1024 * 1024; // 1MB
-      let file = input.files[0];
-      let fileSize = file.size;
-      let fileType = file.type.split('/')[0]; // 'image' or 'video'
-
-      if (fileType !== 'image') {
-        this.fileSizeError = true;
-        this.fileSizeErrorMessage = 'Only image files are allowed.';
-        input.value = ''; // Clear the selected file
-      } else if (fileSize > maxImageSize) {
-        this.fileSizeError = true;
-        this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 1MB.';
-        input.value = ''; // Clear the selected file
-      } else {
-        // Check if the file name contains any special characters except underscore
-        const fileName = input.files[0].name;
-        const regex = /^[A-Za-z0-9_]+\.(jpg|jpeg|png|gif)$/; // Only allows alphanumeric characters and underscores in the file name, and specific image file extensions
-        if (!regex.test(fileName)) {
-          this.fileSizeError = true;
-          this.fileSizeErrorMessage = 'File names must contain only letters, numbers, and underscores, and end with a valid image file extension.';
-          input.value = ''; // Clear the selected file
+      if (file.type.indexOf('image') > -1) {
+        if (flag > -1) {
+          console.log('1');
+          this.cardDetails.at(flag).get(frmval).setValidators(null);
+          this.cardDetails.at(flag).get(frmval).updateValueAndValidity();
         } else {
-          this.fileSizeError = false;
-          this.fileSizeErrorMessage = '';
+          console.log('2');
+          this.setValidation(frmval, null)
+          
         }
+      } else if (file.type.indexOf('video') > -1) {
+        console.log('3');
+        if (flag > -1) {
+          console.log('4');
+          this.cardDetails.at(flag).get(frmval).setValidators(Validators.required);
+          this.cardDetails.at(flag).get(frmval).updateValueAndValidity();
+        } else {
+          console.log('5');
+          this.setValidation(frmval, Validators.required);
+        }
+      }
+    }
+
+  }
+  // Upload Image or Video ---- StandAlone
+  validateFile(input: any, frmCtrl: any, frmCtrlDisplay: any, ind: any, flag: any) {
+    const file = input.files && input.files[0];
+    let maxImageSize = 1 * 1024 * 1024; // 1MB for images
+    let maxVideoSize = 5 * 1024 * 1024; // 5MB for videos
+    let fileSize = file.size;
+    let formatType;
+    if (file) {
+
+      if (file.type.indexOf('image') > -1) {
+        formatType = 'image';
+      } else if (file.type.indexOf('video') > -1) {
+        formatType = 'video';
+      }
+
+      if (formatType == 'image') {
+        if (ind > -1) {
+          this.cardDetails.at(ind).get(frmCtrlDisplay).patchValue(file.name);
+          // this.cardDetails.at(ind).get('thumbnailFileName').setValidators(null);
+          // this.cardDetails.at(ind).get('thumbnailFileName').updateValueAndValidity();
+
+          if (flag != 'thumbnail') {
+            this.cardDetails.at(ind).get(frmCtrl).patchValue(file);
+            this.cardDetails.at(ind).get('mediaContentType').patchValue(formatType);
+          }
+        } else {
+          if (fileSize > maxImageSize) {
+            this.fileSizeError = true;
+            this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 1MB.';
+          } else {
+            this.fileSizeError = false;
+            this.fileSizeErrorMessage = '';
+            this.templateForm.get(frmCtrlDisplay).patchValue(file.name);
+           
+            // this.setValidation('thumbnailFileName', null);
+            if (flag != 'thumbnail') {
+              this.templateForm.get(frmCtrl).patchValue(file);
+              this.templateForm.get('mediaContentType').patchValue(formatType);
+            }
+          }
+
+        }
+
+      } else if (formatType == 'video') {
+        if (ind > -1) {
+          this.cardDetails.at(ind).get(frmCtrlDisplay).patchValue(file.name);
+          this.cardDetails.at(ind).get('mediaContentType').patchValue(formatType);
+          this.cardDetails.at(ind).get(frmCtrl).patchValue(file);
+          // this.cardDetails.at(ind).get('thumbnailFileName').setValidators(Validators.required);
+          // this.cardDetails.at(ind).get('thumbnailFileName').updateValueAndValidity();
+        } else {
+          this.templateForm.get(frmCtrlDisplay).patchValue(file.name);
+          console.log("hhkhkhkhk");
+          this.templateForm.get('mediaContentType').patchValue(formatType);
+          this.templateForm.get(frmCtrl).patchValue(file);
+          // this.setValidation('thumbnailFileName', Validators.required);
+        }
+
+
+      }
+
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        if (formatType == 'image') {
+          if (ind > -1) {
+            this.cardArr.push({ id: ind, srcVal: event.target.result })
+          } else {
+            this.fileName = event.target.result;
+          }
+        }
+      }
+
+      if (file) {
+
+        let fileType = file.type.split('/')[0]; // 'image' or 'video'
+
+        if (fileType === 'image') {
+          // Image file validation
+
+        } else if (fileType === 'video') {
+          // Video file validation
+          if (fileSize > maxVideoSize) {
+            this.fileSizeError = true;
+            this.fileSizeErrorMessage = 'The selected video exceeds the maximum file size of 5MB.';
+          } else {
+            this.fileSizeError = false;
+            this.fileSizeErrorMessage = '';
+            // Set the videoFile flag to show the video thumbnail input field
+          }
+        } else {
+          this.fileSizeError = true;
+          this.fileSizeErrorMessage = 'Only image and video files are allowed.';
+        }
+
+
       }
     }
   }
 
-
-  validateFileCr(input: any, index: any) {
-    console.log(input.files, "Fileeee");
-    if (input.files && input.files[0]) {
-      const reader1 = new FileReader();
-      reader1.onload = (e: any) => {
-        const dataURL = e.target.result;
-        this.cardDetails.at(index).get('fileName').patchValue(dataURL);
-        this.cardDetails.at(index).get('fileNameDisplay').patchValue(input.files[0]);
-        this.cardDetails.at(index).get('mediaFileOriginalName').patchValue(input.files[0].name);
-        console.log(this.cardDetails, "cardDetails");
-        
-      };
-      reader1.readAsDataURL(input.files[0]);
-
-      let maxImageSize = 2 * 1024 * 1024; // 1MB
-      let file = input.files[0];
-      let fileSize = file.size;
-      let fileType = file.type.split('/')[0]; // 'image' or 'video'
-
-      if (fileType !== 'image') {
-        this.fileSizeError = true;
-        this.fileSizeErrorMessage = 'Only image files are allowed.';
-        input.value = ''; // Clear the selected file
-      } else if (fileSize > maxImageSize) {
-        this.fileSizeError = true;
-        this.fileSizeErrorMessage = 'The selected image exceeds the maximum file size of 1MB.';
-        input.value = ''; // Clear the selected file
-      } else {
-        // Check if the file name contains any special characters except underscore
-        const fileName = input.files[0].name;
-        const regex = /^[A-Za-z0-9_]+\.(jpg|jpeg|png|gif)$/; // Only allows alphanumeric characters and underscores in the file name, and specific image file extensions
-        if (!regex.test(fileName)) {
-          this.fileSizeError = true;
-          this.fileSizeErrorMessage = 'File names must contain only letters, numbers, and underscores, and end with a valid image file extension.';
-          input.value = ''; // Clear the selected file
-        } else {
-          this.fileSizeError = false;
-          this.fileSizeErrorMessage = '';
-        }
-      }
-
-    }
-  }
-
-
-  addCustomVariable(formCtrl) {
-    console.log(formCtrl, "Add custom_param");
-    let cardDescriptionControl = this.templateForm.get(formCtrl);
-    if (!cardDescriptionControl.value.includes('[custom_param]')) {
-      let currentValue = cardDescriptionControl.value;
-      let updatedValue = currentValue + ' [custom_param] ';
-      cardDescriptionControl.setValue(updatedValue);
-    }
-
-  }
 
   onSubmit() {
+    console.log(this.templateForm, "templateForm....");
     this.templateCodeVal = true;
     if (this.templateForm.invalid) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Please fill all the required fields.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+          icon: 'custom-icon-class',
+        },
+        width: '300px',
+      });
       return;
     }
-    console.log(this.templateForm, "templateForm....");
     if (this.templateForm.valid) {
       let data = this.templateForm?.value;
-      console.log(data, "Data....");
       let tempData: any = this.dataCreate(data);
       const body = JSON.stringify(tempData);
       const formData = new FormData();
@@ -313,11 +352,11 @@ export class XiaomircsComponent implements OnInit {
       const richCardDetails = this.templateForm.get('templateType').value === 'rich_card'
       if (cardDetails?.length) {
         cardDetails?.forEach(element => {
-          formData.append('files', element?.fileNameDisplay);
+          formData.append('files', element?.fileName);
         })
-      } else if(richCardDetails) {
+      } else if (richCardDetails) {
         formData.append('files', this.templateForm.get('fileName').value);
-      } 
+      }
 
       formData.append('addTemplate', body?.toString());
       console.log(formData, "templateForm");
@@ -340,20 +379,6 @@ export class XiaomircsComponent implements OnInit {
   onCancel() {
     window.location.reload();
   }
-  // updateFiles(data) {
-  //   if (data['name'].includes('.jpeg')) {
-  //     let arr = data.name.split('.jpeg')
-  //     // data['name'] = arr[0] + moment().format('YYYY-MM-DD') + '.jpeg';
-  //     data.name = 'Hello';
-  //     console.log(arr[0] + new Date() + '.jpeg');
-  //   }
-  //   console.log(data['name']);
-  // }
-
-  getName(index) {
-    return 'Card ' + index;
-  }
-
   removeTab(index: number) {
     // this.tabs.splice(index, 1);
     console.log(index, "Index..........");
@@ -373,54 +398,8 @@ export class XiaomircsComponent implements OnInit {
     return matches;
   }
 
-  displayVariables(event: Event, formCtrl: any, flag: any, index?: any): any {
-    let inputElement = event.target as HTMLInputElement;
-    let inputString = inputElement.value;
-    let extractedVariables = this.extractVariables(inputString);
-    const temp: any = [];
-    extractedVariables?.forEach((item, idx) => {
-
-      if (idx >= 0) {
-        temp?.push(item);
-        console.log(item, idx, "item.....");
-      }
-    })
-    console.log(temp, "temp.....");
-    this.forTestVariable.push(...temp);
-
-    // var convertArrayToString = extractedVariables.reduce((current, value, index) => {
-    //   if (index > 0)
-    //     current?.push(value);
-
-    //   return current;
-    // }, []);
-    // this.cardDetailsArrayToString = convertArrayToString;
-    //console.log(convertArrayToString, "convertArrayToString....");
-    // let val;
-    // if (this.cardDetailsArrayToString) {
-    //   val = this.cardDetailsArrayToString.concat(",", convertArrayToString);
-    // }
-    // else {
-    //   val = convertArrayToString;
-    // }
-    // convertArrayToString = val;
-    // this.cardDetailsArrayToString = convertArrayToString;
-    if (flag == 1) {
-      this.templateForm.get(formCtrl).setValue(String(temp));
-      // String(temp) = convertArrayToString;
-    } else if (flag == 2) {
-      this.cardDetails.at(index).get(formCtrl).patchValue(String(temp));
-      // String(temp) = convertArrayToString;
-    } else {
-      this.suggestions.at(index).get(formCtrl).patchValue(String(temp));
-      // String(temp) = convertArrayToString;
-    }
-
-    // console.log('cardDetailsArrayToString....', String(temp) );
-    // console.log('Extracted Variables:', convertArrayToString);
-  }
- 
   dataCreate(val: any) {
+    console.log(val, "vvlalalal");
     let xyz: any = [];
     const cardTitleCustomParam = this.extractVariables(this.templateForm.get('cardtitle').value);
     const cardDescriptionCustomParam = this.extractVariables(this.templateForm.get('cardDescription').value);
@@ -438,7 +417,7 @@ export class XiaomircsComponent implements OnInit {
         xyz = [...xyz, ...cardDescriptionCustomParam]
       }
     });
-    
+
     const suggestions = this.templateForm.get('suggestions').value;
     suggestions.forEach(element => {
       const displayTextCustomParam = this.extractVariables(element?.displayText);
@@ -451,9 +430,6 @@ export class XiaomircsComponent implements OnInit {
       }
     });
 
-    // this.templateForm.get('cardTitleCustomParam').value;
-    const component = this;
-    console.log(val, "VAAAA");
     const obj = {
       templateCode: val?.templateCode,
       templateType: val?.templateType,
@@ -462,33 +438,39 @@ export class XiaomircsComponent implements OnInit {
       templateUserId: sessionStorage.getItem('userId'),
       botId: sessionStorage.getItem('botId'),
       templateJson: {
-       suggestions: val.suggestions
+        suggestions: val.suggestions
       }
     }
 
     if (val?.templateType === 'rich_card') {
+
       obj['templateJson']["standAlone"] = {
         cardTitle: val.cardtitle,
         cardDescription: val.cardDescription,
         mediaUrl: val.mediaFileOriginalName,
         mediaFileOriginalName: val.mediaFileOriginalName,
-        orientation:val.cardOrientation,
-        alignment:val.cardAlignment,
-        height:val.mediaHeight,
+        thumbnailFileOriginalName: val.thumbnailFileName,
+        mediaContentType: val.mediaContentType,
+        orientation: val.cardOrientation,
+        alignment: val.cardAlignment,
+        height: val.mediaHeight,
 
       }
 
     } else if (val['templateType'] == 'carousel') {
+
       obj['templateJson']["carouselList"] = val["cardDetails"].map(function (obj) {
         return {
           cardtitle: obj.cardtitle,
           cardDescription: obj.cardDescription,
           mediaUrl: obj.mediaFileOriginalName,
           mediaFileOriginalName: obj.mediaFileOriginalName,
-          orientation:obj.cardOrientation,
+          thumbnailFileOriginalName: obj.thumbnailFileName,
+          mediaContentType: obj.mediaContentType,
+          orientation: obj.cardOrientation,
           width: obj.cardWidth,
           height: obj.mediaHeight
-          
+
         };
       });
 
@@ -504,6 +486,9 @@ export class XiaomircsComponent implements OnInit {
     this.location.back();
   }
 
-
+  getName(index) {
+    return 'Card ' + index;
+  }
 
 }
+

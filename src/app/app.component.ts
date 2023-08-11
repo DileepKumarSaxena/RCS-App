@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService, JwtService } from './_services';
+import { error } from 'jquery';
 // import { User } from './_models';
 
 @Component({
@@ -29,7 +30,7 @@ export class AppComponent {
   setTimeIntervalToken(){
     this.setTimeValue = setInterval(()=> {
       console.log("Login time.......");
-      this.jwtserivce.checkTokenExpTime()}, 60000)
+      this.jwtserivce.checkTokenExpTime(error)}, 60000)
   }
 
   toggleDropdown() {

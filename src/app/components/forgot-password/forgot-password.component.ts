@@ -56,8 +56,16 @@ export class ForgotPasswordComponent {
         },
 
         error: (err) => {
+          // console.log(err, "err===>");
+          // this.error = ('Username or Email is incorrect');
+          // this.loading = false;
+
           console.log(err, "err===>");
-          this.error = ('Username or Email is incorrect');
+          if (err.status === 404) {
+              this.error = 'Username or Email is incorrect';
+          } else {
+              this.error = 'Something went wrong. Please try again later.';
+          }
           this.loading = false;
         }
       })

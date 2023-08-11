@@ -1,9 +1,8 @@
-<div class="auth-bg min-vh-100 d-flex flex-column p-3 pt-2">
+<div class="auth-bg min-vh-100 d-flex flex-column">
 
     <div class="container p-0">
         <div class="auth-logo">
-            <img alt="Fonada" src="assets/fonada-removebg-preview.png"
-                style="width: 280px;">
+            <img alt="Fonada" src="assets/fonada-removebg-preview.png" style="width: 280px;">
         </div>
         <div class="row flex-fill d-flex justify-content-start">
             <div class="d-none d-md-block col-md-6">
@@ -14,16 +13,16 @@
 
             <div class="col-12 col-md-6">
                 <div class="auth-section ms-auto ng-star-inserted">
-                    <form novalidate="" class="ng-pristine ng-invalid ng-touched"
-                        [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <form novalidate="" class="ng-pristine ng-invalid ng-touched" [formGroup]="loginForm"
+                        (ngSubmit)="onSubmit()">
                         <h1 class="heading ml-2">Welcome To RCS</h1>
                         <p class="sub-heading mb-4 ml-3">Please enter your login credentials</p>
 
                         <div class="row">
 
                             <div class="col-12">
-                                <div class="col-12"><label                                         class="form-label">Enter Username</label>
-                                    <div class="input-group mb-3"><span                                             class="input-group-text">
+                                <div class="col-12"><label class="form-label">Enter Username</label>
+                                    <div class="input-group mb-3"><span class="input-group-text">
                                             <i aria-hidden="true" class="fa fa-user"></i>
                                         </span>
                                         <input type="text" maxlength="30" formControlName="username"
@@ -37,31 +36,31 @@
 
                                     </div>
                                 </div>
-                                <div class="col-12"><label                                         class="form-label">Enter Password</label>
-                                       
-                                    <div class="input-group mb-3"><span                                             class="input-group-text"><i aria-hidden="true"
-                                                class="fa fa-lock"></i></span><input                                             type="password" formControlName="password" minlength="5" maxlength="30" class="form-control"
+                                <div class="col-12"><label class="form-label">Enter Password</label>
+
+                                    <div class="input-group mb-3"><span class="input-group-text"><i aria-hidden="true"
+                                                class="fa fa-lock"></i></span><input type="password"
+                                            formControlName="password" minlength="5" maxlength="30" class="form-control"
                                             [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                             placeholder="Enter here"
                                             class="form-control ps-0 ng-pristine ng-valid ng-touched">
-                                          
+
                                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                             <div *ngIf="f.password.errors.required">Password is required</div>
                                         </div>
-                                    
+
                                     </div>
-                                    <a  routerLink="/forgot/password" style="margin-left: 60%;">Forgot Password ?</a>
+                                    <a routerLink="/forgot/password" style="margin-left: 60%;">Forgot Password ?</a>
                                 </div>
                                 <br>
-                                <div class="col-12"><button  type="submit"
-                                        class="w-100 shadow">
+                                <div class="col-12"><button type="submit" class="w-100 shadow">
                                         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                                         LOGIN &nbsp; <i class="fa fa-arrow-right" style="color: white;"></i></button>
                                     <br>
                                     <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                                 </div>
 
-                                <div class="col-12 my-3 text-center"><span                                         class="sub-heading">
+                                <div class="col-12 my-3 text-center"><span class="sub-heading">
                                     </span>
                                 </div>
                                 <br>
@@ -78,3 +77,5 @@
     <!-- <br><br><br><br>
     <p style="margin-left: 20%;">© The website will make use of cookies. By submitting this form, you agree to the privacy policy and cookie policy of this website.</p> -->
 </div>
+
+<app-footer></app-footer>

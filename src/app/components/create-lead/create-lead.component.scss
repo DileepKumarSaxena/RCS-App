@@ -98,6 +98,7 @@ width:70%;
 
 .progress{
   margin-top: 30px;
+  margin-bottom: 20px;
 }
 
 .progress-bar-green {
@@ -107,7 +108,9 @@ width:70%;
   color: red;
 }
 
-
+.btn[disabled]{
+  cursor: not-allowed;
+}
 
 .time-picker {
   position: relative;
@@ -152,16 +155,23 @@ width:70%;
     z-index: 1;
     color: #888;
 }
-
+.notes{
+  font-size: 11px;
+  color: #f44336;
+}
+.notes.notes-error-spacing{
+  position: relative;
+  top: 10px;
+}
 .custom-date-range-input {
   border: 1px solid #ccc;
   padding: 8px;
 }
 
 .custom-card-width{
-  width: 32%;
-  float: right;
-  margin-bottom: 30px;
+  // width: 70%;
+  // float: right;
+  // margin-bottom: 30px;
 
   .lead {
     width: 100%;
@@ -171,4 +181,11 @@ width:70%;
 
 .error-spacing{
   line-height: 1.2;
+  font-size: 11px;
+}
+
+.form-spacing{
+  .col-sm-6{
+    margin-bottom: 10px;
+  }
 }

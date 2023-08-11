@@ -46,7 +46,7 @@ import { SpinnerInterceptorService } from './_interceptors/spinner.interceptor';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DasboardComponent } from './components/dasboard/dasboard.component';
-import { NgChartsModule } from 'ng2-charts';
+// import { NgChartsModule } from 'ng2-charts';
 import { FooterComponent } from './components/footer/footer.component';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -86,7 +86,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
         MatTabsModule,
         MatTooltipModule,
-        NgChartsModule,
+        // NgChartsModule,
         MatAutocompleteModule,
         MatSlideToggleModule
         

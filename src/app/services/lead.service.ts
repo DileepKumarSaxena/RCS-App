@@ -12,6 +12,8 @@ export class LeadService extends BaseService {
   }
 
   baseUrlData = this.baseUrl + 'lead/';
+  leadUrlData = this.baseUrl + 'lead/';
+  campUrlData = this.baseUrl + 'campaign/';
 
   getAllTheLeadList(leadName: any): Observable<any> {
     let httpParams = new HttpParams()
@@ -32,15 +34,25 @@ export class LeadService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'leadInfo'}`, formData);
   }
 
-  getLeadlistDetails(userId, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
+  getLeadlistDetails(fromDate, toDate,userId,campaignId,limit, start, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
     httpParams = httpParams.append("userId", userId);
+
+    if(campaignId!=null){
+      httpParams = httpParams.append("campaignId", campaignId);
+    }
+    // if(leadId!=null){
+    // httpParams = httpParams.append("leadId", leadId);
+    // }
     httpParams = httpParams.append("limit", limit);
     httpParams = httpParams.append("start", start);
+  
     httpParams = httpParams.append("pageIndex", pageIndex.toString());
     httpParams = httpParams.append("pageSize", pageSize.toString());
+
+    
     return this.http.get(`${this.baseUrlData + 'leadInfoList'}`, { params: httpParams });
   }
 
@@ -100,5 +112,19 @@ export class LeadService extends BaseService {
     httpParams = httpParams.append("pageIndex", pageIndex.toString());
     httpParams = httpParams.append("pageSize", pageSize.toString());
     return this.http.get(`${this.baseUrlData + 'leadInfoList'}`, { params: httpParams });
+  }
+
+
+  private URLS_Lead = this.leadUrlData+'leadNameAndIdList';
+  // private URLS_Lead = this.leadUrlData+'leadNameAndIdList';
+  getLeadList(userId:string, campaignId:string): Observable<any> {
+    return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
+  }
+
+
+  private URLS_lead = this.campUrlData+'campaignNameAndIdListByDateRange';
+  // private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
+  dateRangeFilter(from: string, to: string, userId:string): Observable<any> {
+    return this.http.get(`${this.URLS_lead}?from=${from}&to=${to}&userId=${userId}`);
   }
 }

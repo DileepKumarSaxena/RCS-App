@@ -38,9 +38,13 @@ export class LeadComponent {
   inputdata: any;
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   leadForm: FormGroup;
-  campaignList: any;
+  // campaignList: any;
   moment: any = moment;
-  leadList: LeadData[] = [];
+  // leadList: LeadData[] = [];
+
+  campaignList: any = [];
+  leadList: any = [];
+  currentDate = new Date();
 
   displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'actions'];
   dataSource!: MatTableDataSource<any>;
@@ -62,12 +66,14 @@ export class LeadComponent {
 
 
   ngOnInit(): void {
+    this.createCampaignForm();
+    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex =0;
     this.paginator.pageSize = 5;
-    this.createCampaignForm();
     this.campaignListData();
     this.getLeadList();
+    // this.getDateFilter();
    
   }
 
@@ -78,7 +84,9 @@ export class LeadComponent {
   createCampaignForm() {
     this.leadForm = this.formbuilder.group({
       startDate: moment().format('YYYY-MM-DD'),
-      endDate: moment().format('YYYY-MM-DD')
+      endDate: moment().format('YYYY-MM-DD'),
+      campaignId: [],
+      // leadId: [],
     })
   }
 
@@ -104,7 +112,9 @@ export class LeadComponent {
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
     let limit = this.paginator.pageSize.toString();  
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
-    this.leadService.getLeadlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    let campaignId = this.leadForm.value.campaignId;
+    // let leadId = this.leadForm.value.leadId;
+    this.leadService.getLeadlistDetails(startDateVal,endDateVal,sessionStorage.getItem('userId'),campaignId,  limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         console.log(res['Lead Info'], "REEEEEE");
         this.leadData = res['Lead Info'];
@@ -119,6 +129,69 @@ export class LeadComponent {
       }
     });
   }
+
+  
+  getLeadName(event: any) {
+    let userId = sessionStorage.getItem('userId');
+    let campaignId = event.source.value;
+    this.leadService.getLeadList(userId, campaignId).subscribe({
+      next: (res: any) => {
+        console.log(res, "LeadList....")
+        if (res) {
+          this.leadList = res;
+        }
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+
+    })
+  }
+
+
+  // getDateFilter() {
+  //   this.showLoader = true
+  //   let userId = sessionStorage.getItem('userId');
+  //   let from = moment(this.currentDate).format('YYYY-MM-DD');
+  //   let to = moment(this.currentDate).format('YYYY-MM-DD');
+  //   this.leadService.dateRangeFilter(from, to, userId).subscribe({
+  //     next: (res: any) => {
+  //       this.leadData = res.data;
+  //       this.dataSource.data = this.leadData;
+  //       if (res) {
+  //         this.campaignList = res['Lead Info'];
+  //       }
+        
+  //       this.showLoader = false
+  //     },
+  //     error: (err) => {
+  //       console.log(err, "Error while fetching the records.");
+  //     }
+  //   })
+  // }
+  // dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+  //   // this.showLoader = true
+  //   let userId = sessionStorage.getItem('userId');
+  //   let from = moment(startDate.value).format('YYYY-MM-DD');
+  //   let to = moment(endDate.value).format('YYYY-MM-DD');
+  //   this.leadForm.get('campaignId').setValue(null);
+  //   this.leadService.dateRangeFilter(from, to, userId).subscribe({
+  //     next: (res: any) => {
+  //       console.log(res, "CampaigList");
+  //       this.leadData = res.data;
+  //       // this.leadData = res['Lead Info'];
+  //       this.dataSource.data = this.leadData;
+  //       if (res) {
+  //         this.campaignList = res;
+  //       }
+  //       this.showLoader = false
+  //     },
+  //     error: (err) => {
+  //       console.log(err, "Error while fetching the records.");
+  //     }
+  //   })
+  // }
+
   onPageChanged(event: PageEvent) {
     this.getLeadList();
   }
@@ -310,6 +383,7 @@ export class LeadComponent {
     }
     return null;
   }
+
 }
 
 

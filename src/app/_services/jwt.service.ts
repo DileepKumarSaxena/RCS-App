@@ -14,11 +14,11 @@ export class JwtService  {
     private authenticationService:AuthenticationService) {
   }
 
-  async checkTokenExpTime() {
+  async checkTokenExpTime(err) {
     const expiresOn = this.storage.getItem('expireOn');
     const timeDiff = (new Date(expiresOn).valueOf() - new Date().valueOf()) / 1000 ;
     console.log(timeDiff, "timeDiff.......");
-    if (expiresOn && (timeDiff <= 0)) {
+    if (expiresOn && (timeDiff <= 0) && err.status === 500) {
       this.authenticationService.logout();
       location.reload();
     }

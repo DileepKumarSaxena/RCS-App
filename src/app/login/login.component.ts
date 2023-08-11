@@ -70,13 +70,12 @@ export class LoginComponent implements OnInit {
                 },
 
                 error: (err) => {
-
                     console.log(err, "err===>");
-                    this.error = ('Username or password is incorrect');
-
-                    // if(Response['status'] == 403){
-                    //     this.error = ('Username or password is incorrect'); 
-                    // }
+                    if (err.status === 403) {
+                        this.error = 'Username or Password is incorrect';
+                    } else {
+                        this.error = 'Something went wrong. Please try again later.';
+                    }
                     this.loading = false;
                 }
             })

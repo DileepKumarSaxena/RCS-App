@@ -39,6 +39,14 @@ export class CampaignComponent {
   currentPage: number = 1;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  campaignList: any = [];
+  templateData: any;
+
+  currentDate = new Date();
+
+  campaignNameListbysearch: any = [];
+
+  templateListbysearch: any = [];
 
   // ngAfterViewInit() {
   //   // Set the initial page index (e.g., 0 for the first page)
@@ -77,21 +85,23 @@ export class CampaignComponent {
  
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<any>();
-    this.paginator.pageIndex =0;
-    this.paginator.pageSize = 5;
     this.createCampaignForm();
+    this.dataSource = new MatTableDataSource<any>();
+    this.paginator.pageIndex = 0;
+    this.paginator.pageSize = 5;
+    this.getDateFilter();
     this.getCampaignList();
-    
   }
-
 
   get f() { return this.campaignListForm.controls; }
 
   createCampaignForm() {
     this.campaignListForm = this.formbuilder.group({
       startDate: moment().format('YYYY-MM-DD'),
-      endDate: moment().format('YYYY-MM-DD')
+      endDate: moment().format('YYYY-MM-DD'),
+      templateName: [],
+      campaignId : []
+    
     })
   }
   getCampaignList() {
@@ -102,12 +112,14 @@ export class CampaignComponent {
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
+    let templateName = this.campaignListForm.value.templateName;
+    let campaignName = this.campaignListForm.value.campaignId;
     this.ngxService.start();
     // const pageIndex = this.paginator.pageIndex;
     // const pageSize = this.paginator.pageSize;
 
 
-        this.subscription.add(this.campaignservice.getCampaignlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal,limit, start, this.paginator.pageIndex, this.paginator.pageSize)
+        this.subscription.add(this.campaignservice.getCampaignlistDetails(sessionStorage.getItem('userId'), startDateVal, endDateVal,templateName,campaignName,limit, start, this.paginator.pageIndex, this.paginator.pageSize)
       .subscribe({
        
         next: (res: any) => {
@@ -178,6 +190,86 @@ export class CampaignComponent {
         });
       }
     });
+  }
+
+  getDateFilter() {
+    this.showLoader = true
+    let templateUserId = sessionStorage.getItem('UserId');
+    let from = moment(this.currentDate).format('YYYY-MM-DD');
+    let to = moment(this.currentDate).format('YYYY-MM-DD');
+    this.campaignservice.dateRangeFilter(from, to, templateUserId).subscribe({
+      next: (res: any) => {
+        this.templateData = res.data;
+        this.dataSource.data = this.templateData;
+        if (res) {
+          this.templateListbysearch = res.Campaign;
+        }
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+
+  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+    // this.showLoader = true
+    let templateId = sessionStorage.getItem('UserId');
+    let from = moment(startDate.value).format('YYYY-MM-DD');
+    let to = moment(endDate.value).format('YYYY-MM-DD');
+    this.campaignListForm.get('templateName').setValue(null);
+    this.campaignListForm.get('campaignId').setValue(null);
+    this.campaignservice.dateRangeFilter(from, to, templateId).subscribe({
+      next: (res: any) => {
+        console.log(res, "templateList");
+        this.templateData = res.template;
+        // this.dataSource.data = this.templateData;
+        if (res) {
+          this.templateListbysearch = res.template;
+        }
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+  // getLeadName(event: any) {
+  //   let userId = sessionStorage.getItem('userId');
+  //  let templateName= this.campaignListForm.value.templateName
+  //   this.campaignservice.getLeadList(userId,templateName).subscribe({
+  //     next: (res: any) => {
+  //       console.log(res, "LeadList....")
+  //       if (res) {
+  //         this.leadList = res.campaignName;
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.log(err, "Error while fetching the records.");
+  //     }
+
+  //   })
+  // }
+
+  getCampaignName(event: any) {
+    let userId = sessionStorage.getItem('userId');
+    let templateName= this.campaignListForm.value.templateName;
+    this.campaignListForm.get('campaignId').setValue(null);
+    this.campaignservice.getCampaignList(userId,templateName).subscribe({
+      next: (res: any) => {
+        console.log(res, "campaignList....")
+        if (res) {
+          // this.campaignListForm.get('templateName').setValue(null);
+          this.campaignList = res;
+        }
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+
+    })
   }
 
    
@@ -300,8 +392,10 @@ export class CampaignComponent {
   get_download_Rcs_Campaign_Details_file() {
     const startDate = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     const endDate = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
+    let templateName = this.campaignListForm.value.templateName;
+    let campaignName = this.campaignListForm.value.campaignName;
     if (this.campaignListForm.value.startDate != null && this.campaignListForm.value.endDate != "") {
-      return this.campaignservice.getData(startDate, endDate, sessionStorage.getItem('userId')).subscribe(data_ar => {
+      return this.campaignservice.getData(startDate, endDate, sessionStorage.getItem('userId'),templateName,campaignName).subscribe(data_ar => {
         if (data_ar.Campaign.length > 0) {
           console.log("Campaign List::=>" + JSON.stringify(data_ar.Campaign))
           this.showLoader = false

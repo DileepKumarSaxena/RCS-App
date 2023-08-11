@@ -28,6 +28,7 @@ export class ReportsService extends BaseService{
     return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
   }
   
+  
   getDeatilReport(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
     const url = this.baseUrlData+'getRcsDetailedSmsReport';
     // const url = this.baseUrlData+'getRcsDetailedSmsReport';

@@ -74,6 +74,8 @@ $imageBaseUrl: 'http://fuat.flash49.com';
             background-color: #ffffff;
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            font-weight: 500;
+            font-size: 16px;
 
 
 
@@ -199,9 +201,11 @@ h3 {
         width: 90% !important;
     }
 
-    .mat-mdc-tab-body-content {
-        padding: 10px 20px !important;
-        border: 1px solid #bbb !important;
+    mat-tab-group.mat-mdc-tab-group.form-tab-section.mat-primary.custom-tab-body-class.mat-mdc-tab-group-stretch-tabs {
+        .mat-mdc-tab-body-content {
+            padding: 10px 20px !important;
+            border: 1px solid #bbb !important;
+        }
     }
 }
 
@@ -307,7 +311,7 @@ button.addTabs.mdc-fab.mdc-fab--mini.mat-mdc-mini-fab.mat-accent.mat-mdc-button-
     }
 
     .contact-details {
-        padding: 10px 0px 0;
+        padding: 10px 10px 0;
     }
 
     .call-details {
@@ -389,7 +393,7 @@ a.action-icon {
 
 }
 
-.deviceSection.ng-star-inserted {
+.deviceSection {
     padding-left: 10%;
 }
 
@@ -399,7 +403,8 @@ a.action-icon {
         padding: 10px;
     }
 }
-.rich-card-section.vertical.mediumHeight{
+
+.rich-card-section.vertical.mediumHeight {
     div.devic-img img {
         max-height: 120px;
     }
@@ -411,10 +416,11 @@ a.action-icon {
         justify-content: flex-start;
         align-items: center;
 
-        div.devic-img{
+        div.devic-img {
             width: 30%;
             margin-right: 10px;
         }
+
         div.devic-img img {
             height: 100px;
             border-top-left-radius: 0;
@@ -423,24 +429,27 @@ a.action-icon {
             border-top-left-radius: 4px;
 
         }
+
         div.device-desc {
-            width: 68%;     
+            width: 68%;
         }
 
     }
 }
 
-.rich-card-section.horizontal.cardAlignmentRight{
+.rich-card-section.horizontal.cardAlignmentRight {
     .image-horizontal {
         justify-content: flex-end;
+
         div.device-desc {
             padding-right: 5px;
         }
 
-        div.devic-img{
+        div.devic-img {
             width: 30%;
             margin-right: 0px;
         }
+
         div.devic-img img {
             height: 100px;
             border-top-left-radius: 0;
@@ -451,5 +460,22 @@ a.action-icon {
             border-top-right-radius: 4px;
 
         }
+    }
+}
+
+.devic-img.thumbIcon {
+    position: relative;
+
+    img{
+        opacity: 0.7;
+    }
+
+    i {
+        position: absolute;
+        left: 50%;
+        font-size: 50px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #333;
     }
 }
