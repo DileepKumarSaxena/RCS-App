@@ -71,7 +71,6 @@ export class CreateCampaignComponent {
   getCampaignInfo() {
     this.campaignService.getCampaignData(this.cmpId).subscribe({
       next: (res) => {
-        console.log(res, "Campaign ID");
         this.campaignForm.patchValue(res);
         this.campaignForm.controls['campaignName'].disable();
       },
@@ -163,7 +162,6 @@ onDescriptionBlur() {
   templateList() {
     this.campaignService.getAllTemplateList().subscribe(res => {
       if (res) {
-        console.log(res, "Alllll....");
         this.allTemplateList = res.template;
       } else {
         this.campaignService.setTemplateList();
@@ -184,7 +182,6 @@ onDescriptionBlur() {
         this.campaignService.campaignDataUpdate(this.campaignForm.value).subscribe({
           next: (res) => {
             this.showLoader=false
-            console.log(res, "Create Form....");
             Swal.fire({
               title: 'Campaign Updated Successfully',
               icon: 'success',
@@ -213,7 +210,6 @@ onDescriptionBlur() {
         this.campaignService.campaignDataSubmit(this.campaignForm.value).subscribe({
           next: (res) => {
             this.showLoader=true
-            console.log(res, "Create Form....");
             Swal.fire({
               title: 'Campaign Created Successfully',
               icon: 'success',

@@ -119,10 +119,11 @@
               <!-- status -->
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                <td mat-cell *matCellDef="let row">{{row.status == '0'?'Pending':'Approved'}}</td>
+                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.status == '0'?'Pending':'Approved')">
+                  {{row.status == '0'?'Pending':'Approved'}}
+                </td>
               </ng-container>
-
-
+              
 
               <!-- Actions -->
               <!-- <ng-container matColumnDef="actions">

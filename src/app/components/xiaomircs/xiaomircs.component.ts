@@ -171,7 +171,6 @@ export class XiaomircsComponent implements OnInit {
   }
 
   getClassName(data) {
-    console.log(data, "DDDDDDDD");
     return "Vertical"
   }
 
@@ -181,7 +180,6 @@ export class XiaomircsComponent implements OnInit {
     this.suggestions = this.templateForm.get('suggestions') as FormArray;
     if (this.suggestions.value.length < loopCount) {
       this.suggestions.push(this.createItem());
-      console.log(this.templateForm.get('suggestions'), "suggestions");
     }
   }
 
@@ -189,7 +187,6 @@ export class XiaomircsComponent implements OnInit {
   removeRow(index: number) {
     this.suggestions = this.templateForm.get('suggestions') as FormArray;
     if (index > -1) {
-      console.log(index, this.suggestions);
       this.suggestions.removeAt(index);
     }
   }
@@ -204,22 +201,17 @@ export class XiaomircsComponent implements OnInit {
 
       if (file.type.indexOf('image') > -1) {
         if (flag > -1) {
-          console.log('1');
           this.cardDetails.at(flag).get(frmval).setValidators(null);
           this.cardDetails.at(flag).get(frmval).updateValueAndValidity();
         } else {
-          console.log('2');
           this.setValidation(frmval, null)
           
         }
       } else if (file.type.indexOf('video') > -1) {
-        console.log('3');
         if (flag > -1) {
-          console.log('4');
           this.cardDetails.at(flag).get(frmval).setValidators(Validators.required);
           this.cardDetails.at(flag).get(frmval).updateValueAndValidity();
         } else {
-          console.log('5');
           this.setValidation(frmval, Validators.required);
         }
       }
@@ -278,7 +270,6 @@ export class XiaomircsComponent implements OnInit {
           // this.cardDetails.at(ind).get('thumbnailFileName').updateValueAndValidity();
         } else {
           this.templateForm.get(frmCtrlDisplay).patchValue(file.name);
-          console.log("hhkhkhkhk");
           this.templateForm.get('mediaContentType').patchValue(formatType);
           this.templateForm.get(frmCtrl).patchValue(file);
           // this.setValidation('thumbnailFileName', Validators.required);
@@ -328,7 +319,6 @@ export class XiaomircsComponent implements OnInit {
 
 
   onSubmit() {
-    console.log(this.templateForm, "templateForm....");
     this.templateCodeVal = true;
     if (this.templateForm.invalid) {
       Swal.fire({
@@ -359,10 +349,8 @@ export class XiaomircsComponent implements OnInit {
       }
 
       formData.append('addTemplate', body?.toString());
-      console.log(formData, "templateForm");
       this.templateService.templateDataSubmit(formData).subscribe({
         next: (res: any) => {
-          console.log(res, "Template....")
           this.alertService.successToaster('Template Created Successfully');
           this.templateForm.reset();
           this.router.navigate(['/templateList']);
@@ -381,7 +369,6 @@ export class XiaomircsComponent implements OnInit {
   }
   removeTab(index: number) {
     // this.tabs.splice(index, 1);
-    console.log(index, "Index..........");
     if (this.cardDetails.length > 1) {
       this.cardDetails.removeAt(index);
       this.tabs.splice(index, 1);
@@ -399,7 +386,6 @@ export class XiaomircsComponent implements OnInit {
   }
 
   dataCreate(val: any) {
-    console.log(val, "vvlalalal");
     let xyz: any = [];
     const cardTitleCustomParam = this.extractVariables(this.templateForm.get('cardtitle').value);
     const cardDescriptionCustomParam = this.extractVariables(this.templateForm.get('cardDescription').value);

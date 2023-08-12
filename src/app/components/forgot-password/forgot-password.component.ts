@@ -51,7 +51,6 @@ export class ForgotPasswordComponent {
             confirmButtonColor: '#F34335',
             width: '300px',
           })
-          console.log(res, "Data===>");
           this.router.navigate(['/login']);
         },
 
@@ -60,7 +59,6 @@ export class ForgotPasswordComponent {
           // this.error = ('Username or Email is incorrect');
           // this.loading = false;
 
-          console.log(err, "err===>");
           if (err.status === 404) {
               this.error = 'Username or Email is incorrect';
           } else {

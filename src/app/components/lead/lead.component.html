@@ -29,8 +29,8 @@
                   <mat-label>Enter a date range</mat-label>
                   <mat-date-range-input [rangePicker]="picker">
                     <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" #startDate formControlName="startDate" required>
-                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" #endDate formControlName="endDate"  required>
-                    <!-- (dateChange)="dateFilter(startDate, endDate)" -->
+                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" #endDate formControlName="endDate" (dateChange)="dateFilter(startDate, endDate)" required>
+              
                   </mat-date-range-input>
                   <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -115,14 +115,14 @@
               <!-- scheduleStartDtm -->
               <ng-container matColumnDef="scheduleStartDtm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule Start Date</th>
-                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('YYYY/MM/DD')}}
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('YYYY/MM/DD HH:mm')}}
                 </td>
               </ng-container>
 
               <!-- scheduleEndDtm -->
               <ng-container matColumnDef="scheduleEndDtm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule End Date</th>
-                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('YYYY/MM/DD')}}
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('YYYY/MM/DD HH:mm')}}
                 </td>
               </ng-container>
 
@@ -150,6 +150,12 @@
                 <td mat-cell *matCellDef="let row">{{row.countOfBlackListNumbers}}</td>
               </ng-container>
 
+               <!-- leadStatus -->
+               <ng-container matColumnDef="leadStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.leadStatus)">{{row.leadStatus}}</td>
+              </ng-container>
+
               <!-- Actions -->
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -160,7 +166,7 @@
                       matTooltip="Start"
                       color="primary"
                       (click)="performAction(data.leadId, 'Start', data)"
-                      [disabled]="data.isStartDisabled"
+                      [disabled]="showEnableDisabled(data)"
                     >
                       <mat-icon>play_arrow</mat-icon>
                     </button>

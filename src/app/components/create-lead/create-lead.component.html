@@ -141,9 +141,9 @@
                                             (click)="onCancel()">Reset</button>
                                     </div>
                                     <div class="col-sm-6">
-                                        <!-- areRequiredFieldsFilledForSubmit() ||  -->
+                                       
                                         <button class="btn btn-success submit" type="submit" id="smbtbtn"
-                                            [disabled]="leadForm.status === 'INVALID'"
+                                            [disabled]="areRequiredFieldsFilledForSubmit()"
                                             (click)="onSubmit()">{{actionBtn}}</button>
                                     </div>
         
@@ -185,9 +185,9 @@
                                             </div>
                                         </ng-container>
                                         <br><br>
-                                        <!-- [disabled]="areRequiredFieldsFilledForTestLead()" -->
-                                        <button class="btn btn-success lead" 
-                                            (click)="testLead()">Test
+                                        
+                                        <button class="btn btn-success lead"
+                                            (click)="testLead()" [disabled]="areRequiredFieldsFilledForTestLead()">Test
                                             Lead</button>
                                     </div>
         

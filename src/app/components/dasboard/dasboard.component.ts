@@ -57,7 +57,6 @@ export class DasboardComponent {
     this.reportservice.getSummaryData(username, from, to).subscribe({
       next: (res: any) => {
         this.dashboardData = res.data;
-        console.log(this.dashboardData, "Counts");
         this.calculateTotalSum();
         this.showLoader=false
       },
@@ -76,7 +75,6 @@ export class DasboardComponent {
     this.reportservice.getSummaryData(username, from, to).subscribe({
       next: (res: any) => {
         this.dashboardData = res.data;
-        console.log(this.dashboardData, "Counts");
         this.calculateTotalSum();
         this.showLoader=false
       },

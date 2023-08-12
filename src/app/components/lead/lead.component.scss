@@ -33,3 +33,13 @@ mat-form-field {
   display: flex;
   align-items: center;
 }
+
+.status-completed {
+  color: #008000;
+  font-weight: 500;
+}
+
+.status-acitve {
+  color: #673ab7;
+  font-weight: 500;
+}

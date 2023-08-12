@@ -30,7 +30,7 @@ export class AppComponent {
   setTimeIntervalToken(){
     this.setTimeValue = setInterval(()=> {
       console.log("Login time.......");
-      this.jwtserivce.checkTokenExpTime(error)}, 60000)
+      this.jwtserivce.checkTokenExpTime()}, 60000)
   }
 
   toggleDropdown() {

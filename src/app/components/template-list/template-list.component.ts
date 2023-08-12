@@ -44,6 +44,9 @@ export class TemplateListComponent {
      this.getTemplateList();
   }
 
+  getStatusClass(status: string): string {
+    return status === 'Approved' ? 'status-approved' : 'status-pending';
+  }
 
   templateFilters() {
     this.templateFilterForm = this.formbuilder.group({
@@ -107,9 +110,10 @@ export class TemplateListComponent {
     let templateUserId = sessionStorage.getItem('UserId');
     let from = moment(startDate.value).format('YYYY-MM-DD');
     let to = moment(endDate.value).format('YYYY-MM-DD');
+    this.templateFilterForm.get('templateName').setValue(null);
+    this.templateFilterForm.get('templateStatus').setValue(null);
     this.templateService.dateRangeFilter(from, to, templateUserId).subscribe({
       next: (res: any) => {
-        console.log(res, "templateList");
         this.templateData = res.template;
         // this.dataSource.data = this.templateData;
         if (res) {
@@ -194,7 +198,6 @@ export class TemplateListComponent {
 
     this.templateService.getTemplateData(templateUserId, limit, start, startDateVal, endDateVal,templateName,templateStatus, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
       if (data_ar.template.length > 0) {
-        console.log("template::=>" + JSON.stringify(data_ar))
         this.showLoader = false
         data_ar = data_ar.template.map((e) => {
           // Map only the desired properties with custom header names
@@ -211,8 +214,6 @@ export class TemplateListComponent {
 
 
         });
-        console.log("Campaign List::=>" + JSON.stringify(data_ar))
-
         var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
         var csvData = new Blob(['\uFEFF' + csv], {
           type: 'text/csv;charset=utf-8;'

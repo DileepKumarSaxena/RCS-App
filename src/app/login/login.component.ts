@@ -64,13 +64,11 @@ export class LoginComponent implements OnInit {
                     sessionStorage.setItem('username', res.result.username);
                     sessionStorage.setItem('botId', res.botId);
                     
-                    console.log(res, "Data===>");
                     this.router.navigate(['/dasboard']);
 
                 },
 
                 error: (err) => {
-                    console.log(err, "err===>");
                     if (err.status === 403) {
                         this.error = 'Username or Password is incorrect';
                     } else {

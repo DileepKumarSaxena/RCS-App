@@ -80,13 +80,11 @@ export class ResetPasswordComponent {
             confirmButtonColor: '#F34335',
             width: '300px',
           })
-          console.log(res, "Data===>");
           this.authenticationService.logout();
           this.router.navigate(['/login']);
         },
 
         error: (err) => {
-          console.log(err, "err===>");
           this.error = ('Old Password is Not Valid!');
           this.loading = false;
         }

@@ -62,14 +62,11 @@ export class TemplateComponent {
     });
   }
   onSubmit() {
-    console.log('Hellllooo');
     let data = this.templateForm.value;
     let tempData = this.dataCreate(data);
-    console.log(tempData, "tmD");
     // if (this.templateForm.valid) {
     //   this.templateService.templateDataSubmit(tempData).subscribe({
     //     next: (res) => {
-    //       console.log(res, "Template....")
     //       Swal.fire({
     //         title: 'Template Created Successfully',
     //         icon: 'success',
@@ -103,7 +100,6 @@ export class TemplateComponent {
 
     if (val.items.length > 0) {
       val.items.forEach((element, i) => {
-        console.log(element, "elele", i);
         val.items[i]['date'] = element.date ? moment(element.date).format('YYYY-MM-DDTHH:mm:ssZ') : null;
       });
     }
@@ -125,10 +121,8 @@ export class TemplateComponent {
   }
   tempSelection() {
     if (this.templateForm.get('templateType').value == 'DynamicJson') {
-      console.log("DDDLDLLDLLD");
       this.addRow();
     } else {
-      console.log("elelele");
       const arr = <FormArray>this.templateForm.controls.items;
       arr.controls = [];
 

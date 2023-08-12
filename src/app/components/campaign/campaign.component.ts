@@ -222,7 +222,6 @@ export class CampaignComponent {
     this.campaignListForm.get('campaignId').setValue(null);
     this.campaignservice.dateRangeFilter(from, to, templateId).subscribe({
       next: (res: any) => {
-        console.log(res, "templateList");
         this.templateData = res.template;
         // this.dataSource.data = this.templateData;
         if (res) {
@@ -259,7 +258,6 @@ export class CampaignComponent {
     this.campaignListForm.get('campaignId').setValue(null);
     this.campaignservice.getCampaignList(userId,templateName).subscribe({
       next: (res: any) => {
-        console.log(res, "campaignList....")
         if (res) {
           // this.campaignListForm.get('templateName').setValue(null);
           this.campaignList = res;
@@ -325,7 +323,6 @@ export class CampaignComponent {
         
         this.campaignservice.activeDeactiveCampaignById(data.campaignId, newActiveState).subscribe(
           (res: any) => {
-            console.log(res, "Res....");
             this.getCampaignList();
           },
           (err) => {
@@ -397,7 +394,6 @@ export class CampaignComponent {
     if (this.campaignListForm.value.startDate != null && this.campaignListForm.value.endDate != "") {
       return this.campaignservice.getData(startDate, endDate, sessionStorage.getItem('userId'),templateName,campaignName).subscribe(data_ar => {
         if (data_ar.Campaign.length > 0) {
-          console.log("Campaign List::=>" + JSON.stringify(data_ar.Campaign))
           this.showLoader = false
           data_ar = data_ar.Campaign.map((e) => {
             // Map only the desired properties with custom header names
@@ -412,8 +408,6 @@ export class CampaignComponent {
 
 
           });
-          console.log("Campaign List::=>" + JSON.stringify(data_ar))
-
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {
             type: 'text/csv;charset=utf-8;'

@@ -95,7 +95,6 @@ export class CampaignlogsComponent {
     this.detailListForm.get('leadId').setValue(null);
     this.reportservice.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
-        console.log(res, "CampaigList");
         this.detailData = res.data;
         this.dataSource.data = this.detailData;
         if (res) {
@@ -114,7 +113,6 @@ export class CampaignlogsComponent {
     let campaignId = event.source.value;
     this.reportservice.getLeadList(userId, campaignId).subscribe({
       next: (res: any) => {
-        console.log(res, "LeadList....")
         if (res) {
           this.detailListForm.get('leadId').setValue(null);
           this.leadList = res;
@@ -257,7 +255,6 @@ export class CampaignlogsComponent {
 
       return this.reportservice.getDetailData(username, startDateVal, endDateVal, camType, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((data_ar: any) => {
         if (data_ar.data.length > 0) {
-          console.log("Detail List::=>" + JSON.stringify(data_ar.data))
           this.showLoader = false
           data_ar = data_ar.data.map((e, i) => {
 
@@ -280,7 +277,6 @@ export class CampaignlogsComponent {
 
 
           });
-          console.log("Campaign List::=>" + JSON.stringify(data_ar))
 
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {

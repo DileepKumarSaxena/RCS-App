@@ -61,7 +61,6 @@ export class CreateLeadComponent {
     this.createLeadForm();
     this.campaignListData();
     this.getRouteParams();
-    console.log(this.leadForm, "LeadForm");
   }
 
   getRouteParams() {
@@ -375,22 +374,22 @@ export class CreateLeadComponent {
   }
 
 
-  // areRequiredFieldsFilledForSubmit() {
-  //   if (this.leadForm.get('campaignId').invalid || this.leadForm.get('leadName').invalid || this.leadForm.get('leadExecutionType').invalid || this.leadForm.get('file').invalid) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  areRequiredFieldsFilledForSubmit() {
+    if (this.leadForm.get('campaignId').invalid || this.leadForm.get('leadName').invalid || this.leadForm.get('file').invalid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-  // areRequiredFieldsFilledForTestLead() {
+  areRequiredFieldsFilledForTestLead() {
 
-  //   if (this.leadForm.get('campaignId').invalid || this.leadForm.get('leadName').invalid || this.leadForm.get('testingNumber').invalid ||  this.leadForm.get('file').valid || this.leadForm.get('leadExecutionType').valid) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+    if (this.leadForm.get('campaignId').invalid || this.leadForm.get('leadName').invalid) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   createTestLead(dataVal) {
     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
@@ -450,10 +449,6 @@ export class CreateLeadComponent {
   testLead() {
     this.showLoader = true;
     this.phoneNumError = false;
-    this.leadForm.get('file').clearValidators();
-    this.leadForm.get('file').updateValueAndValidity();
-    // this.leadForm.get('leadExecutionType').clearValidators();
-    // this.leadForm.get('leadExecutionType').updateValueAndValidity();
     let data = this.leadForm.value;
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;

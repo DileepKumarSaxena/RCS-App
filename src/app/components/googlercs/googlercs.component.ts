@@ -168,7 +168,6 @@ export class GooglercsComponent {
     if (this.summaryListForm.value.fromDate !== '' && this.summaryListForm.value.toDate !== '') {
       return this.reportservice.getSummaryData(username, startDateVal, endDateVal).subscribe((data_ar: any) => {
         if (data_ar.data.length > 0) {
-          console.log("Campaign List::=>" + JSON.stringify(data_ar.data))
           this.showLoader = false
           data_ar = data_ar.data.map((e, i) => {
   
@@ -192,7 +191,6 @@ export class GooglercsComponent {
   
   
           });
-          console.log("Campaign List::=>" + JSON.stringify(data_ar))
   
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {
