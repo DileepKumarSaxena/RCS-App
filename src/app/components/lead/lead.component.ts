@@ -43,15 +43,16 @@ export class LeadComponent {
   // leadList: LeadData[] = [];
 
   campaignList: any = [];
+  campaignListArray: any = [];
   leadList: any = [];
   currentDate = new Date();
 
-  displayedColumns: string[] = ['id','campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'leadStatus', 'actions'];
+  displayedColumns: string[] = ['id', 'campaignName', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'leadStatus', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
+
 
 
   constructor(
@@ -69,12 +70,11 @@ export class LeadComponent {
     this.createCampaignForm();
     this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
     this.dataSource = new MatTableDataSource<any>();
-    this.paginator.pageIndex =0;
+    this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
-    this.campaignListData();
-    this.getLeadList();
+    // this.campaignListData();
     this.getDateFilter();
-   
+    this.getLeadList();
   }
 
   getStatusClass(status: string): string {
@@ -96,28 +96,34 @@ export class LeadComponent {
   campaignListData() {
     this.leadService.getCampaignList().subscribe(res => {
       if (res) {
-        this.campaignList = res;
+        this.campaignListArray = res;
       } else {
         this.leadService.setCampaignList();
       }
     })
   }
-  getCampaignNameById(campaignId) {
-    const campaign = this.campaignList.find(el => el.campaignId == campaignId);
-    return campaign ? campaign.campaignName : 'N/A'; // Return the campaign name if found, otherwise 'N/A'
-  }
- 
   
+  getCampaignNameById(campaignId) {
+    console.log(campaignId, "campaignId");
+    console.log(this.campaignList, "campaignList");
+
+    if (this.campaignList && this.campaignList.length > 0) {
+      const campaign = this.campaignList.find(el => el.campaignId == campaignId);
+      return campaign ? campaign.campaignName : 'N/A'; // Return the campaign name if found, otherwise 'N/A'
+    }
+  }
+
+
   getLeadList() {
     this.showLoader = true
     // let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
-    let limit = this.paginator.pageSize.toString();  
+    let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     let campaignId = this.leadForm.value.campaignId;
     // let leadId = this.leadForm.value.leadId;
-    this.leadService.getLeadlistDetails(startDateVal,endDateVal,sessionStorage.getItem('userId'),campaignId,  limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.leadService.getLeadlistDetails(startDateVal, endDateVal, sessionStorage.getItem('userId'), campaignId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;
@@ -132,7 +138,7 @@ export class LeadComponent {
     });
   }
 
-  
+
   getLeadName(event: any) {
     let userId = sessionStorage.getItem('userId');
     let campaignId = event.source.value;
@@ -157,12 +163,11 @@ export class LeadComponent {
     let to = moment(this.currentDate).format('YYYY-MM-DD');
     this.leadService.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
-        this.leadData = res.data;
-        this.dataSource.data = this.leadData;
+        console.log(res, "DDDDDDD222");
         if (res) {
-          this.campaignList = res['Lead Info'];
+          this.campaignList = res;
         }
-        
+
         this.showLoader = false
       },
       error: (err) => {
@@ -178,12 +183,7 @@ export class LeadComponent {
     this.leadForm.get('campaignId').setValue(null);
     this.leadService.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
-        this.leadData = res.data;
-        // this.leadData = res['Lead Info'];
-        this.dataSource.data = this.leadData;
-        if (res) {
-          this.campaignList = res;
-        }
+        this.campaignList = res;
         this.showLoader = false
       },
       error: (err) => {
@@ -195,18 +195,18 @@ export class LeadComponent {
   onPageChanged(event: PageEvent) {
     this.getLeadList();
   }
-  showEnableDisabled(data:any){
-    if(data.leadStatus == 'Completed'){
+  showEnableDisabled(data: any) {
+    if (data.leadStatus == 'Completed') {
       return true;
-    } else if(data.leadStatus == 'Active'){
+    } else if (data.leadStatus == 'Active') {
       return false;
-    } else{
+    } else {
       return true;
     }
   }
   performAction(leadId: string, action: string, data: LeadData) {
     this.showLoader = true;
-  
+
     this.leadService.performActionOnLead(leadId, action).subscribe({
       next: (res: any) => {
         this.updateButtonStates(action, data);
@@ -218,7 +218,7 @@ export class LeadComponent {
       },
     });
   }
-  
+
   updateButtonStates(action: string, data: LeadData) {
     // Reset all button states for all items
     this.leadList.forEach((leadData) => {
@@ -226,7 +226,7 @@ export class LeadComponent {
       leadData.isPauseDisabled = false;
       leadData.isStopDisabled = false;
     });
-  
+
     // Update the button state for the clicked item
     switch (action) {
       case 'Start':
@@ -329,18 +329,18 @@ export class LeadComponent {
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
     let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
-  
+
     if (this.leadForm.value.startDate != null && this.leadForm.value.endDate != "") {
       return this.leadService.getLeadListData(sessionStorage.getItem('userId'), startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe((response: any) => {
         const leadInfoArray = response['Lead Info']; // Access the 'Lead Info' array
-  
+
         if (leadInfoArray.length > 0) {
           this.showLoader = false;
           const data_ar = leadInfoArray.map((e) => {
             // Map only the desired properties with custom header names
             return {
 
-              
+
               'Campaign Name': this.getCampaignNameById(e.campaignId),
               'Lead Name': e.leadName,
               'Schedule Start Date': moment(e.leadSchedule.scheduleStartDtm).format('MM/DD/YYYY'),
@@ -352,8 +352,8 @@ export class LeadComponent {
               // Add more properties and header names as needed
             };
           });
-  
-  
+
+
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {
             type: 'text/csv;charset=utf-8;'

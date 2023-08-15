@@ -55,11 +55,11 @@ export class ReportsService extends BaseService{
   }
   getSummaryData(username, fromDate, toDate) {
     const url = this.baseUrlData+'getRcsSummarySmsReport';
-    // const url = this.baseUrlData+'getRcsSummarySmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,
       username: username,
+      action:'HOURLY',
       clientId: 0,
       role :0,
        camId :0,

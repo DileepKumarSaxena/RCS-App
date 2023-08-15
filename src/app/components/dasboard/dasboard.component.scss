@@ -58,60 +58,64 @@ h2.custom-header-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px;
     font-size: 13px;
     color: #959595;
 
-    div {
+}
+.custom-card-section >  div {
+    flex: 1;
+    margin: 0 5px;
+}
+.custom-card-section  > div > div {
+    width: 100%;
+    padding: 65px 12px 58px;
+    background-color: var(--dasboard-card-bg);
+    box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
+    margin-right: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+
+    &:hover{
+        border-top-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        border-top-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    strong {
+        font-size: 36px;
+        margin-bottom: 15px;
+        float: left;
         width: 100%;
-        padding: 24px 16px;        
-        background-color: var(--dasboard-card-bg);
-        box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
-        margin-right: 15px;
-        text-align: center;
-        border-top-right-radius: 30px;
-        border-bottom-left-radius: 30px;
+    }
 
-        &:hover{
-            border-top-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            border-top-right-radius: 0px;
-            border-bottom-left-radius: 0px;
-        }
+    .total-message-sent {
+        color: #343a40;
+    }
 
-        &:last-child {
-            margin-right: 0;
-        }
+    .total-submited {
+        color: #f3bb45;
+    }
 
-        strong {
-            font-size: 36px;
-            margin-bottom: 15px;
-            float: left;
-            width: 100%;
-        }
+    .total-delivered {
+        color: #68b3c8;
+    }
 
-        .total-message-sent {
-            color: #343a40;
-        }
+    .total-rejected {
+        color: #eb5e28;
+    }
 
-        .total-submited {
-            color: #f3bb45;
-        }
-
-        .total-delivered {
-            color: #68b3c8;
-        }
-
-        .total-rejected {
-            color: #eb5e28;
-        }
-
-        .total-balance {
-            color: #a70606;
-        }
-        .total-failed {
-            color: #7438c0;
-        }
+    .total-balance {
+        color: #a70606;
+    }
+    .total-failed {
+        color: #7438c0;
     }
 }
 

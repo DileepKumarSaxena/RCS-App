@@ -1,22 +1,15 @@
 <div class="go-back-section template-back add-inner-padding">
     <div class="back-icon">
-        <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
         <h5 class="text-center">DASHBOARD</h5>
     </div>
-  </div>
+</div>
 <br>
 
 <div class="container-fluid">
     <div class="p-2">
         <div>
-            <!-- <h1>Hi {{user?.firstName}}!</h1>
-            <p>You're logged in with Angular 15...............!!</p>
-            <p><a routerLink="/users">Manage Users</a></p> -->
-
-
             <div class="card">
                 <div class="card-header custom-header-section">
-                    <!-- <h2 class="custom-header-title">DASHBOARD</h2> -->
                     <form [formGroup]="dashBoardForm">
                         <div class="date-range-section">
                             <div class="input-fields-container">
@@ -28,74 +21,86 @@
                                         <input formControlName="endDate" #endDate matEndDate placeholder="End date"
                                             [value]="currentDate" required>
                                     </mat-date-range-input>
-                                    <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                                <!-- <mat-form-field appearance="fill">
-                                <mat-label>Select me</mat-label>
-                                <mat-select>
-                                    <mat-option value="option">All Senders</mat-option>
-                                    <mat-option value="option">Fonada</mat-option>
-                                </mat-select>
-    
-                            </mat-form-field> -->
-
-
                             </div>
-                            <button class="btn btn-success btn-lg"
-                                (click)="getSummaryData(startDate, endDate)" [disabled]="dashBoardForm.status === 'INVALID'">Search</button>
+                            <button class="btn btn-success btn-lg" (click)="getSummaryData(startDate, endDate)"
+                                [disabled]="dashBoardForm.status === 'INVALID'">Search</button>
                         </div>
                     </form>
                 </div>
-                <!-- *ngFor="let item of dashboardData" -->
                 <app-loader *ngIf="showLoader"></app-loader>
+
                 <div class="card-body">
-                    <div class="custom-card-section" *ngIf="dashboardData">
-                        <div><strong class="total-message-sent counter">{{ getSum('TOTAL') }}</strong><br>Total Request
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="custom-card-section" *ngIf="dashboardData">
+                                <div>
+                                    <div><strong class="total-message-sent counter">{{ getSum('TOTAL')
+                                            }}</strong><br>Total Request
+                                    </div>
+                                    <div><strong class="total-submited counter">{{ getSum('SUBMITTED')
+                                            }}</strong><br>Total
+                                        Submitted</div>
+                                </div>
+                                <div>
+                                    <div><strong class="total-delivered counter">{{ getSum('Delivered')
+                                            }}</strong><br>Total
+                                        Delivered </div>
+
+
+                                    <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br>Total
+                                        Failed </div>
+                                </div>
+                                <div>
+                                    <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED')
+                                            }}</strong><br>Total
+                                        Rejected - NonRCS</div>
+                                    <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br>Total
+                                        Invalid
+                                        Number</div>
+                                </div>
+                            </div>
                         </div>
-                        <div><strong class="total-submited counter">{{ getSum('SUBMITTED') }}</strong><br>Total
-                            Submitted</div>
-                        <div><strong class="total-delivered counter">{{ getSum('Delivered') }}</strong><br>Total
-                            Delivered </div>
-                            <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br>Total
-                                Failed </div>
-                        <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED') }}</strong><br>Total
-                            Rejected - NonRCS</div>
-                        <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br>Total Invalid
-                            Number</div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header custom-header-section">
+                                    <h2 class="custom-header-title">Daily Activities <small>Daily traffic trend for
+                                        today</small></h2>
+
+                                </div>
+                                <div class="card-body chart-section">
+                                    <canvas *ngIf="dashboardData" class="chart" #chart baseChart [data]="barChartData"
+                                        [options]="barChartOptions" [type]="barChartType">
+                                    </canvas>
+                             
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="custom-card-section" *ngIf="!dashboardData">
-                        <div><strong class="total-message-sent counter">0</strong><br>Total Message Sent</div>
-                        <div><strong class="total-submited counter">0</strong><br>Total Submitted</div>
-                        <div><strong class="total-delivered counter">0</strong><br>Total Delivered </div>
-                        <div><strong class="total-failed counter">0</strong><br>Total Failed </div>
-                        <div><strong class="total-rejected counter">0</strong><br>Total Rejected - NonRCS</div>
-                        <div><strong class="total-balance counter">0</strong><br>Total Invalid Number</div>
-                    </div>
-
-
-                    <!-- <div class="custom-card-section">
-                        <div><strong class="total-submited">{{ totalSum }}</strong><br>Total Sum</div>
-                      </div> -->
                 </div>
             </div>
 
             <br>
-            <div class="card" style="display: none;">
-                <div class="card-header custom-header-section">
-                    <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend for today</small></h2>
 
+            <div class="card">
+                <div class="card-header custom-header-section">
+                    <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend for
+                            today</small></h2>
                 </div>
                 <div class="card-body chart-section">
-                    <!-- <canvas class="chart" baseChart [data]="barChartData" [options]="barChartOptions"
-                        [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas> -->
-                    <!-- <button class="btn btn-primary" (click)="randomize()">Update</button> -->
+                    <canvas *ngIf="dashboardData" #lineChart baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                        [options]="lineChartOptions" [legend]="lineChartLegend" [type]="lineChartType"></canvas>
+
                 </div>
             </div>
         </div>
     </div>
+
+
 </div>
+
 <div class="body-spacing"></div>

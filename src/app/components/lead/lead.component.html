@@ -42,20 +42,9 @@
                   <mat-select formControlName="campaignId">
                     <mat-option>None</mat-option>
                       <mat-option *ngFor="let item of campaignList"
-                          (onSelectionChange)="getLeadName($event)"
-                          [value]="item.campaignId">{{item.campaignName}}</mat-option>
+                         [value]="item.campaignId">{{item.campaignName}}</mat-option>
                   </mat-select>
               </mat-form-field>
-
-<!--               
-              <mat-form-field appearance="outline">
-                  <mat-label>Select Lead Name</mat-label>
-                  <mat-select formControlName="leadId">
-                      <mat-option *ngFor="let item of leadList"
-                          [value]="item.leadId">{{item.leadName}}</mat-option>
-                  </mat-select>
-              </mat-form-field> -->
-
 
                 <button type="button" class="btn btn-success btn-lg" [disabled]="leadForm.status === 'INVALID'" (click)="getLeadList()">Search</button>
               </div>

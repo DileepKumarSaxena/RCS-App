@@ -418,8 +418,8 @@ export class XiaomircsComponent implements OnInit {
 
     const obj = {
       templateCode: val?.templateCode,
-      templateType: val?.templateType,
-      templateMsgType: val.templateMsgType,
+      templateType:((String(xyz)).length > 0)? 'Dynamic':'Static',
+      templateMsgType: val.templateType,
       templateCustomParam: String(xyz),
       templateUserId: sessionStorage.getItem('userId'),
       botId: sessionStorage.getItem('botId'),
@@ -427,7 +427,6 @@ export class XiaomircsComponent implements OnInit {
         suggestions: val.suggestions
       }
     }
-
     if (val?.templateType === 'rich_card') {
 
       obj['templateJson']["standAlone"] = {

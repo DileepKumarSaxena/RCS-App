@@ -98,7 +98,7 @@ export class CreateLeadComponent {
       userId: sessionStorage.getItem('userId'),
       campaignId: ['', [Validators.required]],
       leadName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
-      file: ['', [this.validateFileFormat()]],
+      file: [''],
       isDND: [false],
       isDuplicate: [false],
       leadExecutionType: ['save'],
@@ -250,87 +250,88 @@ export class CreateLeadComponent {
 }
   uploadCsvFile(event) {
     this.file = event.target.files[0];
+    console.log(this.file, "fileeeeeee");
     this.leadForm.controls['file'].updateValueAndValidity();
     this.clearFileError();
     // Check if the file has any invalid column value
     if (this.leadForm.get('file').errors?.invalidColumnValue) {
-      this.uploadProgress = null; // Disable the progress bar
+     // this.uploadProgress = null; // Disable the progress bar
       return; // Stop the upload process if there's an error
     }
 
     // Start the upload process
-    this.uploadProgress = 0;
-    if (this.uploadProgress !== null) {
-      this.uploadFile(this.file);
-    }
+    // this.uploadProgress = 0;
+    // if (this.uploadProgress !== null) {
+    //   this.uploadFile(this.file);
+    // }
   }
 
-  uploadFile(file) {
-    // Check if the file has any invalid column value
-    if (this.leadForm.get('file').errors?.invalidColumnValue) {
-      this.uploadProgress = null; // Disable the progress bar
-      return; // Stop the upload process if there's an error
-    }
+  // uploadFile(file) {
+  //   // Check if the file has any invalid column value
+  //   if (this.leadForm.get('file').errors?.invalidColumnValue) {
+  //     this.uploadProgress = null; // Disable the progress bar
+  //     return; // Stop the upload process if there's an error
+  //   }
 
-    // Example code using XMLHttpRequest
-    const xhr = new XMLHttpRequest();
+  //   // Example code using XMLHttpRequest
+  //   const xhr = new XMLHttpRequest();
 
-    xhr.upload.addEventListener('progress', (event) => {
-      if (event.lengthComputable) {
-        const progress = Math.round((event.loaded / event.total) * 100);
-        this.uploadProgress = progress;
-      }
-    });
+  //   xhr.upload.addEventListener('progress', (event) => {
+  //     if (event.lengthComputable) {
+  //       const progress = Math.round((event.loaded / event.total) * 100);
+  //       this.uploadProgress = progress;
+  //     }
+  //   });
 
-    xhr.upload.addEventListener('load', () => {
-      this.uploadProgress = 100;
-    });
+  //   xhr.upload.addEventListener('load', () => {
+  //     this.uploadProgress = 100;
+  //   });
 
-    xhr.open('POST', 'your-upload-url');
-    xhr.send(file);
-  }
+  //   xhr.open('POST', 'your-upload-url');
+  //   xhr.send(file);
+  // }
 
 
 
-  validateFileFormat() {
-    return (control) => {
-      const file = this.file;
-      if (file && file.name) {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension !== 'csv') {
-          return { invalidFileFormat: true };
-        }
+  // validateFileFormat() {
+  //   return (control) => {
+  //     const file = this.file;
+  //     if (file && file.name) {
+  //       const fileExtension = file.name.split('.').pop().toLowerCase();
+  //       if (fileExtension !== 'csv') {
+  //         return { invalidFileFormat: true };
+  //       }
 
-        // Read the contents of the file
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const contents = event.target.result as string;
-          const lines = contents.split('\n');
+  //       // Read the contents of the file
+  //       const reader = new FileReader();
+  //       reader.onload = (event) => {
+  //         const contents = event.target.result as string;
+  //         const lines = contents.split('\n');
 
-          // Skip the first row (header row)
-          const rowsToValidate = lines.slice(1);
+  //         // Skip the first row (header row)
+  //         const rowsToValidate = lines.slice(1);
 
-          const invalidColumn = rowsToValidate.some(line => {
-            const values = line.split(',');
-            for (const value of values) {
-              if (isNaN(Number(value.trim()))) {
-                return true;
-              }
-            }
-            return false;
-          });
+  //         const invalidColumn = rowsToValidate.some(line => {
+  //           const values = line.split(',');
+  //           for (const value of values) {
+  //             if (isNaN(Number(value.trim()))) {
+  //               return true;
+  //             }
+  //           }
+  //           return false;
+  //         });
 
-          if (invalidColumn) {
-            control.setErrors({ invalidColumnValue: true });
-          } else {
-            control.setErrors(null);
-          }
-        };
-        reader.readAsText(file);
-      }
-      return null;
-    };
-  }
+  //         if (invalidColumn) {
+  //           control.setErrors({ invalidColumnValue: true });
+  //         } else {
+  //           control.setErrors(null);
+  //         }
+  //       };
+  //       reader.readAsText(file);
+  //     }
+  //     return null;
+  //   };
+  // }
 
 
   onLeadNameInputBlur() {
