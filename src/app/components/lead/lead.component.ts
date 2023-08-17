@@ -89,7 +89,7 @@ export class LeadComponent {
       startDate: moment().format('YYYY-MM-DD'),
       endDate: moment().format('YYYY-MM-DD'),
       campaignId: [],
-      // leadId: [],
+      leadId: []
     })
   }
 
@@ -104,8 +104,8 @@ export class LeadComponent {
   }
   
   getCampaignNameById(campaignId) {
-    console.log(campaignId, "campaignId");
-    console.log(this.campaignList, "campaignList");
+    // console.log(campaignId, "campaignId");
+    // console.log(this.campaignList, "campaignList");
 
     if (this.campaignList && this.campaignList.length > 0) {
       const campaign = this.campaignList.find(el => el.campaignId == campaignId);
@@ -145,6 +145,7 @@ export class LeadComponent {
     this.leadService.getLeadList(userId, campaignId).subscribe({
       next: (res: any) => {
         if (res) {
+          console.log(res, "RRTTTTTT");
           this.leadList = res;
         }
       },
@@ -341,7 +342,7 @@ export class LeadComponent {
             return {
 
 
-              'Campaign Name': this.getCampaignNameById(e.campaignId),
+              'Campaign Name': e.campaignName,
               'Lead Name': e.leadName,
               'Schedule Start Date': moment(e.leadSchedule.scheduleStartDtm).format('MM/DD/YYYY'),
               'Schedule End Date': moment(e.leadSchedule.scheduleEndDtm).format('MM/DD/YYYY'),

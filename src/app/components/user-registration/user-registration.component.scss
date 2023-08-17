@@ -1,0 +1,57 @@
+mat-form-field {
+    width: 100%;
+  }
+.filter-section,
+.date-range-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.date-range-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+
+    mat-form-field {
+        margin-right: 20px;
+    }
+}
+
+.horizontal-scroll-table {
+    overflow-x: auto;
+    // display: block;
+    white-space: nowrap;
+}
+
+.mdc-data-table__cell{
+    white-space: normal;
+    word-break: break-word;
+}
+
+
+  
+  .status-approved {
+    color: #008000;
+    font-weight: 500;
+  }
+  
+  .status-pending {
+    color: #ff0000;
+    font-weight: 500;
+  }
+  
+
+  .banner-logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    margin-right: 10px;
+  }
+  
+  .banner {
+    /* Adjust styles as needed */
+  }
+  

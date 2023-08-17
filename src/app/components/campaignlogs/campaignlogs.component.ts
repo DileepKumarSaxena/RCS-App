@@ -44,13 +44,15 @@ export class CampaignlogsComponent {
 
   
   ngOnInit(): void {
-    this.detailReport();
+    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
+ 
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
+    this.detailReport();
     this.getDateFilter();
     this.getDetailList();
-    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
+    
 
   }
 

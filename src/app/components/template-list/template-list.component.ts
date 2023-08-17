@@ -207,7 +207,7 @@ export class TemplateListComponent {
             'Template Name/Code': e.templateCode,
             'Template Type': e.templateType,
             'Template Message Type': e.templateMsgType,
-            'Status': e.status === '0' ? 'Pending' : 'Approved',
+            'Status': e.status == '0' ? 'Pending' : 'Approved',
 
             // Add more properties and header names as needed
           };

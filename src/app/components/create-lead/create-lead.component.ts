@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { LeadService } from 'src/app/services/lead.service';
@@ -26,6 +26,7 @@ export class CreateLeadComponent {
   actionBtn: string = "Submit";
   leadID: any;
   campaignList: any = [];
+  testLeadDynamicFields: FormArray;
   leadExecutionData: any = [
     { leadExecutionData: 'save', leadExecutionName: 'Save and Execute' },
     { leadExecutionData: 'schedule', leadExecutionName: 'Save and Schedule' }
@@ -98,7 +99,7 @@ export class CreateLeadComponent {
       userId: sessionStorage.getItem('userId'),
       campaignId: ['', [Validators.required]],
       leadName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
-      file: [''],
+      file: [null, [Validators.required, this.validateFileFormat()]],
       isDND: [false],
       isDuplicate: [false],
       leadExecutionType: ['save'],
@@ -107,7 +108,29 @@ export class CreateLeadComponent {
       startTime: [],
       endTime: [],
       testingNumber: ['', [this.validateNumericInput]],
+      testLeadDynamicFields: new FormArray([]),
     })
+  }
+
+  createItem(): FormGroup {
+    return this.formbuilder.group({
+      key: [''],
+      value: [''],
+    });
+  }
+
+  addRow() {
+    this.testLeadDynamicFields = this.leadForm.get('testLeadDynamicFields') as FormArray;
+    if (this.testLeadDynamicFields.value.length < 10) {
+      this.testLeadDynamicFields.push(this.createItem());
+    }
+  }
+
+  removeRow(index: number) {
+    this.testLeadDynamicFields = this.leadForm.get('testLeadDynamicFields') as FormArray;
+    if (index > -1) {
+      this.testLeadDynamicFields.removeAt(index);
+    }
   }
 
   validateNumericInput(control) {
@@ -132,208 +155,28 @@ export class CreateLeadComponent {
   }
 
 
-
-
-  // createTestLead(dataVal) {
-  //     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
-
-  //     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
-  //         "createdDate": new Date(),
-  //         "lastModifiedDate": new Date(),
-  //         "status": "Created",
-  //         "createdBy": sessionStorage.getItem('username'),
-  //         "lastModifiedBy": sessionStorage.getItem('username'),
-  //         "phoneNumber": phoneNumber
-  //     }));
-
-  //     // Convert the provided strings to JavaScript Date objects
-  //     let scheduleStartDtm = new Date(dataVal['scheduleStartDtm']);
-  //     let scheduleEndDtm = new Date(dataVal['scheduleEndDtm']);
-
-  //     // Calculate the time difference between start and end dates
-  //     let timeDifference = scheduleEndDtm.getTime() - scheduleStartDtm.getTime();
-
-  //     // Calculate the number of days between start and end dates
-  //     let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-  //     // Calculate the count of occurrences for "scheduleDay" (Monday) within the date range
-  //     let countScheduleDay = Math.floor(numDays / 7);
-
-  //     // Check if the start date itself falls on the schedule day (Monday)
-  //     if (scheduleStartDtm.getDay() === 1) {
-  //         countScheduleDay += 1;
-  //     }
-
-  //     let obj = {
-  //         "campaignId": dataVal['campaignId'],
-  //         "userId": sessionStorage.getItem('userId'),
-  //         "leadName": dataVal['leadName'],
-  //         "leadSchedule": {
-  //             "scheduleStartDtm": dataVal['scheduleStartDtm'],
-  //             "windowRequired": "N",
-  //             "scheduleEndDtm": dataVal['scheduleEndDtm'],
-  //             "scheduleDay": countScheduleDay.toString()  // Set the dynamic count of occurrences of "scheduleDay"
-  //         },
-  //         "leadInfoDetails": leadInfoDetailsList
-  //     };
-
-  //     return obj;
-  // }
-
-  //   createTestLead(dataVal) {
-  //     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
-
-  //     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
-  //         "createdDate": new Date(),
-  //         "lastModifiedDate": new Date(),
-  //         "status": "Created",
-  //         "createdBy": sessionStorage.getItem('username'),
-  //         "lastModifiedBy": sessionStorage.getItem('username'),
-  //         "phoneNumber": phoneNumber
-  //     }));
-
-  //     let obj = {
-  //         "campaignId": dataVal['campaignId'],
-  //         "userId": sessionStorage.getItem('userId'),
-  //         "leadName": dataVal['leadName'],
-  //         "leadSchedule": {
-  //             "scheduleStartDtm": dataVal['scheduleStartDtm'],
-  //             "windowRequired": "N",
-  //             "scheduleEndDtm": dataVal['scheduleEndDtm'],
-  //             "scheduleDay": "1"
-  //         },
-  //         "leadInfoDetails": leadInfoDetailsList
-  //     };
-
-  //     return obj;
-  // }
-
-
-  // createTestLead(dataVal){
-  //   let obj = {
-  //       "campaignId": dataVal['campaignId'],
-  //       "userId": sessionStorage.getItem('userId'),
-  //       "leadName":  dataVal['leadName'],
-  //       "leadSchedule": {
-  //           "scheduleStartDtm": dataVal['scheduleStartDtm'],
-  //           "windowRequired": "N",
-  //           "scheduleEndDtm": dataVal['scheduleEndDtm'],
-  //           "scheduleDay": "1"
-  //       },
-  //       "leadInfoDetails": [
-  //           {
-  //               "createdDate": new Date(),
-  //               "lastModifiedDate": new Date(),
-  //               "status": "Created",
-  //               "createdBy": sessionStorage.getItem('username'),
-  //               "lastModifiedBy": sessionStorage.getItem('username'),
-  //               "phoneNumber": dataVal['testingNumber']
-  //           }
-  //       ]
-
-
-  //   }
-  //   return obj;
-  // }
-
-  // validateNumericInput(control) {
-  //   const numericPattern = /^[0-9]+(,[0-9]+)*$/; // Regular expression for numeric values with a single comma separated
-  //   if (control.value && !numericPattern.test(control.value)) {
-  //     return { invalidNumericInput: true };
-  //   }
-  //   return null;
-  // }
-
-  clearFileError() {
-    this.showClickOfSubmitButton = false;
-    this.leadForm.get('file').setErrors(null); // Clear the file error
-}
   uploadCsvFile(event) {
     this.file = event.target.files[0];
-    console.log(this.file, "fileeeeeee");
     this.leadForm.controls['file'].updateValueAndValidity();
-    this.clearFileError();
-    // Check if the file has any invalid column value
-    if (this.leadForm.get('file').errors?.invalidColumnValue) {
-     // this.uploadProgress = null; // Disable the progress bar
-      return; // Stop the upload process if there's an error
-    }
-
-    // Start the upload process
-    // this.uploadProgress = 0;
-    // if (this.uploadProgress !== null) {
-    //   this.uploadFile(this.file);
-    // }
   }
 
-  // uploadFile(file) {
-  //   // Check if the file has any invalid column value
-  //   if (this.leadForm.get('file').errors?.invalidColumnValue) {
-  //     this.uploadProgress = null; // Disable the progress bar
-  //     return; // Stop the upload process if there's an error
-  //   }
 
-  //   // Example code using XMLHttpRequest
-  //   const xhr = new XMLHttpRequest();
-
-  //   xhr.upload.addEventListener('progress', (event) => {
-  //     if (event.lengthComputable) {
-  //       const progress = Math.round((event.loaded / event.total) * 100);
-  //       this.uploadProgress = progress;
-  //     }
-  //   });
-
-  //   xhr.upload.addEventListener('load', () => {
-  //     this.uploadProgress = 100;
-  //   });
-
-  //   xhr.open('POST', 'your-upload-url');
-  //   xhr.send(file);
-  // }
-
-
-
-  // validateFileFormat() {
-  //   return (control) => {
-  //     const file = this.file;
-  //     if (file && file.name) {
-  //       const fileExtension = file.name.split('.').pop().toLowerCase();
-  //       if (fileExtension !== 'csv') {
-  //         return { invalidFileFormat: true };
-  //       }
-
-  //       // Read the contents of the file
-  //       const reader = new FileReader();
-  //       reader.onload = (event) => {
-  //         const contents = event.target.result as string;
-  //         const lines = contents.split('\n');
-
-  //         // Skip the first row (header row)
-  //         const rowsToValidate = lines.slice(1);
-
-  //         const invalidColumn = rowsToValidate.some(line => {
-  //           const values = line.split(',');
-  //           for (const value of values) {
-  //             if (isNaN(Number(value.trim()))) {
-  //               return true;
-  //             }
-  //           }
-  //           return false;
-  //         });
-
-  //         if (invalidColumn) {
-  //           control.setErrors({ invalidColumnValue: true });
-  //         } else {
-  //           control.setErrors(null);
-  //         }
-  //       };
-  //       reader.readAsText(file);
-  //     }
-  //     return null;
-  //   };
-  // }
-
-
+  validateFileFormat() {
+    return () => {
+      const file = this.file;
+      if (file && file.name) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        const allowedMimeTypes = ['text/csv'];
+  
+        if (fileExtension !== 'csv' && !allowedMimeTypes.includes(file.type)) {
+          console.log('Invalid MIME Type:', file.type);
+          return { invalidFileFormat: true };
+        }
+      }
+      return null;
+    };
+  }
+  
   onLeadNameInputBlur() {
     const leadNameControl = this.leadForm.get('leadName');
     if (leadNameControl.value && leadNameControl.value.trim().length === 0) {
@@ -394,14 +237,24 @@ export class CreateLeadComponent {
 
   createTestLead(dataVal) {
     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
-
+    let val1 = [];
+    let val2 = [];
+    if(dataVal['testLeadDynamicFields'].length > 0){
+      dataVal['testLeadDynamicFields'].forEach(el=>{
+        val1.push(el.key);
+        val2.push(el.value);
+      })
+    }
+    
     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
       "createdDate": new Date(),
       "lastModifiedDate": new Date(),
       "status": "Created",
       "createdBy": sessionStorage.getItem('username'),
       "lastModifiedBy": sessionStorage.getItem('username'),
-      "phoneNumber": phoneNumber
+      "phoneNumber": phoneNumber,
+      "additonalDataInfoText":val1.length>0?val1.toString():null,
+      "additonalDataInfoText2":val2.length>0?val2.toString():null,
     }));
 
     // Convert the provided strings to JavaScript Date objects
@@ -413,6 +266,8 @@ export class CreateLeadComponent {
 
     // Calculate the number of days between start and end dates
     let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+   
 
     let obj = {
       "campaignId": dataVal['campaignId'],
@@ -451,6 +306,8 @@ export class CreateLeadComponent {
     this.showLoader = true;
     this.phoneNumError = false;
     let data = this.leadForm.value;
+    this.leadForm.get('file').clearValidators();
+    this.leadForm.get('file').updateValueAndValidity();
     if (this.leadForm.valid) {
       let dndValue = this.leadForm.get('isDND').value;
       data['scheduleStartDtm'] = this.leadForm.value.scheduleStartDtm ? moment(this.leadForm.value.scheduleStartDtm).format('YYYY-MM-DDTHH:mm:ssZ') : null;
@@ -511,7 +368,6 @@ export class CreateLeadComponent {
       this.showClickOfSubmitButton = true; // Show the error message
       return;
     }
-    this.clearFileError();
 
     let data = this.leadForm.value;
     if (this.leadForm.valid) {

@@ -85,10 +85,13 @@ export class CampaignComponent {
  
 
   ngOnInit(): void {
-    this.createCampaignForm();
+    // this.createCampaignForm();
+    // this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
+    this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
+    this.createCampaignForm();
     this.getDateFilter();
     this.getCampaignList();
   }
@@ -270,41 +273,6 @@ export class CampaignComponent {
     })
   }
 
-   
-  // toggleCampaignStatus(data: any) {
-  //   Swal.fire({
-  //     title: data.campaignStatus === 'Active' ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes',
-  //     cancelButtonText: 'No',
-  //     icon: 'warning',
-  //     confirmButtonColor: '#5FC29F',
-  //     customClass: {
-  //       icon: 'custom-icon-class',
-  //     },
-  //     width: '300px',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       const newActiveState = data.campaignStatus === 'Active' ? 'Inactive' : 'Active'; // Toggle the active state
-  
-  //       this.campaignservice.campaignDataUpdate({ campaignId: data.campaignId, campaignStatus: newActiveState }).subscribe(
-  //         (res: any) => {
-  //           console.log(res,"Res....");
-  //           this.getCampaignList();
-  //         },
-  //         (err) => {
-  //           Swal.fire({
-  //             title: `Error while ${newActiveState === 'Active' ? 'activating' : 'deactivating'} the campaign.`,
-  //             customClass: {
-  //               icon: 'custom-icon-class',
-  //             },
-  //             width: '300px',
-  //           });
-  //         }
-  //       );
-  //     }
-  //   });
-  // }
   toggleCampaignStatus(data: any) {
     Swal.fire({
       title: data.isDeleted === 0 ? 'Are you sure you want to deactivate this campaign?' : 'Are you sure you want to activate this campaign?',

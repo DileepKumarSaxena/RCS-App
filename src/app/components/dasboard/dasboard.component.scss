@@ -64,11 +64,11 @@ h2.custom-header-title {
 }
 .custom-card-section >  div {
     flex: 1;
-    margin: 0 5px;
+    margin: 0 10px;
 }
 .custom-card-section  > div > div {
     width: 100%;
-    padding: 65px 12px 58px;
+    padding: 63px 12px 55px;
     background-color: var(--dasboard-card-bg);
     box-shadow: 2px 4px 10px 0 rgba(0, 34, 51, 0.05), 2px 4px 10px 0 rgba(0, 34, 51, 0.05);
     margin-right: 15px;
@@ -76,6 +76,10 @@ h2.custom-header-title {
     text-align: center;
     border-top-right-radius: 30px;
     border-bottom-left-radius: 30px;
+    border-bottom: 5px solid #ddd;
+    background-color: #f5f5f5;
+
+    
 
     &:hover{
         border-top-left-radius: 30px;
@@ -95,8 +99,13 @@ h2.custom-header-title {
         width: 100%;
     }
 
+    .small, small {
+        font-size: 100%;
+    }
+
     .total-message-sent {
         color: #343a40;
+        
     }
 
     .total-submited {
@@ -104,7 +113,7 @@ h2.custom-header-title {
     }
 
     .total-delivered {
-        color: #68b3c8;
+        color: #5FC29F;
     }
 
     .total-rejected {

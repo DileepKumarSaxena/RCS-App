@@ -75,4 +75,7 @@ export class AuthenticationService {
     this.currentUserSubject.next(null!);
   }
 
+  addNewUser(formData: FormData) {
+    return this.http.post<any>(this.baseUrl + 'user/add-user', formData);
+  }
 }

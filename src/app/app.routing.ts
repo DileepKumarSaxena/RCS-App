@@ -16,6 +16,8 @@ import { TemplateListComponent } from './components/template-list/template-list.
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DasboardComponent } from './components/dasboard/dasboard.component';
+import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 const routes: Routes = [
     { path: '', component: DasboardComponent, canActivate: [AuthGuard] },
@@ -33,9 +35,11 @@ const routes: Routes = [
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
-    { path: 'reset/password', component: ResetPasswordComponent , canActivate:[AuthGuard]  },
+    { path: 'reset/password', component: ResetPasswordComponent, canActivate: [AuthGuard] },
     { path: 'forgot/password', component: ForgotPasswordComponent },
-   
+    { path: 'user/registration', component: UserRegistrationComponent, canActivate: [AuthGuard] },
+    { path: 'addUser', component: AddUserComponent, canActivate: [AuthGuard] },
+
 
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }

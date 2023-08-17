@@ -38,43 +38,43 @@
                             <div class="custom-card-section" *ngIf="dashboardData">
                                 <div>
                                     <div><strong class="total-message-sent counter">{{ getSum('TOTAL')
-                                            }}</strong><br>Total Request
+                                            }}</strong><br><small class="total-message-sent">Total Request</small>
                                     </div>
                                     <div><strong class="total-submited counter">{{ getSum('SUBMITTED')
-                                            }}</strong><br>Total
-                                        Submitted</div>
+                                            }}</strong><br><small class="total-submited">Total Submitted</small>
+                                    </div>
                                 </div>
                                 <div>
                                     <div><strong class="total-delivered counter">{{ getSum('Delivered')
-                                            }}</strong><br>Total
-                                        Delivered </div>
+                                            }}</strong><br><small class="total-delivered">Total Delivered</small> 
+                                    </div>
 
-
-                                    <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br>Total
-                                        Failed </div>
+                                    <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br><small class="total-failed">Total
+                                        Failed </small></div>
                                 </div>
                                 <div>
                                     <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED')
-                                            }}</strong><br>Total
-                                        Rejected - NonRCS</div>
-                                    <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br>Total
-                                        Invalid
-                                        Number</div>
+                                            }}</strong><br><small class="total-rejected">Total Rejected - NonRCS</small></div>
+
+                                    <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br><small class="total-balance">Total
+                                        Invalid Number</small></div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <div class="card">
                                 <div class="card-header custom-header-section">
-                                    <h2 class="custom-header-title">Daily Activities <small>Daily traffic trend for
+                                    <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend for
                                         today</small></h2>
 
                                 </div>
                                 <div class="card-body chart-section">
-                                    <canvas *ngIf="dashboardData" class="chart" #chart baseChart [data]="barChartData"
+                                    <!-- <canvas *ngIf="dashboardData" class="chart" #chart baseChart [data]="barChartData"
                                         [options]="barChartOptions" [type]="barChartType">
-                                    </canvas>
-                             
+                                    </canvas> -->
+
+                                    <canvas *ngIf="dashboardData" #lineChart baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                                    [options]="lineChartOptions" [legend]="lineChartLegend" [type]="lineChartType"></canvas>
 
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
 
             <br>
 
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-header custom-header-section">
                     <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend for
                             today</small></h2>
@@ -96,7 +96,7 @@
                         [options]="lineChartOptions" [legend]="lineChartLegend" [type]="lineChartType"></canvas>
 
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 

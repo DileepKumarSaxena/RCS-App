@@ -47,6 +47,8 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DasboardComponent } from './components/dasboard/dasboard.component';
 import { NgChartsModule } from 'ng2-charts';
+import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 
 import { FooterComponent } from './components/footer/footer.component';
@@ -116,7 +118,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         ResetPasswordComponent,
         ForgotPasswordComponent,
         DasboardComponent,
-        FooterComponent
+        FooterComponent,
+        UserRegistrationComponent,
+        AddUserComponent
+        
     
     ],
     providers: [

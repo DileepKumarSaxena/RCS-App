@@ -21,7 +21,7 @@
                     <div class="col-sm-8">
                         <div class="card bg-light text-dark">
                             <div class="card-body form-spacing">
-        
+
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <mat-form-field appearance="outline">
@@ -30,38 +30,47 @@
                                                 <mat-option *ngFor="let item of campaignList"
                                                     [value]="item.campaignId">{{item.campaignName}}</mat-option>
                                             </mat-select>
-                                            <mat-error *ngIf="leadForm.get('campaignId').hasError('required')">Select Campaign Name</mat-error>
+                                            <mat-error *ngIf="leadForm.get('campaignId').hasError('required')">Select
+                                                Campaign Name</mat-error>
                                         </mat-form-field>
-                                        
+
                                     </div>
-        
-        
+
+
                                     <div class="col-sm-6">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Lead Name</mat-label>
                                             <input matInput autocomplete="off" placeholder="Lead name"
-                                                formControlName="leadName" maxlength="50" (blur)="onLeadNameInputBlur();" />
-                                            <mat-error *ngIf="leadForm.get('leadName').hasError('required')">Lead name is
+                                                formControlName="leadName" maxlength="50"
+                                                (blur)="onLeadNameInputBlur();" />
+                                            <mat-error *ngIf="leadForm.get('leadName').hasError('required')">Lead name
+                                                is
                                                 required</mat-error>
-                                            <mat-error *ngIf="leadForm.get('leadName').hasError('spacesNotAllowed')">Lead name
+                                            <mat-error
+                                                *ngIf="leadForm.get('leadName').hasError('spacesNotAllowed')">Lead name
                                                 cannot be empty or contain only spaces</mat-error>
-                                            <mat-error *ngIf="leadForm.get('leadName').hasError('pattern')">Lead name can only
+                                            <mat-error *ngIf="leadForm.get('leadName').hasError('pattern')">Lead name
+                                                can only
                                                 contain letters, numbers, underscores, and dashes</mat-error>
-                                            <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">Lead name
+                                            <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">Lead
+                                                name
                                                 already exists</mat-error>
                                             <mat-icon matSuffix aria-hidden="true" container="body">
-                                                <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
+                                                <span class="material-symbols-outlined"
+                                                    (mouseenter)="isHidden2 = !isHidden2"
                                                     (mouseleave)="isHidden2 = !isHidden2">info</span>
                                             </mat-icon>
                                         </mat-form-field>
-        
-                                        <ng-container *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
-                                            <div style="margin-top: -20px; font-size: small; color: red;  margin-left: 4px">
+
+                                        <ng-container
+                                            *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
+                                            <div
+                                                style="margin-top: -20px; font-size: small; color: red;  margin-left: 4px">
                                                 No Special Characters allowed.
                                             </div>
                                         </ng-container>
                                     </div>
-        
+
                                     <div class=" col-sm-6">
                                         <div class="form-group">
                                             <div class="input-group custom-file-button">
@@ -71,18 +80,21 @@
                                                 <label class="input-group-text" for="inputGroupFile">Browse</label>
                                             </div>
                                         </div>
-                                        <span class="notes notes-error-spacing" *ngIf="showClickOfSubmitButton">File is required</span>
+                                        <span class="notes notes-error-spacing" *ngIf="showClickOfSubmitButton">File is
+                                            required</span>
                                         <!-- <div *ngIf="leadForm.get('file').hasError('invalidColumnValue'); else validFileContent" -->
-                                        <div *ngIf="leadForm.get('file').hasError('invalidColumnValue')"
+                                        <div *ngIf="leadForm.get('file').hasError('invalidFileFormat')"
                                             class="text-danger invalid-format">
-                                            Invalid column value. Please ensure all values in the CSV file column are numbers.
+                                            Only CSV Files are allowed.
                                         </div>
-        
+
                                         <div class="toggleRow">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" [(ngModel)]="switchState" class="custom-control-input"
-                                                    id="customSwitch1" formControlName="isDND">
-                                                <label class="custom-control-label" for="customSwitch1">Enable DND</label>
+                                                <input type="checkbox" [(ngModel)]="switchState"
+                                                    class="custom-control-input" id="customSwitch1"
+                                                    formControlName="isDND">
+                                                <label class="custom-control-label" for="customSwitch1">Enable
+                                                    DND</label>
                                                 <div *ngIf="switchState">
                                                     <!-- Switch is ON -->
                                                 </div>
@@ -107,7 +119,7 @@
                                                 </div>
                                             </div>
                                         </ng-template> -->
-        
+
                                     </div>
                                     <div class="col-sm-6">
                                         <mat-form-field appearance="outline">
@@ -123,9 +135,9 @@
                                     </div>
                                     <div class="col-sm-6" *ngIf="f.leadExecutionType.value === 'schedule'">
                                         <label for="scheduleStartDtm" class="custom-date-label">Start Date:</label>
-                                        <input id="scheduleStartDtm" class="custom-date-range-input" type="datetime-local"
-                                            formControlName="scheduleStartDtm" [min]="minDate" placeholder="YYYY-MM-DD"
-                                            required>
+                                        <input id="scheduleStartDtm" class="custom-date-range-input"
+                                            type="datetime-local" formControlName="scheduleStartDtm" [min]="minDate"
+                                            placeholder="YYYY-MM-DD" required>
                                     </div>
                                     <div class="col-sm-6" *ngIf="f.leadExecutionType.value === 'schedule'">
                                         <label for="scheduleEndDtm" class="custom-date-label">End Date:</label>
@@ -137,66 +149,111 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-6">
-                         
+
                                         <button class="btn btn-outline-danger submit" type="submit" id="smbtbtn"
                                             (click)="onCancel()">Reset</button>
                                     </div>
                                     <div class="col-sm-6">
-                                       
+
                                         <button class="btn btn-success submit" type="submit" id="smbtbtn"
                                             [disabled]="areRequiredFieldsFilledForSubmit()"
                                             (click)="onSubmit()">{{actionBtn}}</button>
                                     </div>
-        
+
                                 </div>
-                              
-        
+
+
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="card bg-light text-dark custom-card-width">
                             <div class="card-body">
-        
-                                
-                                    <!-- <div class="col-sm-6">
+
+
+                                <!-- <div class="col-sm-6">
                                         <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
                                     </div> -->
-                                  
+                                <div class="row">
+                                    <div class="col-md-10">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Enter Testing Number</mat-label>
-                                            <input matInput formControlName="testingNumber" (focus)="phoneNumError = false">
-                                            
+                                            <input matInput formControlName="testingNumber"
+                                                (focus)="phoneNumError = false">
+
                                             <mat-icon matSuffix aria-hidden="true" container="body">
-                                                <span class="material-symbols-outlined" (mouseenter)="isHidden3 = !isHidden3"
+                                                <span class="material-symbols-outlined"
+                                                    (mouseenter)="isHidden3 = !isHidden3"
                                                     (mouseleave)="isHidden3 = !isHidden3">info</span>
                                             </mat-icon>
-                                            
-                                            <mat-error *ngIf="leadForm.controls.testingNumber.errors || leadForm.invalid"
+
+                                            <mat-error
+                                                *ngIf="leadForm.controls.testingNumber.errors || leadForm.invalid"
                                                 class="error-spacing">
                                                 {{ getErrorMessage() }}
                                             </mat-error>
                                         </mat-form-field>
-                                        <span class="notes" *ngIf="phoneNumError">Provide valid mobile number with Comma-separated.</span>
-        
-        
-                                        <ng-container *ngIf="isHidden3 && leadForm.get('testingNumber').invalid">
-                                            <div style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
+                                        <span class="notes" *ngIf="phoneNumError">Provide valid mobile number with
+                                            Comma-separated.</span>
+
+
+                                        <ng-container *ngIf="isHidden3 && leadForm.get('testingNumber')">
+                                            <div
+                                                style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                                 Numbers(S) on which test call to be given.
                                             </div>
                                         </ng-container>
-                                        <br><br>
-                                        
-                                        <button class="btn btn-success lead"
-                                            (click)="testLead()" [disabled]="areRequiredFieldsFilledForTestLead()">Test
-                                            Lead</button>
+
                                     </div>
-        
+
+                                    <div class="col-md-2">
+                                        <button type="button" matTooltip="Add Key and Value Fields" mat-mini-fab
+                                            color="primary" (click)="addRow()">
+                                            <mat-icon>add</mat-icon>
+                                        </button>
+                                    </div>
                                 </div>
+                                <br>
+                                <div class="testLeadSection">
+                                    <div formArrayName="testLeadDynamicFields"
+                                        *ngFor="let item of leadForm.get('testLeadDynamicFields')['controls']; let i = index;">
+                                        <div [formGroupName]="i">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>Enter Key</mat-label>
+                                                        <input matInput formControlName="key" maxlength="30">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>Enter Value</mat-label>
+                                                        <input matInput formControlName="value" maxlength="30">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button matTooltip="Remove Fields" mat-mini-fab color="warn"
+                                                        (click)="removeRow(i)">
+                                                        <mat-icon>remove</mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success lead lead-btn-space" (click)="testLead()"
+                                    [disabled]="areRequiredFieldsFilledForTestLead()">Test
+                                    Lead</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
-              
+
             </form>
         </div>
     </div>
