@@ -17,8 +17,9 @@ export class ReportsService extends BaseService{
 
 
   //Api for Detail_Report
-  private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
   // private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
+  // private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
+  private URLS = this.leadUrlData+'getLeadAndCampaignNameWithIds';
   dateRangeFilter(from: string, to: string, userId:string): Observable<any> {
     return this.http.get(`${this.URLS}?from=${from}&to=${to}&userId=${userId}`);
   }
@@ -37,7 +38,7 @@ export class ReportsService extends BaseService{
       toDate: toDate,
       username: username,
       camType:camType!=null?camType:'0',
-      clientId: leadId!=null?leadId:'0',
+      clientId:'0',
       camId: limit,
       role: start,
       pageIndex: pageIndex,

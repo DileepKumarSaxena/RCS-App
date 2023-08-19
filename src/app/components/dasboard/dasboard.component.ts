@@ -177,14 +177,14 @@ export class DasboardComponent implements AfterViewInit {
       { data: [], label: 'Total Request', backgroundColor: '#343a40' },
       { data: [], label: 'Total Submitted', backgroundColor: '#f3bb45' },
       { data: [], label: 'Total Delivered', backgroundColor: '#5FC29F' },
-      { data: [], label: 'Total Failed', backgroundColor: '#7438c0' },
       { data: [], label: 'Total Rejected - NonRCS', backgroundColor: '#eb5e28' },
+      { data: [], label: 'Total Failed', backgroundColor: '#7438c0' },
       { data: [], label: 'Total Invalid Number', backgroundColor: '#a70606' },
     ],
   };
 
   updateChartData() {
-    let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED', 'Invalid'];
+    let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'NonRCS_FAILED', 'failed', 'Invalid'];
 
     dataKeys.forEach((key, index) => {
       let sum = this.getSum(key);
@@ -213,39 +213,62 @@ export class DasboardComponent implements AfterViewInit {
   
   
   lineChartData: any[] = [
-    { data: [], label: 'Total Request', borderColor: 'rgba(52, 58, 64, 1)', backgroundColor: 'rgba(52, 58, 64, 0.2)', pointBackgroundColor: 'rgba(52, 58, 64, 0.2)' },
-    { data: [], label: 'Total Delivered', borderColor: 'rgba(95, 194, 159, 1)', backgroundColor: 'rgba(95, 194, 159, 0.2)', pointBackgroundColor: 'rgba(95, 194, 159, 0.2)' },
-    { data: [], label: 'Total Rejected - NonRCS', borderColor: 'rgba(235, 94, 40, 1)', backgroundColor: 'rgba(235, 94, 40, 0.2)', pointBackgroundColor: 'rgba(235, 94, 40, 0.2)' },
-    { data: [], label: 'Total Submitted', borderColor: 'rgba(243, 187, 69, 1)', backgroundColor: 'rgba(243, 187, 69, 0.2)', pointBackgroundColor: 'rgba(243, 187, 69, 0.2)' },
-    { data: [], label: 'Total Failed', borderColor: 'rgba(116, 56, 192, 1)', backgroundColor: 'rgba(116, 56, 192, 0.2)', pointBackgroundColor: 'rgba(116, 56, 192, 0.2)' },
-    { data: [], label: 'Total Invalid Number', borderColor: 'rgba(167, 6, 6, 1)', backgroundColor: 'rgba(167, 6, 6, 0.2)', pointBackgroundColor: 'rgba(167, 6, 6, 0.2)' }
+    { data: [], label: 'Request', borderColor: 'rgba(52, 58, 64, 1)', backgroundColor: 'rgba(52, 58, 64, 0.2)', pointBackgroundColor: 'rgba(52, 58, 64, 0.2)' },
+    { data: [], label: 'Delivered', borderColor: 'rgba(95, 194, 159, 1)', backgroundColor: 'rgba(95, 194, 159, 0.2)', pointBackgroundColor: 'rgba(95, 194, 159, 0.2)' },
+    { data: [], label: 'Rejected - NonRCS', borderColor: 'rgba(235, 94, 40, 1)', backgroundColor: 'rgba(235, 94, 40, 0.2)', pointBackgroundColor: 'rgba(235, 94, 40, 0.2)' },
+    { data: [], label: 'Submitted', borderColor: 'rgba(243, 187, 69, 1)', backgroundColor: 'rgba(243, 187, 69, 0.2)', pointBackgroundColor: 'rgba(243, 187, 69, 0.2)' },
+    { data: [], label: 'Failed', borderColor: 'rgba(116, 56, 192, 1)', backgroundColor: 'rgba(116, 56, 192, 0.2)', pointBackgroundColor: 'rgba(116, 56, 192, 0.2)' },
+    { data: [], label: 'Invalid Number', borderColor: 'rgba(167, 6, 6, 1)', backgroundColor: 'rgba(167, 6, 6, 0.2)', pointBackgroundColor: 'rgba(167, 6, 6, 0.2)' }
   ];
   
   
   public lineChartLabels: string[] = [];  
-  public lineChartLegend = true;
+  public lineChartLegend = false;
+
+  // updateLineChartData() {
+  //   if (this.dashboardData && this.dashboardData.length > 0) {
+  //     let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED', 'Invalid'];
+  //     let currentHour = new Date().getHours();
+  //     let hourLabels = Array.from({ length: currentHour + 1 }, (_, i) => `${i}:00`); // Generate labels from 0 to 23
   
+  //     this.lineChartLabels = hourLabels;
+  //     console.log(hourLabels, 'hourLabels');
+  //     dataKeys.forEach((key, index) => {
+  //       let data: number[] = new Array<number>(24).fill(0);
+  
+  //       this.dashboardData.forEach(entry => {
+  //         const hour = entry.datehour;
+  //         data[hour] = entry[key];
+  //       });
+  
+  //       this.lineChartData[index].data = data;
+  //     });
+  
+  //     this.lineChart?.update();
+  //   }
+  // }
+
+
   updateLineChartData() {
     if (this.dashboardData && this.dashboardData.length > 0) {
-      let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED', 'Invalid'];
+      let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'failed', 'Invalid'];
       
-      let currentHour = new Date().getHours();
-      
-      // Generate an array of hour labels from 0 to the current hour
-      let hourLabels = Array.from({ length: currentHour + 1 }, (_, i) => `${i}:00`);
-      
+      // let currentHour = new Date().getHours();
+  
+      // Find the maximum hour with data
+      let maxDataHour = Math.max(...this.dashboardData.map(entry => entry.datehour));
+  
+      // Generate labels from 0 to the maximum data hour
+      let hourLabels = Array.from({ length: maxDataHour + 1 }, (_, i) => `${i}:00`);
+  
       this.lineChartLabels = hourLabels;
       console.log(hourLabels, 'hourLabels');
-      
-      // Loop through each data key
-      dataKeys.forEach((key, index) => {
-        // Create an array to hold data for each hour (24 hours in total)
-        let data: number[] = new Array<number>(24).fill(0);
   
-        // Loop through each entry in the dashboard data
+      dataKeys.forEach((key, index) => {
+        let data: number[] = new Array<number>(maxDataHour + 1).fill(0);
+  
         this.dashboardData.forEach(entry => {
           const hour = entry.datehour;
-          // Populate the data array at the corresponding hour index with the data value for the current key
           data[hour] = entry[key];
         });
   

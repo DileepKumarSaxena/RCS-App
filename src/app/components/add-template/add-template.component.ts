@@ -16,11 +16,11 @@ import { event } from 'jquery';
 
 
 @Component({
-  selector: 'app-xiaomircs',
-  templateUrl: './xiaomircs.component.html',
-  styleUrls: ['./xiaomircs.component.scss']
+  selector: 'app-add-template',
+  templateUrl: './add-template.component.html',
+  styleUrls: ['./add-template.component.scss']
 })
-export class XiaomircsComponent implements OnInit {
+export class AddTemplateComponent implements OnInit {
   templateForm: FormGroup;
   templateName: string;
   fileName: string = '';
@@ -117,6 +117,54 @@ export class XiaomircsComponent implements OnInit {
       phoneNumber: [''],
     });
   }
+
+  suggestionTypeChange(item: AbstractControl) {
+    let suggestionTypeControl = item.get('suggestionType');
+    let urlControl = item.get('url');
+    let phoneNumberControl = item.get('phoneNumber');
+
+    if (suggestionTypeControl.value === 'url_action') {
+        urlControl.setValidators([Validators.required]);
+        phoneNumberControl.clearValidators();
+    } else if (suggestionTypeControl.value === 'dialer_action') {
+        urlControl.clearValidators();
+        phoneNumberControl.setValidators([Validators.required]);
+    }
+
+    urlControl.updateValueAndValidity();
+    phoneNumberControl.updateValueAndValidity();
+}
+
+
+addPrefixIfNecessary(event: any) {
+  const input = event.target as HTMLInputElement;
+  if (!input.value.startsWith('+91')) {
+      input.value = '+91';
+  }
+}
+
+// restrictTo10Digits(event: any) {
+//   const input = event.target as HTMLInputElement;
+//   if (input.value.startsWith('+91')) {
+//       input.value = '+91' + input.value.slice(3, 13);
+//   } else {
+//       input.value = '+91';
+//   }
+// }
+
+
+restrictTo10Digits(event: any) {
+  const input = event.target as HTMLInputElement;
+  if (input.value.startsWith('+91')) {
+    input.value = '+91' + input.value.slice(3, 13).replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  } else {
+    input.value = '+91' + input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  }
+}
+
+
+
+
   createCards(): FormGroup {
     return this.fb.group({
       cardWidth: ['SMALL_WIDTH'],
@@ -357,7 +405,17 @@ export class XiaomircsComponent implements OnInit {
         },
         error: (error: string) => {
           if (error) {
-            this.alertService.errorToaster(error);
+            //this.alertService.errorToaster(error);
+            Swal.fire({
+              title: 'Error',
+              text: 'Error while adding the Template Details.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
+            });
           }
         },
       });
@@ -408,11 +466,15 @@ export class XiaomircsComponent implements OnInit {
     suggestions.forEach(element => {
       const displayTextCustomParam = this.extractVariables(element?.displayText);
       const postbackCustomParam = this.extractVariables(element?.postback);
+      const urlCustomParam = this.extractVariables(element?.url);
       if (displayTextCustomParam?.length) {
         xyz = [...xyz, ...displayTextCustomParam]
       }
       if (postbackCustomParam?.length) {
         xyz = [...xyz, ...postbackCustomParam]
+      }
+      if (urlCustomParam?.length) {
+        xyz = [...xyz, ...urlCustomParam]
       }
     });
 

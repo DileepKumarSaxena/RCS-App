@@ -720,7 +720,8 @@
                         <div class="addSuggestionSection">
                             <div class="form-group">
                                 <label>Type of Action</label>
-                                <select class="form-control" formControlName="suggestionType">
+                                <select class="form-control" formControlName="suggestionType"
+                                    (change)="suggestionTypeChange(item)">
                                     <option *ngFor="let item of suggestionActionValue" [value]="item.key">{{item.value}}
                                     </option>
                                 </select>
@@ -749,20 +750,31 @@
                                             class="variableName">variableName</span>.</small>
                                 </div>
                             </div>
-                            <div class="form-group form-input"
+                            <div class="form-group form-input form-width"
                                 *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] === 'url_action'">
                                 <label>URL/URI to open</label>
-                                <input type="text" class="form-control" maxlength="2048" formControlName="url">
+                                <input type="text" class="form-control" maxlength="2048" formControlName="url" required>
                                 <small class="text-light-gray">0/2048 characters used</small>
                                 <small>Add your custom variable like this <span
                                         class="variableName">variableName</span>.</small>
+                                <div *ngIf="templateCodeVal && item.get('url').invalid && item.get('suggestionType').value === 'url_action'"
+                                    class="text-danger">
+                                    URL is required.
+                                </div>
                             </div>
 
-                            <div class="form-group form-input"
+                            <div class="form-group form-input form-width"
                                 *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] === 'dialer_action'">
                                 <label>Phone Number to Dial</label>
-                                <input type="text" class="form-control" maxlength="10" formControlName="phoneNumber">
+                                <input type="text" class="form-control" maxlength="13" formControlName="phoneNumber"
+                                    required (click)="addPrefixIfNecessary($event)"
+                                    (input)="restrictTo10Digits($event)">
+                                <div *ngIf="templateCodeVal && item.get('phoneNumber').invalid && item.get('suggestionType').value === 'dialer_action'"
+                                    class="text-danger">
+                                    Phone Number is required.
+                                </div>
                             </div>
+
 
                             <div>
                                 <div class="add-remove-section">

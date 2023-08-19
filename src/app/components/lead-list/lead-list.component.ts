@@ -18,14 +18,14 @@ interface LeadData {
 }
 
 @Component({
-  selector: 'app-lead',
-  templateUrl: './lead.component.html',
-  styleUrls: ['./lead.component.scss']
+  selector: 'app-lead-list',
+  templateUrl: './lead-list.component.html',
+  styleUrls: ['./lead-list.component.scss']
 })
 
 
 
-export class LeadComponent {
+export class LeadListComponent {
 
   public showLoader = false;
   public create_campaign: any[];

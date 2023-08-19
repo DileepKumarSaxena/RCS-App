@@ -11,11 +11,11 @@ import { Router } from '@angular/router';
 import * as Papa from 'papaparse';
 import Swal from 'sweetalert2';
 @Component({
-  selector: 'app-googlercs',
-  templateUrl: './googlercs.component.html',
-  styleUrls: ['./googlercs.component.scss']
+  selector: 'app-summary-report',
+  templateUrl: './summary-report.component.html',
+  styleUrls: ['./summary-report.component.scss']
 })
-export class GooglercsComponent {
+export class SummaryReportComponent {
   summaryListForm: FormGroup;
   public showLoader = false;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;

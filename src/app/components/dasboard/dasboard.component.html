@@ -40,21 +40,23 @@
                                     <div><strong class="total-message-sent counter">{{ getSum('TOTAL')
                                             }}</strong><br><small class="total-message-sent">Total Request</small>
                                     </div>
-                                    <div><strong class="total-submited counter">{{ getSum('SUBMITTED')
-                                            }}</strong><br><small class="total-submited">Total Submitted</small>
-                                    </div>
+                                  
+                                    <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED')
+                                    }}</strong><br><small class="total-rejected">Total Rejected - NonRCS</small></div>
                                 </div>
                                 <div>
-                                    <div><strong class="total-delivered counter">{{ getSum('Delivered')
-                                            }}</strong><br><small class="total-delivered">Total Delivered</small> 
-                                    </div>
+                                    <div><strong class="total-submited counter">{{ getSum('SUBMITTED')
+                                    }}</strong><br><small class="total-submited">Total Submitted</small>
+                            </div>
 
                                     <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br><small class="total-failed">Total
                                         Failed </small></div>
                                 </div>
                                 <div>
-                                    <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED')
-                                            }}</strong><br><small class="total-rejected">Total Rejected - NonRCS</small></div>
+                                            
+                                    <div><strong class="total-delivered counter">{{ getSum('Delivered')
+                                    }}</strong><br><small class="total-delivered">Total Delivered</small> 
+                            </div>
 
                                     <div><strong class="total-balance counter">{{ getSum('Invalid') }}</strong><br><small class="total-balance">Total
                                         Invalid Number</small></div>

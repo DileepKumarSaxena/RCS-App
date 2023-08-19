@@ -15,11 +15,11 @@ import { Subscription } from 'rxjs';
 import * as Papa from 'papaparse';
 
 @Component({
-  selector: 'app-campaign',
-  templateUrl: './campaign.component.html',
-  styleUrls: ['./campaign.component.scss']
+  selector: 'app-campaign-list',
+  templateUrl: './campaign-list.component.html',
+  styleUrls: ['./campaign-list.component.scss']
 })
-export class CampaignComponent {
+export class CampaignListComponent {
   campaignListForm: FormGroup;
   public showLoader = false;
   

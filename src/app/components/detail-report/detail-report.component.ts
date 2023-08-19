@@ -13,12 +13,14 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
 import { CampaignService } from '@app/services/campaign.service';
 import * as Papa from 'papaparse';
+import { distinctUntilChanged } from 'rxjs/operators';
+
 @Component({
-  selector: 'app-campaignlogs',
-  templateUrl: './campaignlogs.component.html',
-  styleUrls: ['./campaignlogs.component.scss']
+  selector: 'app-detail-report',
+  templateUrl: './detail-report.component.html',
+  styleUrls: ['./detail-report.component.scss']
 })
-export class CampaignlogsComponent {
+export class DetailReportComponent {
   detailListForm: FormGroup;
   public showLoader = false;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
@@ -42,17 +44,15 @@ export class CampaignlogsComponent {
     private location: Location
   ) { }
 
-  
+
   ngOnInit(): void {
+    this.detailReport();
     this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate()));
- 
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
-    this.detailReport();
-    this.getDateFilter();
+    this.dateFilter(this.currentDate, this.currentDate, 2);
     this.getDetailList();
-    
 
   }
 
@@ -68,67 +68,75 @@ export class CampaignlogsComponent {
     })
   }
 
-  getDateFilter() {
-    this.showLoader = true
-    let userId = sessionStorage.getItem('userId');
-    let from = moment(this.currentDate).format('YYYY-MM-DD');
-    let to = moment(this.currentDate).format('YYYY-MM-DD');
+  dateFilter(startDate: any, endDate: any, flag: any) {
+    this.showLoader = true;
+      let userId = sessionStorage.getItem('userId');
+
+      // Determine the 'from' and 'to' dates based on the flag
+    let from = flag == '1' ? moment(startDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
+    let to = flag == '1' ? moment(endDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
+  
+    this.campaignList = [];
+    this.leadList = [];
+  
     this.reportservice.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
-        this.detailData = res.data;
-        this.dataSource.data = this.detailData;
         if (res) {
-          this.campaignList = res;
+          // Create an object to group data
+          let groups: any = {};
+          let obj: any = [];
+  
+          // Process each element from the response
+          res.forEach((element: any) => {
+            var id = element.campId;
+  
+            // Check if the group for the campaign already exists
+            if (groups[id]) {
+              // If it exists, add lead information to the existing group
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+            } else {
+              // If it doesn't exist, create a new group
+              groups[id] = {};
+              groups[id]['leadInfo'] = [];
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+              groups[id]['campId'] = element.campId;
+              groups[id]['campaignName'] = element.campaignName;
+            }
+          });
+  
+          // Convert the grouped data into an array
+          Object.keys(groups).forEach(function (key) {
+            obj.push(groups[key]);
+          });
+  
+          // Update the campaignList with the grouped data
+          this.campaignList = obj;
+  
+          this.showLoader = false;
         }
-        this.showLoader = false
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
       }
     })
   }
-  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+  
 
-    // this.showLoader = true
-    let userId = sessionStorage.getItem('userId');
-    let from = moment(startDate.value).format('YYYY-MM-DD');
-    let to = moment(endDate.value).format('YYYY-MM-DD');
-    this.detailListForm.get('campaignId').setValue(null);
-    this.detailListForm.get('leadId').setValue(null);
-    this.reportservice.dateRangeFilter(from, to, userId).subscribe({
-      next: (res: any) => {
-        this.detailData = res.data;
-        this.dataSource.data = this.detailData;
-        if (res) {
-          this.campaignList = res;
-        }
-        this.showLoader = false
-      },
-      error: (err) => {
-        console.log(err, "Error while fetching the records.");
-      }
-    })
+  getLeadName(id: any, event: any) {
+    if (event.isUserInput) {
+      this.leadList = [];
+      let campaignId = id;
+      console.log(campaignId, 'campaignId');
+      let obj = this.campaignList.find(element => element.campId == campaignId);
+      console.log(obj, 'obj');
+      this.leadList = obj['leadInfo'];
+    }
   }
 
-  getLeadName(event: any) {
-    let userId = sessionStorage.getItem('userId');
-    let campaignId = event.source.value;
-    this.reportservice.getLeadList(userId, campaignId).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.detailListForm.get('leadId').setValue(null);
-          this.leadList = res;
-        }
-      },
-      error: (err) => {
-        console.log(err, "Error while fetching the records.");
-      }
-
-    })
-  }
   displayCampaignName(campaign: any): string {
     return campaign ? campaign.campaignName : '';
   }
+
   getDetailList() {
     this.showLoader = true
     let username = sessionStorage.getItem('username');

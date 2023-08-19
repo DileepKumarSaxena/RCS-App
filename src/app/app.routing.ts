@@ -1,17 +1,13 @@
 import { Routes, RouterModule } from '@angular/router';
-import { CampaignlogsComponent } from './components/campaignlogs/campaignlogs.component';
-import { GooglercsComponent } from './components/googlercs/googlercs.component';
-import { XiaomircsComponent } from './components/xiaomircs/xiaomircs.component';
-
-import { HomeComponent } from './home';
+import { DetailReportComponent } from './components/detail-report/detail-report.component';
+import { SummaryReportComponent } from './components/summary-report/summary-report.component';
+import { AddTemplateComponent } from './components/add-template/add-template.component';
 import { LoginComponent } from './login';
 import { AuthGuard } from './_helpers';
-import { UploadFileComponent } from './components/upload-file/upload-file.component';
-import { CampaignComponent } from './components/campaign/campaign.component';
+import { CampaignListComponent } from './components/campaign-list/campaign-list.component';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
-import { LeadComponent } from './components/lead/lead.component';
+import { LeadListComponent } from './components/lead-list/lead-list.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
-import { TemplateComponent } from './components/template/template.component';
 import { TemplateListComponent } from './components/template-list/template-list.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
@@ -23,18 +19,16 @@ const routes: Routes = [
     { path: '', component: DasboardComponent, canActivate: [AuthGuard] },
     { path: 'dasboard', component: DasboardComponent, canActivate: [AuthGuard] },
     { path: 'templateList', component: TemplateListComponent, canActivate: [AuthGuard] },
-    { path: 'addTemplate', component: XiaomircsComponent, canActivate: [AuthGuard] },
-    { path: 'Summary', component: GooglercsComponent, canActivate: [AuthGuard] },
-    { path: 'detailreport', component: CampaignlogsComponent, canActivate: [AuthGuard] },
+    { path: 'addTemplate', component: AddTemplateComponent, canActivate: [AuthGuard] },
+    { path: 'Summary', component: SummaryReportComponent, canActivate: [AuthGuard] },
+    { path: 'detailreport', component: DetailReportComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
-    { path: 'upload', component: UploadFileComponent, canActivate: [AuthGuard] },
-    { path: 'campaignList', component: CampaignComponent, canActivate: [AuthGuard] },
+    { path: 'campaignList', component: CampaignListComponent, canActivate: [AuthGuard] },
     { path: 'campaign/create', component: CreateCampaignComponent, canActivate: [AuthGuard] },
     { path: 'campaign/edit', component: CreateCampaignComponent, canActivate: [AuthGuard] },
-    { path: 'leadList', component: LeadComponent, canActivate: [AuthGuard] },
+    { path: 'leadList', component: LeadListComponent, canActivate: [AuthGuard] },
     { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
-    { path: 'template', component: TemplateComponent, canActivate: [AuthGuard] },
     { path: 'reset/password', component: ResetPasswordComponent, canActivate: [AuthGuard] },
     { path: 'forgot/password', component: ForgotPasswordComponent },
     { path: 'user/registration', component: UserRegistrationComponent, canActivate: [AuthGuard] },

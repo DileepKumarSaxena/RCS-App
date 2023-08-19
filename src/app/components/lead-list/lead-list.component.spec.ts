@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GooglercsComponent } from './googlercs.component';
+import { LeadListComponent } from './lead-list.component';
 
-describe('GooglercsComponent', () => {
-  let component: GooglercsComponent;
-  let fixture: ComponentFixture<GooglercsComponent>;
+describe('LeadListComponent', () => {
+  let component: LeadListComponent;
+  let fixture: ComponentFixture<LeadListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GooglercsComponent ]
+      declarations: [ LeadListComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GooglercsComponent);
+    fixture = TestBed.createComponent(LeadListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
