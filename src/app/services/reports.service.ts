@@ -74,6 +74,26 @@ export class ReportsService extends BaseService{
   
     return this.http.post(url, data, httpOptions);
   }
+
+  getSummaryDataSearch(username, fromDate, toDate) {
+    const url = this.baseUrlData+'getRcsSummarySmsReport';
+    const data = {
+      fromDate: fromDate,
+      toDate: toDate,
+      username: username,
+      clientId: 0,
+      role :0,
+       camId :0,
+    };
+  
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+  
+    return this.http.post(url, data, httpOptions);
+  }
   getDetailData(username, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
     const url = this.baseUrlData+'getRcsDetailedSmsReport';
     // const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';

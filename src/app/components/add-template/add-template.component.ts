@@ -124,45 +124,47 @@ export class AddTemplateComponent implements OnInit {
     let phoneNumberControl = item.get('phoneNumber');
 
     if (suggestionTypeControl.value === 'url_action') {
-        urlControl.setValidators([Validators.required]);
-        phoneNumberControl.clearValidators();
+      urlControl.setValidators([Validators.required]);
+      phoneNumberControl.clearValidators();
     } else if (suggestionTypeControl.value === 'dialer_action') {
-        urlControl.clearValidators();
-        phoneNumberControl.setValidators([Validators.required]);
+      urlControl.clearValidators();
+      phoneNumberControl.setValidators([Validators.required]);
     }
 
     urlControl.updateValueAndValidity();
     phoneNumberControl.updateValueAndValidity();
-}
+  }
 
 
-addPrefixIfNecessary(event: any) {
-  const input = event.target as HTMLInputElement;
-  if (!input.value.startsWith('+91')) {
+  addPrefixIfNecessary(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (!input.value.startsWith('+91')) {
       input.value = '+91';
+    }
   }
-}
 
-// restrictTo10Digits(event: any) {
-//   const input = event.target as HTMLInputElement;
-//   if (input.value.startsWith('+91')) {
-//       input.value = '+91' + input.value.slice(3, 13);
-//   } else {
-//       input.value = '+91';
-//   }
-// }
+  // restrictTo10Digits(event: any) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.value.startsWith('+91')) {
+  //       input.value = '+91' + input.value.slice(3, 13);
+  //   } else {
+  //       input.value = '+91';
+  //   }
+  // }
 
 
-restrictTo10Digits(event: any) {
-  const input = event.target as HTMLInputElement;
-  if (input.value.startsWith('+91')) {
-    input.value = '+91' + input.value.slice(3, 13).replace(/[^0-9]/g, ''); // Remove non-numeric characters
-  } else {
-    input.value = '+91' + input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  restrictTo10Digits(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.startsWith('+91')) {
+      input.value = '+91' + input.value.slice(3, 13).replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    } else {
+      input.value = '+91' + input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    }
   }
-}
 
-
+  handleLinkClick(event: Event) {
+    event.preventDefault();
+  }
 
 
   createCards(): FormGroup {
@@ -226,6 +228,7 @@ restrictTo10Digits(event: any) {
   addRow() {
     let loopCount = this.templateForm.get('templateType').value == 'text_message' ? 10 : 4;
     this.suggestions = this.templateForm.get('suggestions') as FormArray;
+    console.log(this.templateForm, "templateForm....");
     if (this.suggestions.value.length < loopCount) {
       this.suggestions.push(this.createItem());
     }
@@ -253,7 +256,7 @@ restrictTo10Digits(event: any) {
           this.cardDetails.at(flag).get(frmval).updateValueAndValidity();
         } else {
           this.setValidation(frmval, null)
-          
+
         }
       } else if (file.type.indexOf('video') > -1) {
         if (flag > -1) {
@@ -299,7 +302,7 @@ restrictTo10Digits(event: any) {
             this.fileSizeError = false;
             this.fileSizeErrorMessage = '';
             this.templateForm.get(frmCtrlDisplay).patchValue(file.name);
-           
+
             // this.setValidation('thumbnailFileName', null);
             if (flag != 'thumbnail') {
               this.templateForm.get(frmCtrl).patchValue(file);
@@ -399,29 +402,58 @@ restrictTo10Digits(event: any) {
       formData.append('addTemplate', body?.toString());
       this.templateService.templateDataSubmit(formData).subscribe({
         next: (res: any) => {
-          this.alertService.successToaster('Template Created Successfully');
-          this.templateForm.reset();
-          this.router.navigate(['/templateList']);
-        },
-        error: (error: string) => {
-          if (error) {
-            //this.alertService.errorToaster(error);
+          if (res.status === 'OK') {
+            // Template added successfully
             Swal.fire({
-              title: 'Error',
-              text: 'Error while adding the Template Details.',
-              icon: 'error',
+              title: 'Template Created Successfully.',
+              icon: 'success',
               confirmButtonText: 'OK',
               customClass: {
                 icon: 'custom-icon-class',
               },
               width: '300px',
             });
+            this.templateForm.reset();
+            this.router.navigate(['/templateList']);
+          } else if (res.status === 'CREATED') {
+            // Template code already exists
+            Swal.fire({
+              text: 'Template Name Already Exist.',
+              icon: 'warning',
+              confirmButtonText: 'OK',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
+            });
+          } else {
+            // Handle unexpected response
+            this.showErrorMessageBox('Error while adding the Template Details.');
           }
         },
-      });
+        error: (error: string) => {
+          // Display error message
+          this.showErrorMessageBox('Error while adding the Template Details.');
+        },
+      })
 
     }
   }
+
+  showErrorMessageBox(message: string) {
+    Swal.fire({
+      title: 'Error',
+      text: message,
+      icon: 'error',
+      confirmButtonText: 'OK',
+      customClass: {
+        icon: 'custom-icon-class',
+      },
+      width: '300px',
+    });
+  }
+
+
   onCancel() {
     window.location.reload();
   }
@@ -480,7 +512,7 @@ restrictTo10Digits(event: any) {
 
     const obj = {
       templateCode: val?.templateCode,
-      templateType:((String(xyz)).length > 0)? 'Dynamic':'Static',
+      templateType: ((String(xyz)).length > 0) ? 'Dynamic' : 'Static',
       templateMsgType: val.templateType,
       templateCustomParam: String(xyz),
       templateUserId: sessionStorage.getItem('userId'),

@@ -33,17 +33,25 @@
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                                <mat-form-field appearance="outline">
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Select Campaign</mat-label>
                                     <mat-select formControlName="campaignId">
-                                        <mat-option>None</mat-option>
                                         <mat-option *ngFor="let item of campaignList"
                                             (onSelectionChange)="getLeadName(item.campId, $event)"
                                             [value]="item.campId">{{item.campaignName}}</mat-option>
                                     </mat-select>
+                                </mat-form-field> -->
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select Campaign</mat-label>
+                                    <input #campaignInput type="text" matInput placeholder="Search Campaign" [formControl]="campaignControl" [matAutocomplete]="auto" (focus)="openAutocompletePanel()">
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCampaignName" (optionSelected)="getLeadName($event.option.value.campId, $event)">
+                                        <mat-option *ngFor="let item of filteredCampaigns | async" [value]="item">
+                                            {{ item.campaignName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
                                 </mat-form-field>
-
-
+                                
                                 <mat-form-field appearance="outline">
                                     <mat-label>Select Lead</mat-label>
                                     <mat-select formControlName="leadId">
@@ -52,19 +60,6 @@
                                             [value]="item.leadId">{{item.leadName}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Select Campaign Name</mat-label>
-                                    <input type="text" matInput formControlName="campaignId" [matAutocomplete]="auto" [value]="selectedCampaign?.campaignName">
-                                  
-                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCampaignName">
-                                      <mat-option *ngFor="let item of campaignList | async" [value]="item.campaignId">
-                                        {{ item.campaignName }}
-                                      </mat-option>
-                                    </mat-autocomplete>
-                                  </mat-form-field>
-                                   -->
-
 
                                 <button type="button" class="btn btn-success btn-lg"
                                     [disabled]="detailListForm.status === 'INVALID'"

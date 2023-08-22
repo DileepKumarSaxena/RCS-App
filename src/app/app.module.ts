@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-
+import { NgFor, AsyncPipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { BasicAuthInterceptor, ErrorInterceptor } from './_helpers';
 import { LoginComponent } from './login';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { AddTemplateComponent } from './components/add-template/add-template.component';
@@ -16,26 +14,26 @@ import { SummaryReportComponent } from './components/summary-report/summary-repo
 import { DetailReportComponent } from './components/detail-report/detail-report.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CampaignListComponent } from './components/campaign-list/campaign-list.component';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { MatInputModule } from '@angular/material/input';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
-import {TextFieldModule} from '@angular/cdk/text-field';
-import {MatTableModule} from '@angular/material/table';
-import { MatPaginatorModule} from '@angular/material/paginator';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { LeadListComponent } from './components/lead-list/lead-list.component';
 import { CreateLeadComponent } from './components/create-lead/create-lead.component';
-import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION,NgxUiLoaderHttpModule  } from 'ngx-ui-loader';
+import { NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION, NgxUiLoaderHttpModule } from 'ngx-ui-loader';
 import { LoaderComponent } from './components/loader/loader.component';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TemplateListComponent } from './components/template-list/template-list.component';
 import { HttpConfigInterceptor } from './_interceptors/http-config.interceptor';
 // import { HttpErrorInterceptor } from './_interceptors/http-error.interceptor';
@@ -59,10 +57,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     fgsType: "three-strings",
     //logoUrl: "assets/img/dca_logo1_small.png",
     //logoSize: 30
-    };
+};
 
 @NgModule({
-    imports:[
+    imports: [
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
@@ -82,19 +80,21 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatNativeDateModule,
         TextFieldModule,
         MatTableModule,
-        MatPaginatorModule,  
+        MatPaginatorModule,
         NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
         NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
         MatTabsModule,
         MatTooltipModule,
         NgChartsModule,
         MatAutocompleteModule,
-        MatSlideToggleModule
-        
-        
+        MatSlideToggleModule,
+        NgFor,
+        AsyncPipe
+
+
     ],
 
-    
+
 
     declarations: [
         AppComponent,
@@ -115,14 +115,14 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         FooterComponent,
         UserRegistrationComponent,
         AddUserComponent
-        
-    
+
+
     ],
     providers: [
         // { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptorService, multi: true },
-       
+
     ],
     bootstrap: [AppComponent]
 })

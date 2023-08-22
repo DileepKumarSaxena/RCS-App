@@ -25,8 +25,11 @@ export class CreateLeadComponent {
   isHidden3: any;
   actionBtn: string = "Submit";
   leadID: any;
+  campaignId: any;
   campaignList: any = [];
+  templateDetailList: any = [];
   testLeadDynamicFields: FormArray;
+  templateCustomParamArray: any = [];
   leadExecutionData: any = [
     { leadExecutionData: 'save', leadExecutionName: 'Save and Execute' },
     { leadExecutionData: 'schedule', leadExecutionName: 'Save and Schedule' }
@@ -56,6 +59,7 @@ export class CreateLeadComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private papa: Papa) {
+
   }
 
   ngOnInit(): void {
@@ -108,9 +112,21 @@ export class CreateLeadComponent {
       startTime: [],
       endTime: [],
       testingNumber: ['', [this.validateNumericInput]],
-      testLeadDynamicFields: new FormArray([]),
+      testLeadDynamicFields: new FormArray([])
     })
   }
+  // getGuideline() {
+  //   this.guidelines = this.data.tabObj[0];
+  //   console.log(this.guidelines);
+  //   this.form = this.createGroup();
+  // }
+
+  // createGroup() {
+  //   const group = this.fb.group({});
+  //   this.leadForm.fields.forEach(control => group.addControl(control.field_name, this.fb.control('')));
+
+  //   return group;
+  // }
 
   createItem(): FormGroup {
     return this.formbuilder.group({
@@ -167,7 +183,7 @@ export class CreateLeadComponent {
       if (file && file.name) {
         const fileExtension = file.name.split('.').pop().toLowerCase();
         const allowedMimeTypes = ['text/csv'];
-  
+
         if (fileExtension !== 'csv' && !allowedMimeTypes.includes(file.type)) {
           console.log('Invalid MIME Type:', file.type);
           return { invalidFileFormat: true };
@@ -176,7 +192,7 @@ export class CreateLeadComponent {
       return null;
     };
   }
-  
+
   onLeadNameInputBlur() {
     const leadNameControl = this.leadForm.get('leadName');
     if (leadNameControl.value && leadNameControl.value.trim().length === 0) {
@@ -218,6 +234,22 @@ export class CreateLeadComponent {
   }
 
 
+  templateDetails() {
+    let selectedCampaignId = this.leadForm.get('campaignId').value;
+    this.leadService.getTemplateDetailsByCampaignId(selectedCampaignId).subscribe(res => {
+      if (res) {
+        this.templateDetailList = res;
+        this.templateCustomParamArray = this.templateDetailList.templateCustomParam.split(',');
+        let obj = <FormArray>this.leadForm.get('testLeadDynamicFields')
+        this.templateCustomParamArray.forEach(element => {
+          obj.push(new FormGroup({ element: new FormControl(null) }))
+        })
+      }
+    });
+  }
+
+
+
   areRequiredFieldsFilledForSubmit() {
     if (this.leadForm.get('campaignId').invalid || this.leadForm.get('leadName').invalid || this.leadForm.get('file').invalid) {
       return true;
@@ -237,15 +269,14 @@ export class CreateLeadComponent {
 
   createTestLead(dataVal) {
     let phoneNumberList = dataVal['testingNumber'].split(',').map(phoneNumber => phoneNumber.trim());
-    let val1 = [];
     let val2 = [];
-    if(dataVal['testLeadDynamicFields'].length > 0){
-      dataVal['testLeadDynamicFields'].forEach(el=>{
-        val1.push(el.key);
-        val2.push(el.value);
+    if (dataVal['testLeadDynamicFields'].length > 0) {
+      dataVal['testLeadDynamicFields'].forEach(el => {
+        val2.push(el.element);
+
       })
     }
-    
+
     let leadInfoDetailsList = phoneNumberList.map(phoneNumber => ({
       "createdDate": new Date(),
       "lastModifiedDate": new Date(),
@@ -253,8 +284,10 @@ export class CreateLeadComponent {
       "createdBy": sessionStorage.getItem('username'),
       "lastModifiedBy": sessionStorage.getItem('username'),
       "phoneNumber": phoneNumber,
-      "additonalDataInfoText":val1.length>0?val1.toString():null,
-      "additonalDataInfoText2":val2.length>0?val2.toString():null,
+      // "additonalDataInfoText": val1.length > 0 ? val1.toString() : null,
+      // "additonalDataInfoText2": val2.length > 0 ? val2.toString() : null,
+      "additonalDataInfoText2": val2.length > 0 ? val2.join(',') : null,
+
     }));
 
     // Convert the provided strings to JavaScript Date objects
@@ -267,7 +300,7 @@ export class CreateLeadComponent {
     // Calculate the number of days between start and end dates
     let numDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-   
+
 
     let obj = {
       "campaignId": dataVal['campaignId'],

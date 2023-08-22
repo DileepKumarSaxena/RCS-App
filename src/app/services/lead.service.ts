@@ -34,7 +34,7 @@ export class LeadService extends BaseService {
     return this.http.post(`${this.baseUrlData + 'leadInfo'}`, formData);
   }
 
-  getLeadlistDetails(fromDate, toDate,userId,campaignId,limit, start, pageIndex: number, pageSize: number) {
+  getLeadlistDetails(fromDate, toDate,userId,campaignId, leadId, limit, start, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
@@ -43,9 +43,9 @@ export class LeadService extends BaseService {
     if(campaignId!=null){
       httpParams = httpParams.append("campaignId", campaignId);
     }
-    // if(leadId!=null){
-    // httpParams = httpParams.append("leadId", leadId);
-    // }
+    if(leadId!=null){
+    httpParams = httpParams.append("leadId", leadId);
+    }
     httpParams = httpParams.append("limit", limit);
     httpParams = httpParams.append("start", start);
   
@@ -66,6 +66,11 @@ export class LeadService extends BaseService {
 
   getLeadData(leadId: any) {
     return this.http.get(`${this.baseUrlData + 'findByLeadInfoId?leadId=' + leadId}`);
+  }
+  
+
+  getTemplateDetailsByCampaignId(campaignId:any){
+    return this.http.get(`${this.campUrlData + 'templateByCamapignId?campaignId=' + campaignId}`);
   }
 
   // Campaign Name List

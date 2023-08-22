@@ -122,8 +122,8 @@ export class LeadListComponent {
     let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     let campaignId = this.leadForm.value.campaignId;
-    // let leadId = this.leadForm.value.leadId;
-    this.leadService.getLeadlistDetails(startDateVal, endDateVal, sessionStorage.getItem('userId'), campaignId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    let leadId = this.leadForm.value.leadId;
+    this.leadService.getLeadlistDetails(startDateVal, endDateVal, sessionStorage.getItem('userId'), campaignId, leadId, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;

@@ -103,7 +103,7 @@
 
                                     <!-- <div class="form-group">
                                         <label>Image<span class="requireField">*</span> <i class="fa fa-info-circle"
-                                                matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 480 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it. If you are uploading a video, the max file size is 5MB."></i></label>
+                                                matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 720 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it. If you are uploading a video, the max file size is 5MB."></i></label>
                                         <div class="input-group custom-file-button">
                                             <input type="file" class="form-control" accept="image/*"
                                                 id="inputGroupFile" (change)="validateFile($event.target)"
@@ -120,7 +120,7 @@
                                     <div class="form-group">
                                         <label>Image/Video<span class="requireField">*</span> <i
                                                 class="fa fa-info-circle"
-                                                matTooltip="The image or video you specify must be 3:1 aspect ratio, have a max file size of 1MB for images or 5MB for videos, have an optimal resolution of 1440 pixels x 480 pixels for images, and should be a JPEG, JPG, PNG, GIF for images or any video format for videos. If the file you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
+                                                matTooltip="The image or video you specify must be 3:1 aspect ratio, have a max file size of 1MB for images or 5MB for videos, have an optimal resolution of 1440 pixels x 720 pixels for images, and should be a JPEG, JPG, PNG, GIF for images or any video format for videos. If the file you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
                                         <div class="input-group custom-file-button">
                                             <input type="file" class="form-control" accept="image/*,video/*"
                                                 id="inputGroupFile" required
@@ -138,7 +138,7 @@
                                         *ngIf="templateForm.get('mediaContentType').value === 'video'">
                                         <label>Video Thumbnail<span class="requireField">*</span> <i
                                                 class="fa fa-info-circle"
-                                                matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 480 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
+                                                matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 720 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
                                         <div class="input-group custom-file-button">
                                             <input type="file" class="form-control" accept="image/*"
                                                 id="inputGroupFileThumbnail"
@@ -230,7 +230,7 @@
 
                                                         <!-- <div class="form-group">
                                                             <label>Image* <i class="fa fa-info-circle"
-                                                                    matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 2MB, have an optimal resolution of 1440 pixels x 480 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it. If you are uploading a video, the max file size is 10MB."></i></label>
+                                                                    matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 2MB, have an optimal resolution of 1440 pixels x 720 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it. If you are uploading a video, the max file size is 10MB."></i></label>
                                                             <div class="input-group custom-file-button">
                                                                 <input type="file" class="form-control" accept="image/*"
                                                                     id="inputGroupFile"
@@ -246,7 +246,7 @@
                                                         <div class="form-group">
                                                             <label>Image/Video<span class="requireField">*</span> <i
                                                                     class="fa fa-info-circle"
-                                                                    matTooltip="The image or video you specify must be 3:1 aspect ratio, have a max file size of 1MB for images or 5MB for videos, have an optimal resolution of 1440 pixels x 480 pixels for images, and should be a JPEG, JPG, PNG, GIF for images or any video format for videos. If the file you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
+                                                                    matTooltip="The image or video you specify must be 3:1 aspect ratio, have a max file size of 1MB for images or 5MB for videos, have an optimal resolution of 1440 pixels x 720 pixels for images, and should be a JPEG, JPG, PNG, GIF for images or any video format for videos. If the file you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
                                                             <div class="input-group custom-file-button">
                                                                 <input type="file" class="form-control"
                                                                     accept="image/*,video/*" id="inputGroupFile"
@@ -265,7 +265,7 @@
                                                             *ngIf="templateForm.get('cardDetails').value[i]['mediaContentType'] == 'video'">
                                                             <label>Video Thumbnail<span class="requireField">*</span> <i
                                                                     class="fa fa-info-circle"
-                                                                    matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 480 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
+                                                                    matTooltip="The image you specify must be 3:1 aspect ratio, have a max file size of 1MB, have an optimal resolution of 1440 pixels x 720 pixels, and should be a JPEG, JPG, PNG, or GIF. If the image you select doesn’t meet these requirements, you’ll have the opportunity to edit it."></i></label>
                                                             <div class="input-group custom-file-button">
                                                                 <input type="file" class="form-control" accept="image/*"
                                                                     id="inputGroupFileThumbnail"
@@ -402,15 +402,15 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                                href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"
-                                                                                target="_blank"><i
+                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"
+                                                                               ><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
-                                                                            <a href="{{templateForm.get('suggestions').value[i]['postback']}}"
-                                                                                target="_blank" class="action-icon"><i
+                                                                            <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
+                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
@@ -441,14 +441,14 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                                href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"><i
+                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
-                                                                            <a href="{{templateForm.get('suggestions').value[i]['postback']}}"
-                                                                                target="_blank" class="action-icon">
+                                                                            <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
+                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)">
                                                                                 <i class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
@@ -467,15 +467,14 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                                href="{{templateForm.get('suggestions').value[i]['phoneNumber']}}"><i
+                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
-                                                                            <a href="{{templateForm.get('suggestions').value[i]['postback']}}"
-                                                                                target="_blank" class="action-icon"><i
-                                                                                    class="fa fa-globe"></i>
+                                                                            <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
+                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)"><i class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                     </div>

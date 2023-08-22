@@ -25,15 +25,15 @@ export class DasboardComponent implements AfterViewInit {
     private formbuilder: FormBuilder,
   ) {
     this.dashboardReport();
-    
+
   }
 
-  
-  chartTypes: {[key: string]: ChartType} = {
+
+  chartTypes: { [key: string]: ChartType } = {
     line: 'line',
     bar: 'bar'
- };
- lineChartType = this.chartTypes['line'];
+  };
+  lineChartType = this.chartTypes['line'];
 
 
   ngOnInit() {
@@ -59,15 +59,15 @@ export class DasboardComponent implements AfterViewInit {
 
     this.getSummaryDate();
 
-    
+
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
-    this.updateChartData();
-    this.updateLineChartData();
-    },100);
- }
+      this.updateChartData();
+      this.updateLineChartData();
+    }, 100);
+  }
 
   getSummaryDate() {
     let username = sessionStorage.getItem('username');
@@ -77,7 +77,8 @@ export class DasboardComponent implements AfterViewInit {
     // let to = moment('2023-08-15').format('YYYY-MM-DD');
     this.reportservice.getSummaryData(username, from, to).subscribe({
       next: (res: any) => {
-   
+        // res.data[0]['datehour'] = 9;
+        console.log(res.data[0]['datehour'], "datehour");
         // res.data.forEach(el =>{
         //   el['TOTAL'] = 50;
         //   el['SUBMITTED'] = 30;
@@ -86,7 +87,7 @@ export class DasboardComponent implements AfterViewInit {
         //   el['NonRCS_FAILED'] = 5;
         //   el['Invalid'] = 5;
         // })
-         console.log(res, "RRRRRR");
+        console.log(res, "RRRRRR");
         this.dashboardData = res.data;
         this.calculateTotalSum();
         this.updateChartData();
@@ -105,7 +106,7 @@ export class DasboardComponent implements AfterViewInit {
     let username = sessionStorage.getItem('username');
     let from = moment(startDate.value).format('YYYY-MM-DD');
     let to = moment(endDate.value).format('YYYY-MM-DD');
-    this.reportservice.getSummaryData(username, from, to).subscribe({
+    this.reportservice.getSummaryDataSearch(username, from, to).subscribe({
       next: (res: any) => {
         console.log(res, "resresresres");
         this.dashboardData = res.data;
@@ -194,7 +195,7 @@ export class DasboardComponent implements AfterViewInit {
 
     this.chart?.update();
   }
-  
+
 
 
   // Line Chart Start Here
@@ -205,13 +206,13 @@ export class DasboardComponent implements AfterViewInit {
       line: {
         tension: 0.5,
         fill: true,
-        backgroundColor: 'rgba(243, 187, 69, 0.2)' 
+        backgroundColor: 'rgba(243, 187, 69, 0.2)'
       }
     },
 
   };
-  
-  
+
+
   lineChartData: any[] = [
     { data: [], label: 'Request', borderColor: 'rgba(52, 58, 64, 1)', backgroundColor: 'rgba(52, 58, 64, 0.2)', pointBackgroundColor: 'rgba(52, 58, 64, 0.2)' },
     { data: [], label: 'Delivered', borderColor: 'rgba(95, 194, 159, 1)', backgroundColor: 'rgba(95, 194, 159, 0.2)', pointBackgroundColor: 'rgba(95, 194, 159, 0.2)' },
@@ -220,9 +221,9 @@ export class DasboardComponent implements AfterViewInit {
     { data: [], label: 'Failed', borderColor: 'rgba(116, 56, 192, 1)', backgroundColor: 'rgba(116, 56, 192, 0.2)', pointBackgroundColor: 'rgba(116, 56, 192, 0.2)' },
     { data: [], label: 'Invalid Number', borderColor: 'rgba(167, 6, 6, 1)', backgroundColor: 'rgba(167, 6, 6, 0.2)', pointBackgroundColor: 'rgba(167, 6, 6, 0.2)' }
   ];
-  
-  
-  public lineChartLabels: string[] = [];  
+
+
+  public lineChartLabels: string[] = [];
   public lineChartLegend = false;
 
   // updateLineChartData() {
@@ -230,20 +231,20 @@ export class DasboardComponent implements AfterViewInit {
   //     let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED', 'Invalid'];
   //     let currentHour = new Date().getHours();
   //     let hourLabels = Array.from({ length: currentHour + 1 }, (_, i) => `${i}:00`); // Generate labels from 0 to 23
-  
+
   //     this.lineChartLabels = hourLabels;
   //     console.log(hourLabels, 'hourLabels');
   //     dataKeys.forEach((key, index) => {
   //       let data: number[] = new Array<number>(24).fill(0);
-  
+
   //       this.dashboardData.forEach(entry => {
   //         const hour = entry.datehour;
   //         data[hour] = entry[key];
   //       });
-  
+
   //       this.lineChartData[index].data = data;
   //     });
-  
+
   //     this.lineChart?.update();
   //   }
   // }
@@ -252,32 +253,32 @@ export class DasboardComponent implements AfterViewInit {
   updateLineChartData() {
     if (this.dashboardData && this.dashboardData.length > 0) {
       let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'failed', 'Invalid'];
-      
+
       // let currentHour = new Date().getHours();
-  
+
       // Find the maximum hour with data
       let maxDataHour = Math.max(...this.dashboardData.map(entry => entry.datehour));
-  
+
       // Generate labels from 0 to the maximum data hour
       let hourLabels = Array.from({ length: maxDataHour + 1 }, (_, i) => `${i}:00`);
-  
+
       this.lineChartLabels = hourLabels;
       console.log(hourLabels, 'hourLabels');
-  
+
       dataKeys.forEach((key, index) => {
         let data: number[] = new Array<number>(maxDataHour + 1).fill(0);
-  
+
         this.dashboardData.forEach(entry => {
           const hour = entry.datehour;
           data[hour] = entry[key];
         });
-  
+
         this.lineChartData[index].data = data;
       });
-  
+
       this.lineChart?.update();
     }
   }
-  
-  
+
+
 }

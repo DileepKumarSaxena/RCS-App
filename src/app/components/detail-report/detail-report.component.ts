@@ -14,11 +14,14 @@ import { Router } from '@angular/router';
 import { CampaignService } from '@app/services/campaign.service';
 import * as Papa from 'papaparse';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-detail-report',
   templateUrl: './detail-report.component.html',
-  styleUrls: ['./detail-report.component.scss']
+  styleUrls: ['./detail-report.component.scss'],
 })
 export class DetailReportComponent {
   detailListForm: FormGroup;
@@ -26,8 +29,15 @@ export class DetailReportComponent {
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   detailData: any;
   moment: any = moment;
-  campaignList: any = [];
+  campaignList: any[] = [];
+  // filteredCampaigns = this.campaignList;
+  @ViewChild(MatAutocompleteTrigger) autoTrigger!: MatAutocompleteTrigger;
+  @ViewChild('campaignInput') campaignInput!: ElementRef;
+  campaignControl = new FormControl();
+  filteredCampaigns: Observable<any[]>;
+ 
   leadList: any = [];
+  arrayDataList: any = [];
   displayedColumns: string[] = ['id', 'created_date', 'campName', 'leadname', 'language', 'phone_number', 'status'];
   dataSource!: MatTableDataSource<any>;
   selectedCampaign: any;
@@ -54,9 +64,33 @@ export class DetailReportComponent {
     this.dateFilter(this.currentDate, this.currentDate, 2);
     this.getDetailList();
 
+    this.filteredCampaigns = this.campaignControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterCampaigns(value))
+    );
+
+  }
+
+  filterCampaigns(value: any) {
+    let filterValue = value.toLowerCase();
+    return this.campaignList.filter(item => item.campaignName.toLowerCase().includes(filterValue));
+  }
+
+  displayCampaignName(campaign: any): string {
+    return campaign ? campaign.campaignName : '';
+  }
+
+  openAutocompletePanel() {
+   if (!this.autoTrigger.panelOpen) {
+      this.campaignControl.setValue(''); // Reset the control to show all options
+      this.autoTrigger.openPanel();
+    }
   }
 
 
+
+
+  
   get f() { return this.detailListForm.controls; }
 
   detailReport() {
@@ -72,30 +106,32 @@ export class DetailReportComponent {
     this.showLoader = true;
       let userId = sessionStorage.getItem('userId');
 
-      // Determine the 'from' and 'to' dates based on the flag
     let from = flag == '1' ? moment(startDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
     let to = flag == '1' ? moment(endDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
   
     this.campaignList = [];
+    let arrayList = [];
     this.leadList = [];
   
     this.reportservice.dateRangeFilter(from, to, userId).subscribe({
       next: (res: any) => {
         if (res) {
-          // Create an object to group data
           let groups: any = {};
           let obj: any = [];
-  
-          // Process each element from the response
+ 
+          res.forEach((element:any) => {
+            arrayList.push({campId:element.campId, campaignName:element.campaignName});
+
+            this.leadList.push({leadId:element.leadId, leadName:element.leadName});
+          })
+          this.campaignList = this.removeDupliactes(arrayList);
+
           res.forEach((element: any) => {
             var id = element.campId;
   
-            // Check if the group for the campaign already exists
             if (groups[id]) {
-              // If it exists, add lead information to the existing group
               groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
             } else {
-              // If it doesn't exist, create a new group
               groups[id] = {};
               groups[id]['leadInfo'] = [];
               groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
@@ -104,13 +140,11 @@ export class DetailReportComponent {
             }
           });
   
-          // Convert the grouped data into an array
           Object.keys(groups).forEach(function (key) {
             obj.push(groups[key]);
           });
   
-          // Update the campaignList with the grouped data
-          this.campaignList = obj;
+          this.arrayDataList = obj;
   
           this.showLoader = false;
         }
@@ -122,20 +156,49 @@ export class DetailReportComponent {
   }
   
 
+   removeDupliactes(values:any) {
+    let concatArray = values.map(eachValue => {
+      return Object.values(eachValue).join('')
+    })
+    let filterValues = values.filter((value, index) => {
+      return concatArray.indexOf(concatArray[index]) === index
+      })
+    return filterValues
+  }
+
+  // getLeadName(id: any, event: any) {
+  //   if (event.isUserInput) {
+  //     this.leadList = [];
+  //     let campaignId = id;
+  //     let obj = this.arrayDataList.find(element => element.campId == campaignId);
+  //     this.leadList = obj['leadInfo'];
+  //   }
+  // }
+
   getLeadName(id: any, event: any) {
     if (event.isUserInput) {
       this.leadList = [];
-      let campaignId = id;
-      console.log(campaignId, 'campaignId');
-      let obj = this.campaignList.find(element => element.campId == campaignId);
-      console.log(obj, 'obj');
-      this.leadList = obj['leadInfo'];
+
+      // Find the selected campaign by its campId
+      let selectedCampaign = this.campaignList.find(item => item.campId === id);
+
+      if (selectedCampaign) {
+        // Use the selected campaign to update your leadList
+        this.leadList = selectedCampaign.leadInfo;
+      }
     }
   }
 
-  displayCampaignName(campaign: any): string {
-    return campaign ? campaign.campaignName : '';
-  }
+
+  //  onKey(event: any) {
+  //   let value = event.target.value;
+  //   this.filteredCampaigns = this.search(value);
+  // }
+
+  // search(value: any) { 
+  //   let filter = value.toLowerCase();
+  //   return this.campaignList.filter(option => option.campaignName.toLowerCase().includes(filter));
+  // }
 
   getDetailList() {
     this.showLoader = true

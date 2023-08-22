@@ -206,5 +206,9 @@ mat-form-field {
 }
 
 .lead-btn-space, .testLeadSection{
-  margin-top: 5px;
+  margin-top: 18px;
+
+  mat-form-field{
+    margin-bottom: 5px;
+  }
 }

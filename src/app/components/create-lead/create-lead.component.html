@@ -26,7 +26,8 @@
                                     <div class="col-sm-6">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Select Campaign Name</mat-label>
-                                            <mat-select formControlName="campaignId">
+                                            <mat-select formControlName="campaignId"
+                                                (selectionChange)="templateDetails()">
                                                 <mat-option *ngFor="let item of campaignList"
                                                     [value]="item.campaignId">{{item.campaignName}}</mat-option>
                                             </mat-select>
@@ -175,7 +176,7 @@
                                         <label for="testingNumber" class="testingNumber">Enter Testing Numbers</label>
                                     </div> -->
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div class="col-md-12">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Enter Testing Number</mat-label>
                                             <input matInput formControlName="testingNumber"
@@ -195,26 +196,36 @@
                                         </mat-form-field>
                                         <span class="notes" *ngIf="phoneNumError">Provide valid mobile number with
                                             Comma-separated.</span>
-
-
                                         <ng-container *ngIf="isHidden3 && leadForm.get('testingNumber')">
                                             <div
                                                 style="margin-top: -20px; font-size: small; color: red; margin-left: 4px;">
                                                 Numbers(S) on which test call to be given.
                                             </div>
                                         </ng-container>
-
+                                        <br>
+                                        <div class="testLeadSection">
+                                        <ng-container formArrayName="testLeadDynamicFields">
+                                            <div *ngFor="let control of leadForm.get('testLeadDynamicFields')['controls']; let i = index">
+                                                <div [formGroupName]="i">
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-label>{{ templateCustomParamArray[i].trim() }}</mat-label>
+                                                        <input matInput formControlName="element" maxlength="30" required>
+                                                        <mat-error *ngIf="control.get('element').hasError('required')">{{ templateCustomParamArray[i].trim() }} is required</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <button type="button" matTooltip="Add Key and Value Fields" mat-mini-fab
                                             color="primary" (click)="addRow()">
                                             <mat-icon>add</mat-icon>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
-                                <br>
-                                <div class="testLeadSection">
+                                <!-- <div class="testLeadSection">
                                     <div formArrayName="testLeadDynamicFields"
                                         *ngFor="let item of leadForm.get('testLeadDynamicFields')['controls']; let i = index;">
                                         <div [formGroupName]="i">
@@ -243,7 +254,7 @@
 
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <button class="btn btn-success lead lead-btn-space" (click)="testLead()"
                                     [disabled]="areRequiredFieldsFilledForTestLead()">Test
                                     Lead</button>
