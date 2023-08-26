@@ -255,22 +255,44 @@ export class CampaignListComponent {
   //   })
   // }
 
-  getCampaignName(event: any) {
-    let userId = sessionStorage.getItem('userId');
-    let templateName= this.campaignListForm.value.templateName;
-    this.campaignListForm.get('campaignId').setValue(null);
-    this.campaignservice.getCampaignList(userId,templateName).subscribe({
-      next: (res: any) => {
-        if (res) {
-          // this.campaignListForm.get('templateName').setValue(null);
-          this.campaignList = res;
-        }
-      },
-      error: (err) => {
-        console.log(err, "Error while fetching the records.");
-      }
+  // getCampaignName() {
+  //   let userId = sessionStorage.getItem('userId');
+  //   // let templateName= this.campaignListForm.value.templateName;
+  //   let templateName= this.campaignListForm.controls.templateName.value;
+  //   this.campaignListForm.get('campaignId').setValue(null);
+  //   this.campaignservice.getCampaignList(userId,templateName).subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         // this.campaignListForm.get('templateName').setValue(null);
+  //         this.campaignList = res;
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.log(err, "Error while fetching the records.");
+  //     }
 
-    })
+  //   })
+  // }
+
+  getCampaignName() {
+    let userId = sessionStorage.getItem('userId');
+    let selectedTemplateName = this.campaignListForm.controls.templateName.value;
+    // let selectedTemplateName= this.campaignListForm.value.templateName;
+    console.log('Selected Template Id from form:', selectedTemplateName);
+
+    if (selectedTemplateName && userId) {
+      this.campaignservice.getCampaignList(userId, selectedTemplateName).subscribe({
+        next: (res: any) => {
+          if (res) {
+            console.log(res, "Campaign list fetched successfully.");
+            this.campaignList = res;
+          }
+        },
+        error: (err) => {
+          console.log(err, "Error while fetching the Campaign list.");
+        }
+      });
+    }
   }
 
   toggleCampaignStatus(data: any) {

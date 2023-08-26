@@ -15,11 +15,10 @@
         <div class="col-sm-12">
 
             <form [formGroup]="detailListForm">
-
                 <div class="card bg-light text-dark">
                     <div class="card-body bottom-space">
-                        <div class="filter-section">
-                            <div class="date-range-section">
+                        <div class="row">
+                            <div class="col-sm-3">
                                 <mat-form-field appearance="outline" class="min-width-set">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker">
@@ -27,56 +26,48 @@
                                             #startDate formControlName="startDate" required>
                                         <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
                                             formControlName="endDate" #endDate
-                                            (dateChange)="dateFilter(startDate, endDate, 1)" required>
+                                            (dateChange)="handleDateChange(startDate, endDate)" required>
+
+                                        <!-- <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="endDate" #endDate
+                                            (dateChange)="dateFilter(startDate, endDate, 1)" required> -->
                                     </mat-date-range-input>
-                                    <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
                                 </mat-form-field>
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Select Campaign</mat-label>
-                                    <mat-select formControlName="campaignId">
-                                        <mat-option *ngFor="let item of campaignList"
-                                            (onSelectionChange)="getLeadName(item.campId, $event)"
-                                            [value]="item.campId">{{item.campaignName}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field> -->
-
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Select Campaign</mat-label>
-                                    <input #campaignInput type="text" matInput placeholder="Search Campaign" [formControl]="campaignControl" [matAutocomplete]="auto" (focus)="openAutocompletePanel()">
-                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCampaignName" (optionSelected)="getLeadName($event.option.value.campId, $event)">
-                                        <mat-option *ngFor="let item of filteredCampaigns | async" [value]="item">
-                                            {{ item.campaignName }}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
-                                
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Select Lead</mat-label>
-                                    <mat-select formControlName="leadId">
-                                        <mat-option>None</mat-option>
-                                        <mat-option *ngFor="let item of leadList"
-                                            [value]="item.leadId">{{item.leadName}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-
-                                <button type="button" class="btn btn-success btn-lg"
-                                    [disabled]="detailListForm.status === 'INVALID'"
-                                    (click)="getDetailList()">Search</button>
                             </div>
-                            <button *ngIf="dataSource['data']['length'] > 0" title="Export to Excel"
-                                class="btn btn-success download" (click)="exportExcel(paginatorRef)"
-                                [disabled]="detailListForm.status === 'INVALID'">Export
-                                &nbsp;<mat-icon>download</mat-icon></button>
+                            <div class="col-sm-3">
+                                <ng-select [items]="campaignList" bindLabel="campaignName" (change)="getLeadName()"
+                                    placeholder="Select Campaign" bindValue="campId" [searchable]="true"
+                                    [clearable]="false" appearance="outline" formControlName="campaignId">
+                                </ng-select>
+                            </div>
+                            <div class="col-sm-3">
+                                <ng-select [items]="leadList" bindLabel="leadName" bindValue="leadId"
+                                    placeholder="Select Lead" [searchable]="true" [clearable]="false"
+                                    appearance="outline" formControlName="leadId">
+                                </ng-select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="action-button-sec">
+                                    <button type="button" class="btn btn-success btn-lg"
+                                        [disabled]="detailListForm.status === 'INVALID'"
+                                        (click)="getDetailList()">Search</button>
+
+                                    <button *ngIf="dataSource['data']['length'] > 0" title="Export to Excel"
+                                        class="btn btn-success download" (click)="exportExcel(paginatorRef)"
+                                        [disabled]="detailListForm.status === 'INVALID'">Export
+                                        &nbsp;<mat-icon>download</mat-icon></button>
+                                </div>
+                            </div>
+
+
+
                         </div>
-
-                        <div>
-
-                        </div>
-
                     </div>
                 </div>
+
             </form>
 
             <app-loader *ngIf="showLoader"></app-loader>

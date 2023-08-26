@@ -369,12 +369,98 @@ export class AddTemplateComponent implements OnInit {
   }
 
 
+  // onSubmit() {
+  //   this.templateCodeVal = true;
+  //   if (this.templateForm.invalid) {
+  //     Swal.fire({
+  //       title: 'Error',
+  //       text: 'Please fill all the required fields.',
+  //       icon: 'error',
+  //       confirmButtonText: 'OK',
+  //       customClass: {
+  //         icon: 'custom-icon-class',
+  //       },
+  //       width: '300px',
+  //     });
+  //     return;
+  //   }
+  //   if (this.templateForm.valid) {
+  //     let data = this.templateForm?.value;
+  //     let tempData: any = this.dataCreate(data);
+  //     const body = JSON.stringify(tempData);
+  //     const formData = new FormData();
+  //     const cardDetails = this.templateForm.get('cardDetails').value;
+  //     const richCardDetails = this.templateForm.get('templateType').value === 'rich_card'
+  //     if (cardDetails?.length) {
+  //       cardDetails?.forEach(element => {
+  //         formData.append('files', element?.fileName);
+  //       })
+  //     } else if (richCardDetails) {
+  //       formData.append('files', this.templateForm.get('fileName').value);
+  //     }
+
+  //     formData.append('addTemplate', body?.toString());
+  //     this.templateService.templateDataSubmit(formData).subscribe({
+  //       next: (res: any) => {
+  //         if (res.status === 'OK') {
+  //           // Template added successfully
+  //           Swal.fire({
+  //             title: 'Template Created Successfully.',
+  //             icon: 'success',
+  //             confirmButtonText: 'OK',
+  //             customClass: {
+  //               icon: 'custom-icon-class',
+  //             },
+  //             width: '300px',
+  //           });
+  //           this.templateForm.reset();
+  //           this.router.navigate(['/templateList']);
+  //         } else if (res.status === 'CREATED') {
+  //           // Template code already exists
+  //           Swal.fire({
+  //             text: 'Template Name Already Exist.',
+  //             icon: 'warning',
+  //             confirmButtonText: 'OK',
+  //             customClass: {
+  //               icon: 'custom-icon-class',
+  //             },
+  //             width: '300px',
+  //           });
+  //         } else {
+  //           // Handle unexpected response
+  //           this.showErrorMessageBox('Error while adding the Template Details.');
+  //         }
+  //       },
+  //       error: (error: string) => {
+  //         // Display error message
+  //         this.showErrorMessageBox('Error while adding the Template Details.');
+  //       },
+  //     })
+
+  //   }
+  // }
+
   onSubmit() {
     this.templateCodeVal = true;
     if (this.templateForm.invalid) {
+      const incompleteCards: number[] = [];
+
+      // Check each card for missing required fields
+      const cardDetailsArray = this.templateForm.get('cardDetails') as FormArray;
+      cardDetailsArray.controls.forEach((control, index) => {
+        if (control.invalid) {
+          incompleteCards.push(index + 1); // Index is 0-based, but cards are 1-based for display
+        }
+      });
+
+      let errorMessage = 'Please fill all the required fields';
+      if (incompleteCards.length > 0) {
+        errorMessage += ` in card(s) ${incompleteCards.join(', ')}`;
+      }
+
       Swal.fire({
         title: 'Error',
-        text: 'Please fill all the required fields.',
+        text: errorMessage,
         icon: 'error',
         confirmButtonText: 'OK',
         customClass: {
@@ -382,24 +468,33 @@ export class AddTemplateComponent implements OnInit {
         },
         width: '300px',
       });
+
       return;
     }
+
     if (this.templateForm.valid) {
       let data = this.templateForm?.value;
       let tempData: any = this.dataCreate(data);
       const body = JSON.stringify(tempData);
       const formData = new FormData();
       const cardDetails = this.templateForm.get('cardDetails').value;
-      const richCardDetails = this.templateForm.get('templateType').value === 'rich_card'
+      const richCardDetails = this.templateForm.get('templateType').value === 'rich_card';
+
       if (cardDetails?.length) {
         cardDetails?.forEach(element => {
-          formData.append('files', element?.fileName);
-        })
+          if (element && element.fileName) {
+            formData.append('files', element.fileName);
+          }
+        });
       } else if (richCardDetails) {
-        formData.append('files', this.templateForm.get('fileName').value);
+        const richCardFileName = this.templateForm.get('fileName').value;
+        if (richCardFileName) {
+          formData.append('files', richCardFileName);
+        }
       }
 
       formData.append('addTemplate', body?.toString());
+
       this.templateService.templateDataSubmit(formData).subscribe({
         next: (res: any) => {
           if (res.status === 'OK') {
@@ -412,9 +507,11 @@ export class AddTemplateComponent implements OnInit {
                 icon: 'custom-icon-class',
               },
               width: '300px',
+            }).then(() => {
+              this.templateForm.reset();
+              this.router.navigate(['/templateList']);
             });
-            this.templateForm.reset();
-            this.router.navigate(['/templateList']);
+        
           } else if (res.status === 'CREATED') {
             // Template code already exists
             Swal.fire({
@@ -435,10 +532,10 @@ export class AddTemplateComponent implements OnInit {
           // Display error message
           this.showErrorMessageBox('Error while adding the Template Details.');
         },
-      })
-
+      });
     }
   }
+
 
   showErrorMessageBox(message: string) {
     Swal.fire({

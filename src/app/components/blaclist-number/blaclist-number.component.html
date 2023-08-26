@@ -1,0 +1,133 @@
+<div class="go-back-section template-back">
+    <div class="back-icon">
+        <h5 class="text-center">BLACKLIST NUMBERS</h5>
+    </div>
+    <button type="button" class="btn btn-info btn-lg" routerLink="/addBlacklist">+ Add
+        Blacklist Number</button>
+</div>
+<br>
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="card bg-light text-dark">
+                <div class="card-body bottom-space">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <form [formGroup]="createBlackListForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Enter Mobile Number</mat-label>
+                                            <input matInput formControlName="phoneNumber" maxlength="10" required>
+                                            <mat-error
+                                                *ngIf="createBlackListForm.get('phoneNumber').hasError('required')">
+                                                Phone number is required.
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="createBlackListForm.get('phoneNumber').hasError('allZeros')">
+                                                Invalid phone number. Please enter a valid phone number.
+                                            </mat-error>
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="action-button-sec">
+                                            <button class="btn btn-success btn-lg" type="submit" id="smbtbtn"
+                                            [disabled]="createBlackListForm.get('phoneNumber').invalid || createBlackListForm.get('phoneNumber').value.length !== 10"
+                                                (click)="createBlackListNumbers()">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-6">
+                            <form [formGroup]="searchlackListForm">
+                                <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Search</mat-label>
+                                        <input matInput formControlName="search" maxlength="10" required>
+                                        <mat-error *ngIf="searchlackListForm.get('search').hasError('required')">
+                                            Search field is required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="action-button-sec">
+                                        <button type="button" class="btn btn-success btn-lg"
+                                            [disabled]="searchlackListForm.get('search').invalid"
+                                            (click)="searchBlackListNo()">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <app-loader *ngIf="showLoader"></app-loader>
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-sm-12">
+            <div class="card bg-light text-dark">
+                <div class="card-body">
+                    <div class="mat-elevation-z8">
+
+                        <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+                            <!-- SLNo Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                                <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
+                                    paginatorRef.pageSize) + (i + 1)}} </td>
+                            </ng-container>
+
+                            <!-- createDtm -->
+                            <ng-container matColumnDef="createDtm">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Create Date</th>
+                                <td mat-cell *matCellDef="let row">{{moment(row.created_date).format('YYYY/MM/DD')}}
+                                </td>
+                            </ng-container>
+
+
+                            <!-- msisdn -->
+                            <ng-container matColumnDef="phoneNumber">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Blacklist No.</th>
+                                <td mat-cell *matCellDef="let row">{{row.phoneNumber}}</td>
+                            </ng-container>
+
+
+                            <!-- Actions -->
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                <td mat-cell *matCellDef="let data">
+                                    <button mat-icon-button matTooltip="Delete" color="warn"
+                                        (click)="deleteRow(data.id)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+                        </table>
+
+                        <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div>
+
+                        <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="body-spacing"></div>

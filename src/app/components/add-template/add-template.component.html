@@ -333,7 +333,7 @@
                                 <div id="text-message-div"
                                     *ngIf="templateForm.get('templateType').value === 'text_message'">
                                     <div class="form-group">
-                                        <label>Message Content
+                                        <label>Message Content <span class="requireField">*</span>
                                             <i class="fa fa-info-circle"></i>
                                         </label>
                                         <textarea class="form-control" formControlName="messageContent" rows="3"
@@ -402,15 +402,15 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"
-                                                                               ><i
+                                                                                [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
                                                                             <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
-                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)"><i
+                                                                            <a href="#" class="action-icon"
+                                                                                (click)="handleLinkClick($event)"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
@@ -441,14 +441,15 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
+                                                                                [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
                                                                             <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
-                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)">
+                                                                            <a href="#" class="action-icon"
+                                                                                (click)="handleLinkClick($event)">
                                                                                 <i class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
@@ -467,14 +468,16 @@
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                             <a class="action-icon"
-                                                                            [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
+                                                                                [href]="'tel:' + templateForm.get('suggestions').value[i]['phoneNumber']"><i
                                                                                     class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                         <div
                                                                             *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'reply'">
                                                                             <!-- <a href="{{templateForm.get('suggestions').value[i]['postback']}}" -->
-                                                                            <a href="#" class="action-icon" (click)="handleLinkClick($event)"><i class="fa fa-globe"></i>
+                                                                            <a href="#" class="action-icon"
+                                                                                (click)="handleLinkClick($event)"><i
+                                                                                    class="fa fa-globe"></i>
                                                                                 {{templateForm.get('suggestions').value[i]['displayText']}}</a>
                                                                         </div>
                                                                     </div>
@@ -578,7 +581,7 @@
                                                                         href="{{templateForm.get('suggestions').value[i]['url']}}"
                                                                         target="_blank"><i class="fa fa-globe"></i>
                                                                         {{templateForm.get('suggestions').value[i]['displayText']}}</a>
-                                                                </div>
+                                                                </div>Z
                                                                 <div
                                                                     *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] == 'dialer_action'">
                                                                     <a class="action-icon"
@@ -623,17 +626,17 @@
                                                     </div>
 
                                                     <div class="action-row">
-                                                        <a href="tel:+91xxxxxxxxxx">
+                                                        <a href="#" (click)="handleLinkClick($event)">
                                                             <div class="call">
                                                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                                                 <p>Call</p>
                                                             </div>
-                                                        </a><a href="#" target="_blank">
+                                                        </a><a href="#" (click)="handleLinkClick($event)">
                                                             <div class="website"><i class="fa fa-globe"
                                                                     aria-hidden="true"></i>
                                                                 <p>Website</p>
                                                             </div>
-                                                        </a><a href="#">
+                                                        </a><a href="#" (click)="handleLinkClick($event)">
                                                             <div class="email"><i class="fa fa-envelope"
                                                                     aria-hidden="true"></i>
                                                                 <p>Email</p>
@@ -644,22 +647,24 @@
                                                         <mat-tab-group>
                                                             <mat-tab label="Info">
                                                                 <div class="contact-details">
-                                                                    <a class="email" href="#">
+                                                                    <a class="email" href="#"
+                                                                        (click)="handleLinkClick($event)">
                                                                         <i class="fa fa-phone"></i>
                                                                         <div class="call-details">
                                                                             <p>+91xxxxxxxxxx</p>
                                                                             <span>personName 93</span>
                                                                         </div>
                                                                     </a>
-                                                                    <a class="email" href="https://fonada.com"
-                                                                        target="__blank"><i class="fa fa-globe"
-                                                                            aria-hidden="true"></i>
+                                                                    <a class="email" href="#"
+                                                                        (click)="handleLinkClick($event)"><i
+                                                                            class="fa fa-globe" aria-hidden="true"></i>
                                                                         <div class="call-details">
                                                                             <p>https://company.com</p>
                                                                             <span>company website</span>
                                                                         </div>
                                                                     </a>
-                                                                    <a class="email" href="#">
+                                                                    <a class="email" href="#"
+                                                                        (click)="handleLinkClick($event)">
                                                                         <i class="fa fa-envelope"
                                                                             aria-hidden="true"></i>
                                                                         <div class="call-details bdr-bt-none-template">
@@ -753,7 +758,9 @@
                                 *ngIf="templateForm.get('suggestions').value[i]['suggestionType'] === 'url_action'">
                                 <label>URL/URI to open</label>
                                 <input type="text" class="form-control" maxlength="2048" formControlName="url" required>
-                                <small class="text-light-gray">0/2048 characters used</small>
+                                <small class="text-light-gray">{{
+                                    characterCounts(templateForm.get('suggestions').value[i]['url'])
+                                    }}/2048 characters used</small>
                                 <small>Add your custom variable like this <span
                                         class="variableName">variableName</span>.</small>
                                 <div *ngIf="templateCodeVal && item.get('url').invalid && item.get('suggestionType').value === 'url_action'"
@@ -772,6 +779,11 @@
                                     class="text-danger">
                                     Phone Number is required.
                                 </div>
+                                <div class="text-danger"
+                                *ngIf="templateCodeVal && item.get('phoneNumber').hasError('invalidPhoneNumberFormat')">
+                                Invalid phone number format. Please enter a valid Indian phone number starting with
+                                +91 and followed by 10 digits.
+                            </div>
                             </div>
 
 

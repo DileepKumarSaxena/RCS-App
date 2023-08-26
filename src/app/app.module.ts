@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgFor, AsyncPipe } from '@angular/common';
@@ -47,6 +48,8 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 
 
 import { FooterComponent } from './components/footer/footer.component';
+import { BlaclistNumberComponent } from './components/blaclist-number/blaclist-number.component';
+import { AddBlaclistNumberComponent } from './components/add-blaclist-number/add-blaclist-number.component';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
     bgsPosition: POSITION.bottomCenter,
@@ -65,6 +68,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         ReactiveFormsModule,
         HttpClientModule,
         appRoutingModule,
+        NgSelectModule,
         FormsModule,
         BrowserAnimationsModule,
         MatButtonModule,
@@ -89,7 +93,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatAutocompleteModule,
         MatSlideToggleModule,
         NgFor,
-        AsyncPipe
+        AsyncPipe,
+        
 
 
     ],
@@ -114,7 +119,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         DasboardComponent,
         FooterComponent,
         UserRegistrationComponent,
-        AddUserComponent
+        AddUserComponent,
+        BlaclistNumberComponent,
+        AddBlaclistNumberComponent
 
 
     ],

@@ -17,13 +17,58 @@
       <br>
 
       <form [formGroup]="templateFilterForm">
-
         <div class="card bg-light text-dark">
-
-
-
           <div class="card-body bottom-space">
+            <div class="row">
+              <div class="col-sm-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Enter a date range</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input #startDate ng-disabled="true" required readonly="true" matStartDate placeholder="Start date"
+                      formControlName="startDate">
+                    <input #endDate ng-disabled="true" required readonly="true" matEndDate placeholder="End date"
+                      formControlName="endDate" (dateChange)="dateFilter(startDate, endDate)">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
 
+              </div>
+              <div class="col-sm-3">
+                <ng-select [items]="templateListbysearch" bindLabel="templateCode" placeholder="Select Template"
+                  bindValue="templateCode" [searchable]="true" [clearable]="false" appearance="outline"
+                  formControlName="templateName">
+                </ng-select>
+              </div>
+              <div class="col-sm-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Template Status</mat-label>
+                  <mat-select formControlName="templateStatus">
+                    <mat-option>None</mat-option>
+                    <mat-option value="0">Pending</mat-option>
+                    <mat-option value="1">Approved</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="action-button-sec">
+                  <button type="button" [disabled]="templateFilterForm.status === 'INVALID'"
+                    (click)="getTemplateListWithDateFilter()" class="btn btn-success btn-lg">Search</button>
+
+                  <button type="text" class="btn btn-success download" *ngIf="dataSource['data']['length'] > 0"
+                    placeholder="Download" (click)="downloadTemplateFile()" readonly>Export
+                    &nbsp;<mat-icon>download</mat-icon></button>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+        <div class="card bg-light text-dark" style="display: none;">
+          <div class="card-body bottom-space">
             <div class="filter-section">
               <div class="date-range-section">
                 <mat-form-field appearance="outline">
@@ -123,7 +168,7 @@
                   {{row.status == '0'?'Pending':'Approved'}}
                 </td>
               </ng-container>
-              
+
 
               <!-- Actions -->
               <!-- <ng-container matColumnDef="actions">
@@ -152,7 +197,7 @@
               showFirstLastButtons>
             </mat-paginator>
 
-            
+
 
           </div>
 

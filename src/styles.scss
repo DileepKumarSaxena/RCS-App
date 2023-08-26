@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@ng-select/ng-select/themes/material.theme.css";
 html,
 body {
     height: 100%;
@@ -288,4 +289,53 @@ i {
 
 .body-spacing{
     padding-bottom: 60px;
+}
+
+
+
+/*ng-select css start here*/
+
+.ng-select {
+    margin-top: -6px;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline .ng-placeholder {
+    background-color: #eeeff0 !important;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 6px;
+
+}
+
+.ng-select.ng-select-focused .ng-select-container .ng-value-container .ng-placeholder{
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #f8f9f9 !important;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline:after{
+    border-color: rgba(0, 0, 0, 0.38);
+}
+.action-button-sec {
+    display: flex;
+    justify-content: space-between;
+    align-items: inherit;
+
+    .btn-group-lg>.btn, .btn-lg {
+        padding: 0.7rem 1rem;
+    }
+}
+.ng-select .ng-select-container .ng-value-container .ng-input>input{
+    padding: 5px 11px !important;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline {
+      min-height: 62px;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+    padding-top: 8px;
+}
+.card-body{
+    overflow: inherit;
 }

@@ -34,7 +34,6 @@ export class AddUserService extends BaseService{
 
   getUserReport(username, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
     const url = this.baseUrlData+'Adduser';
-    // const url = 'https://app.flash49.com/rcsmsg/report/getRcsSummarySmsReport';
     const data = {
       fromDate: fromDate,
       toDate: toDate,

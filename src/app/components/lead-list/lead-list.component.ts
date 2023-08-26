@@ -90,7 +90,7 @@ export class LeadListComponent {
       endDate: moment().format('YYYY-MM-DD'),
       campaignId: [],
       leadId: []
-    })
+    });
   }
 
   campaignListData() {
@@ -102,7 +102,7 @@ export class LeadListComponent {
       }
     })
   }
-  
+
   getCampaignNameById(campaignId) {
     // console.log(campaignId, "campaignId");
     // console.log(this.campaignList, "campaignList");
@@ -139,21 +139,25 @@ export class LeadListComponent {
   }
 
 
-  getLeadName(event: any) {
+  getLeadName() {
     let userId = sessionStorage.getItem('userId');
-    let campaignId = event.source.value;
-    this.leadService.getLeadList(userId, campaignId).subscribe({
-      next: (res: any) => {
-        if (res) {
-          console.log(res, "RRTTTTTT");
-          this.leadList = res;
-        }
-      },
-      error: (err) => {
-        console.log(err, "Error while fetching the records.");
-      }
+    let selectedCampaignId = this.leadForm.controls.campaignId.value;
+    
+    console.log('Selected campaign ID from form:', selectedCampaignId);
 
-    })
+    if (selectedCampaignId && userId) {
+      this.leadService.getLeadList(userId, selectedCampaignId).subscribe({
+        next: (res: any) => {
+          if (res) {
+            console.log(res, "Lead list fetched successfully.");
+            this.leadList = res;
+          }
+        },
+        error: (err) => {
+          console.log(err, "Error while fetching the lead list.");
+        }
+      });
+    }
   }
 
 

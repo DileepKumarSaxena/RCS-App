@@ -11,7 +11,7 @@
             <div _ngcontent-xvv-c46="" class="auth-section ms-auto ng-star-inserted card bg-light text-dark">
                 <form _ngcontent-xvv-c46="" novalidate="" class="ng-pristine ng-invalid ng-touched"
                     [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
-                    <h1 _ngcontent-xvv-c46="" class="heading ml-0">User Registration</h1>
+                    <!-- <h1 _ngcontent-xvv-c46="" class="heading ml-0">New Account Setup</h1> -->
                     <p _ngcontent-xvv-c46="" class="sub-heading mb-4"></p>
 
                     <div _ngcontent-xvv-c46="" class="row ">
@@ -56,13 +56,13 @@
                         <div class="col-md-6 mt-2">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i aria-hidden="true" class="fa fa-envelope"></i></span>
-                                <input type="email" formControlName="email" class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && (f.email.errors || f.email.errors?.email) }"
+                                <input type="email" formControlName="email" maxlength="100" class="form-control"
+                                    [ngClass]="{ 'is-invalid': submitted && (f.email.errors || f.email.errors?.pattern) }"
                                     placeholder="Email" class="form-control ps-0 ng-pristine ng-valid ng-touched">
-                                <div *ngIf="submitted && (f.email.errors || f.email.errors?.email)"
+                                <div *ngIf="submitted && (f.email.errors || f.email.errors?.pattern)"
                                     class="invalid-feedback">
                                     <div *ngIf="f.email.errors?.required">Email is required</div>
-                                    <div *ngIf="f.email.errors?.email">Invalid email format</div>
+                                    <div *ngIf="f.email.errors?.pattern">Invalid email format</div>
                                 </div>
                             </div>
 
@@ -110,11 +110,7 @@
                                     <div *ngIf="f.confirmPassword.errors?.mustMatch">Passwords must match</div>
                                 </div>
                             </div>
-
                         </div>
-
-
-
 
                         <div class="col-md-6 mt-2">
                             <div class="input-group mb-3">
@@ -123,13 +119,14 @@
                                     class="form-control"
                                     [ngClass]="{ 'is-invalid': submitted && (f.Username.errors || f.Username.errors?.minlength || f.Username.errors?.maxlength) }"
                                     placeholder="Username" class="form-control ps-0 ng-pristine ng-valid ng-touched">
-                                <div *ngIf="submitted && (f.Username.errors || f.Username.errors?.minlength || f.Username.errors?.maxlength)"
+                                <div *ngIf="submitted && (f.Username.errors || f.Username.errors?.minlength || f.Username.errors?.maxlength || f.Username.errors?.noSpecialCharacters)"
                                     class="invalid-feedback">
                                     <div *ngIf="f.Username.errors?.required">Username is required</div>
                                     <div *ngIf="f.Username.errors?.minlength">Username should have at least 3 characters
                                     </div>
                                     <div *ngIf="f.Username.errors?.maxlength">Username should have at most 20 characters
                                     </div>
+                                    <div *ngIf="f.Username.errors?.noSpecialCharacters">Special characters are not allowed</div>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +134,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i aria-hidden="true" class="fa fa-user"></i></span>
-                                <select style="width: 92%; padding: 1.3%;" formControlName="selectparentUser"
+                                <select style="width: 82%; padding: 1.3%;" formControlName="selectparentUser"
                                     class="form-select"
                                     [ngClass]="{ 'is-invalid': submitted && f.selectparentUser.invalid }"
                                     class="form-control ps-0 ng-pristine ng-valid ng-touched">
@@ -149,8 +146,43 @@
                                 </div>
                             </div>
 
+                        </div>
 
+                        <div class="col-md-6 mt-2">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i aria-hidden="true" class="fa fa-id-badge"></i></span>
+                                <input type="text" maxlength="100" minlength="3" formControlName="botId"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': submitted && (f.botId.errors || f.botId.errors?.minlength || f.botId.errors?.maxlength) }"
+                                    placeholder="Enter BotId" class="form-control ps-0 ng-pristine ng-valid ng-touched">
+                                <div *ngIf="submitted && (f.botId.errors || f.botId.errors?.minlength || f.botId.errors?.maxlength)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="f.botId.errors?.required">BotId is required</div>
+                                    <div *ngIf="f.botId.errors?.minlength">BotId should have at least 3
+                                        characters</div>
+                                    <div *ngIf="f.botId.errors?.maxlength">BotId should have at most 0
+                                        characters</div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="col-md-6 mt-2">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i aria-hidden="true" class="fa fa-id-badge"></i></span>
+                                <input type="text" maxlength="200" minlength="3" formControlName="botToken"
+                                    class="form-control"
+                                    [ngClass]="{ 'is-invalid': submitted && (f.botToken.errors || f.botToken.errors?.minlength || f.botToken.errors?.maxlength) }"
+                                    placeholder="Enter Bot Token"
+                                    class="form-control ps-0 ng-pristine ng-valid ng-touched">
+                                <div *ngIf="submitted && (f.botToken.errors || f.botToken.errors?.minlength || f.botToken.errors?.maxlength)"
+                                    class="invalid-feedback">
+                                    <div *ngIf="f.botToken.errors?.required">Bot Token is required</div>
+                                    <div *ngIf="f.botToken.errors?.minlength">Bot Token should have at least 3
+                                        characters</div>
+                                    <div *ngIf="f.botToken.errors?.maxlength">>Bot Token should have at most 20
+                                        characters</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="input-group mb-3">
@@ -170,7 +202,8 @@
                                 <span class="input-group-text"><i aria-hidden="true" class="fa fa-building"></i></span>
                                 <div class="custom-file">
                                     <input type="file" formControlName="companyBanner" accept=".png, .jpg, .jpeg"
-                                        class="custom-file-input" required (change)="handleCompanyBannerChange($event)">
+                                        class="custom-file-input" (change)="handleCompanyBannerChange($event)">
+
                                     <label class="custom-file-label">{{ selectedBannerName || 'Choose Company Banner'
                                         }}</label>
                                 </div>
@@ -204,7 +237,7 @@
                         <div _ngcontent-xvv-c46="" class="col-md-6 mt-3">
                             <button _ngcontent-xvv-c46="" type="submit" class="w-100 shadow">
                                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                                Register
+                                {{actionBtn}}
                             </button>
                             <br>
                             <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>

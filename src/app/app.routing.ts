@@ -14,6 +14,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { DasboardComponent } from './components/dasboard/dasboard.component';
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
+import { BlaclistNumberComponent } from './components/blaclist-number/blaclist-number.component';
+import { AddBlaclistNumberComponent } from './components/add-blaclist-number/add-blaclist-number.component';
 
 const routes: Routes = [
     { path: '', component: DasboardComponent, canActivate: [AuthGuard] },
@@ -31,8 +33,10 @@ const routes: Routes = [
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'reset/password', component: ResetPasswordComponent, canActivate: [AuthGuard] },
     { path: 'forgot/password', component: ForgotPasswordComponent },
-    { path: 'user/registration', component: UserRegistrationComponent, canActivate: [AuthGuard] },
+    { path: 'user/list', component: UserRegistrationComponent, canActivate: [AuthGuard] },
     { path: 'addUser', component: AddUserComponent, canActivate: [AuthGuard] },
+    { path: 'blacklist', component: BlaclistNumberComponent, canActivate: [AuthGuard] },
+    { path: 'addBlacklist', component: AddBlaclistNumberComponent, canActivate: [AuthGuard] },
 
 
     // otherwise redirect to home

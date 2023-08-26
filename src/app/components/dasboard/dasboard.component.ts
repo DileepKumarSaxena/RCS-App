@@ -88,11 +88,11 @@ export class DasboardComponent implements AfterViewInit {
         //   el['Invalid'] = 5;
         // })
         console.log(res, "RRRRRR");
-        this.dashboardData = res.data;
-        this.calculateTotalSum();
+          this.dashboardData = res.data;
+          this.calculateTotalSum();
         this.updateChartData();
-        this.updateLineChartData();
-        this.showLoader = false
+          this.updateLineChartData();
+          this.showLoader = false
       },
       error: (err) => {
         console.log(err, "Error while fetching the records.");
@@ -258,12 +258,11 @@ export class DasboardComponent implements AfterViewInit {
 
       // Find the maximum hour with data
       let maxDataHour = Math.max(...this.dashboardData.map(entry => entry.datehour));
-
+      console.log(maxDataHour, "maxDataHour");
       // Generate labels from 0 to the maximum data hour
       let hourLabels = Array.from({ length: maxDataHour + 1 }, (_, i) => `${i}:00`);
 
       this.lineChartLabels = hourLabels;
-      console.log(hourLabels, 'hourLabels');
 
       dataKeys.forEach((key, index) => {
         let data: number[] = new Array<number>(maxDataHour + 1).fill(0);

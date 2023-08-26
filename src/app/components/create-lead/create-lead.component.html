@@ -24,7 +24,7 @@
 
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <mat-form-field appearance="outline">
+                                        <!-- <mat-form-field appearance="outline">
                                             <mat-label>Select Campaign Name</mat-label>
                                             <mat-select formControlName="campaignId"
                                                 (selectionChange)="templateDetails()">
@@ -33,7 +33,12 @@
                                             </mat-select>
                                             <mat-error *ngIf="leadForm.get('campaignId').hasError('required')">Select
                                                 Campaign Name</mat-error>
-                                        </mat-form-field>
+                                        </mat-form-field> -->
+
+                                        <ng-select [items]="campaignList" bindLabel="campaignName" (change)="templateDetails()"
+                                        placeholder="Select Campaign Name" bindValue="campaignId" [searchable]="true"
+                                        [clearable]="false" appearance="outline" formControlName="campaignId">
+                                    </ng-select>
 
                                     </div>
 
@@ -209,8 +214,8 @@
                                                 <div [formGroupName]="i">
                                                     <mat-form-field appearance="outline">
                                                         <mat-label>{{ templateCustomParamArray[i].trim() }}</mat-label>
-                                                        <input matInput formControlName="element" maxlength="30" required>
-                                                        <mat-error *ngIf="control.get('element').hasError('required')">{{ templateCustomParamArray[i].trim() }} is required</mat-error>
+                                                        <input matInput formControlName="element" maxlength="500">
+                                                        <!-- <mat-error *ngIf="control.get('element').hasError('required')">{{ templateCustomParamArray[i].trim() }} is required</mat-error> -->
                                                     </mat-form-field>
                                                 </div>
                                             </div>

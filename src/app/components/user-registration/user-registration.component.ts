@@ -1,6 +1,5 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ReportsService } from 'src/app/services/reports.service';
 import { Location } from '@angular/common';
 import moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +10,7 @@ import { Router } from '@angular/router';
 import * as Papa from 'papaparse';
 import Swal from 'sweetalert2';
 import { AddUserService } from '@app/services/add-user.service';
+import { UserService } from '@app/_services';
 
 @Component({
   selector: 'app-user-registration',
@@ -23,15 +23,15 @@ export class UserRegistrationComponent {
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   userData: any;
   moment: any = moment;
-  
- 
-  displayedColumns: string[] = ['id','bannerWithLogo','firstName', 'lastName', 'email',  'phoneNumber', 'userName', 'parentUser', 'companyName','actions'];
+
+  displayedColumns: string[] = ['id', 'bannerWithLogo', 'firstName', 'lastName', 'email', 'phoneNumber', 'userName', 'parentUser', 'botId', 'botToken', 'companyName', 'actions'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private userservice: AddUserService,
+    private UserService: UserService,
     private formbuilder: FormBuilder,
     private router: Router,
     private ngxService: NgxUiLoaderService,
@@ -40,7 +40,7 @@ export class UserRegistrationComponent {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<any>();
-    this.paginator.pageIndex =0;
+    this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
     this.userReport();
     this.getUserList();
@@ -55,25 +55,26 @@ export class UserRegistrationComponent {
       endDate: moment().format('YYYY-MM-DD')
     })
   }
+
   getUserList() {
-    this.showLoader=true
+    this.showLoader = true
     let username = sessionStorage.getItem('username');
     let startDateVal = moment(this.userListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.userListForm.value.endDate).format('YYYY-MM-DD');
-    let limit = this.paginator.pageSize.toString();  
+    let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
     this.userservice.getUserReport(username, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
-       
+
         this.userData = res.data;
         this.dataSource.data = this.userData;
         this.paginator.length = res.request_status;
         // this.checkDataSource();
         // this.ngxService.stop();
-        this.showLoader=false
-    
+        this.showLoader = false
       },
+
       error: (err) => {
         this.userData = [];
         this.dataSource.data = this.userData;
@@ -81,22 +82,20 @@ export class UserRegistrationComponent {
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
         this.ngxService.stop();
-
-        this.showLoader=false
+        this.showLoader = false
       }
     });
   }
+
   onPageChanged(event: PageEvent) {
     this.getUserList();
   }
- 
 
   checkDataSource() {
     this.showLoader = true
     if (this.dataSource['data']['length'] === 0) {
       this.showNoRecordsFoundAlert();
     }
-
     this.showLoader = false
   }
 
@@ -105,7 +104,6 @@ export class UserRegistrationComponent {
       icon: 'error',
       title: 'Data Not Found',
       width: '250px'
-
     });
   }
 
@@ -131,42 +129,39 @@ export class UserRegistrationComponent {
   exportExcel(paginatorRef) {
     this.showLoader = true
     return this.get_download_Rcs_User_Details_file(paginatorRef);
-  
   }
-  
-  
+
   get_download_Rcs_User_Details_file(paginatorRef) {
     this.showLoader = true
     let username = sessionStorage.getItem('username');
     let startDateVal = moment(this.userListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.userListForm.value.endDate).format('YYYY-MM-DD');
-    let limit = this.paginator.pageSize.toString();  
+    let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     this.ngxService.start();
-  
+
     if (this.userListForm.value.fromDate !== '' && this.userListForm.value.toDate !== '') {
       return this.userservice.downloaduserlist(username, startDateVal, endDateVal).subscribe((data_ar: any) => {
         if (data_ar.data.length > 0) {
           this.showLoader = false
           data_ar = data_ar.data.map((e, i) => {
-  
+
             const startingSerialNo = paginatorRef.pageIndex * paginatorRef.pageSize + 1;
             // Map only the desired properties with custom header names
             return {
-             
+
               'First Name': e.firstName,
               'Last Name': e.lastName,
               'E-mail': e.email,
               'Phone Number': e.phoneNumber,
               'Username': e.userName,
               'Parent User': e.parentUser,
+              'BotId': e.botId,
+              'Bot Token': e.botToken,
               'Company Name': e.companyName,
-           
             };
-  
-  
           });
-  
+
           var csv = Papa.unparse(data_ar); // Use the 'unparse' function from PapaParse
           var csvData = new Blob(['\uFEFF' + csv], {
             type: 'text/csv;charset=utf-8;'
@@ -191,8 +186,6 @@ export class UserRegistrationComponent {
           width: '250px',
           icon: 'error',
           // position: 'top-end',
-  
-  
         });
       });
     } else {
@@ -210,9 +203,48 @@ export class UserRegistrationComponent {
   editRow(data) {
     this.router.navigate(['/addUser'], { queryParams: { id: data } });
   }
-
-
   
+
+  deleteRow(id: any) {
+    Swal.fire({
+      title: 'Are you sure you want to delete this User?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      icon: 'warning',
+      confirmButtonColor: '#5FC29F',
+      customClass: {
+        icon: 'custom-icon-class',
+      },
+      width: '300px',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.UserService.deleteUserById(id).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              title: 'User Deleted Successfully',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
+            });
+            this.getUserList();
+          },
+          error: (err) => {
+            Swal.fire({
+              title: 'Error while deleting the User.',
+              customClass: {
+                icon: 'custom-icon-class',
+              },
+              width: '300px',
+            });
+          }
+        });
+      }
+    });
+  }
+
+
 }
 
 

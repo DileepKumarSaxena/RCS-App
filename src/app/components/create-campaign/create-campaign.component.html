@@ -106,13 +106,18 @@
                             </div> -->
 
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Template List</mat-label>
                                     <mat-select placeholder="Select One" formControlName="templateId" required>
                                         <mat-option *ngFor="let item of allTemplateList"
                                             [value]="item.id">{{item.templateCode}}</mat-option>
                                     </mat-select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+
+                                <ng-select [items]="allTemplateList" bindLabel="templateCode"
+                                placeholder="Template List" bindValue="id" [searchable]="true"
+                                [clearable]="false" appearance="outline" formControlName="templateId">
+                            </ng-select>
                             </div>
 
                         </div>

@@ -17,6 +17,53 @@
       <form [formGroup]="campaignListForm">
 
         <div class="card bg-light text-dark">
+          <div class="card-body bottom-space">
+              <div class="row">
+                  <div class="col-sm-3">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input required [rangePicker]="picker">
+                        <input #startDate required ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                          formControlName="startDate">
+                        <input #endDate required ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                          formControlName="endDate" (dateChange)="dateFilter(startDate, endDate)">
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+    
+                  </div>
+                  <div class="col-sm-3">
+                      <ng-select [items]="templateListbysearch" bindLabel="templateCode" (change)="getCampaignName()"
+                          placeholder="Select Template" bindValue="id" [searchable]="true"
+                          [clearable]="false" appearance="outline" formControlName="templateName">
+                      </ng-select>
+                  </div>
+                  <div class="col-sm-3">
+                      <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="campaignId"
+                          placeholder="Select Campaign" [searchable]="true" [clearable]="false"
+                          appearance="outline" formControlName="campaignId">
+                      </ng-select>
+                  </div>
+
+                  <div class="col-sm-3">
+                      <div class="action-button-sec">
+                        <button type="button" class="btn btn-success btn-lg" [disabled]="campaignListForm.status === 'INVALID'"
+                        (click)="getCampaignList()">Search</button>
+
+                        <button *ngIf="dataSource['data']['length'] > 0" [disabled]="campaignListForm.status === 'INVALID'"
+                          type="text" class="btn btn-success download" placeholder="Download" (click)="downloadFile()"
+                          readonly>Export &nbsp;<mat-icon>download</mat-icon></button>
+                      </div>
+                  </div>
+
+
+
+              </div>
+          </div>
+      </div>
+
+        <div class="card bg-light text-dark" style="display: none;">
 
 
 
@@ -45,7 +92,7 @@
                   </mat-select>
                 </mat-form-field> -->
 
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                   <mat-label>Select Template Name</mat-label>
                   <mat-select formControlName="templateName">
                     <mat-option>None</mat-option>
@@ -53,17 +100,17 @@
                     (onSelectionChange)="getCampaignName($event)"
                       [value]="item.id">{{item.templateCode}}</mat-option>
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field> -->
 
 
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                   <mat-label>Select Campaign Name</mat-label>
                   <mat-select formControlName="campaignId">
                     <mat-option>None</mat-option>
                     <mat-option *ngFor="let item of campaignList" [value]="item.campaignId">{{ item.campaignName }}</mat-option>
 
                   </mat-select>
-                </mat-form-field>
+                </mat-form-field> -->
 
                
 
