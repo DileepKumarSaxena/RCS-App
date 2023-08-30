@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { TemplateService } from 'src/app/services/template.service'
 import { Location } from '@angular/common';
@@ -38,6 +38,7 @@ export class CreateCampaignComponent {
     this.messageTypeList();
     this.templateList();
     this.getRouteParams();
+ 
   }
   getRouteParams() {
 
@@ -69,7 +70,7 @@ export class CreateCampaignComponent {
       userId: [1],
       campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       description: [],
-      messageJson: [],
+      
       campaignStartTime: [],
       campaignEndTime: [],
       campaignStatus: ['Active'],
@@ -83,7 +84,9 @@ export class CreateCampaignComponent {
 
 
   }
+  
 
+  
   checkDuplicateName() {
     this.existingCampaignNames = [];
     const userId = 1;

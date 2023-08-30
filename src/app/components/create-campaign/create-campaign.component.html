@@ -1,11 +1,11 @@
 <div class="container-fluid h-100">
 
     <div class="row">
-        <div class="col-sm-3">
+        <!-- <div class="col-sm-3">
             <app-navigation></app-navigation>
-        </div>
+        </div> -->
 
-        <div class="col-sm-9"><br><br>
+        <div class="col-sm-12"><br><br>
             <div class="go-back-section">
                 <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
                 <h5 class="text-center">ADD CAMPAIGN</h5>
@@ -27,18 +27,15 @@
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">
                                         Campaign name already exists
                                     </mat-error>
-                                    <mat-icon matSuffix aria-hidden="true" container="body">
-                                        <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
-                                            (mouseleave)="isHidden2 = !isHidden2">info</span>
-                                    </mat-icon>
+                                
                                 </mat-form-field>
 
-                                <ng-container
+                                <!-- <ng-container
                                     *ngIf="isHidden2 && !campaignForm.get('campaignName').hasError('duplicateName')">
                                     <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
                                         No Special Characters allowed.
                                     </div>
-                                </ng-container>
+                                </ng-container> -->
 
                                 <!-- <div class="error-field" *ngIf="submitted && f.camaignName.errors">
                                     <span *ngIf="f.camaignName.errors.required">This field is required!</span>
@@ -61,15 +58,15 @@
                                             class="material-symbols-outlined">
                                             info
                                         </span>
-                                    </mat-icon>
+                                    </mat-icon> -->
 
                                 </mat-form-field>
-                                <ng-container
+                                <!-- <ng-container
                                     *ngIf="isHidden && !campaignForm.get('campaignName').hasError('duplicateName')">
                                     <div style="margin-top: -25px; font-size: small; color: red; margin-left: 4px;">
                                         Brief description about your campaign.
                                     </div>
-                                </ng-container>
+                                </ng-container> -->
                             </div>
 
                             <!-- <div class="style col-sm-4">
@@ -86,7 +83,7 @@
                                     <mat-label>Template List</mat-label>
                                     <mat-select placeholder="Select One" formControlName="messageJson" required>
                                         <mat-option *ngFor="let item of allTemplateList"
-                                            [value]="item.templateJson">{{item.templateCode}}</mat-option>
+                                            [value]="item.id">{{item.templateCode}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -96,20 +93,7 @@
 
                         <div class="row mt-4" style="margin-left: 40px; ">
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Campaign Date Range</mat-label>
-                                    <mat-date-range-input [rangePicker]="picker" [min]="minDate">
-                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
-                                            formControlName="campaignStartTime">
-                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
-                                            formControlName="campaignEndTime">
-                                    </mat-date-range-input>
-                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-date-range-picker #picker></mat-date-range-picker>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-sm-4">
+                                
                                 <mat-form-field appearance="outline">
                                     <mat-label>Message Type</mat-label>
                                     <mat-select placeholder="Select One" formControlName="messageId" required>
@@ -117,6 +101,29 @@
                                             [value]="item.messageId">{{item.messageType}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <!-- <mat-form-field appearance="outline">
+                                    <mat-label>Enter a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker" [min]="minDate">
+                                        <input required ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                                            formControlName="campaignStartTime">
+                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="campaignEndTime">
+                                    </mat-date-range-input>
+                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field> -->
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-success" type="submit" id="smbtbtn"
+                                [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
+
+
+                            </div>
+
+                            <div class="col-sm-4 ">
+                               
+
                             </div>
                             <div class="col-sm-4">
                                 <button class="btn btn-success" type="submit" id="smbtbtn"

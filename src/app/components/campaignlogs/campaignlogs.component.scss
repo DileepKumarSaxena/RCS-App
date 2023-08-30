@@ -21,3 +21,26 @@
     white-space: nowrap;
 }
 
+    mat-form-field {
+        margin-right: 20px;
+    }
+}
+
+.horizontal-scroll-table {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+ .example-container {
+    height: 350px;
+    max-width: 100%;
+    overflow: auto;
+  }
+
+//for scrolling inside the mat-table
+  

@@ -44,14 +44,16 @@ export class LeadService extends BaseService {
   }
 
   // Campaign Name List
-  getAllTheCampaignTypesList(userId:any): Observable<any> {
-    return this.http.get(`${this.baseUrl +  'campaign/campaignListing?userId=' + userId}`);
+  getAllTheCampaignTypesList(userId: any): Observable<any> {
+    return this.http.get(`${this.baseUrl + 'campaign/campaignListing?userId=' + userId}`);
   }
+
   private campaignListSubject$ = new BehaviorSubject(null);
 
   getCampaignList(): Observable<any> {
     return this.campaignListSubject$.asObservable();
   }
+  
   setCampaignList() {
     let userId = 1;
     this.getAllTheCampaignTypesList(userId).subscribe((res) => {
@@ -59,7 +61,7 @@ export class LeadService extends BaseService {
     });
   }
 
-  uploadCSVFile(leadInfoJson: any, file:any, isDND: any, isDuplicate: any): Observable<any> {
+  uploadCSVFile(leadInfoJson: any, file: any, isDND: any, isDuplicate: any): Observable<any> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append("isDND", isDND);
     httpParams = httpParams.append("isDuplicate", isDuplicate);
@@ -69,5 +71,5 @@ export class LeadService extends BaseService {
     formData.append("leadInfoJson", JSON.stringify(leadInfoJson));
     return this.http.post(`${this.baseUrlData + 'leadInfo/upload'}`, formData, { params: httpParams });
   }
-  
+
 }

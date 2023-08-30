@@ -89,6 +89,43 @@ export class CampaignlogsComponent {
   editRow(data) {
     this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
 
+        this.showLoader = false
+      }
+    });
+  }
+  editRow(data) {
+    this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  goBack(): void {
+    this.location.back();
+  }
+
+  //For Downloading the table data same as it is showing in UI....
+
+  exportToExcel() {
+    const data: any[] = this.dataSource.filteredData.map(item => {
+      // Map the table data to include only the necessary columns
+      return {
+        'Created By': item.created_by,
+        'Created Date': item.created_date,
+        'Last Modified Date': item.last_modified_date,
+        'Phone Number': item.phone_number,
+        'Phone Number Status': item.phone_number_status,
+        'Status': item.status
+      };
+    });
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const fileName: string = 'Detail_Report.xlsx';
+    const excelBlob: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(excelBlob, fileName);
   }
 
   // deleteRow(id: any) {
@@ -130,3 +167,36 @@ export class CampaignlogsComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
+
+
+
+  // deleteRow(id: any) {
+  //   Swal.fire({
+  //     title: 'Are you sure you want to delete this campaign?',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes',
+  //     cancelButtonText: 'No',
+  //     icon: 'warning',
+  //     confirmButtonColor: '#F34335',
+  //     customClass: {
+  //       icon: 'custom-icon-class',
+  //     },
+
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.campaignservice.deleteCampaignById(id).subscribe({
+  //         next: (res: any) => {
+  //           Swal.fire({
+  //             title: 'Campaign Deleted Successfully',
+  //           });
+  //           this.getdetailList();
+  //         },
+  //         error: (err) => {
+  //           Swal.fire({
+  //             title: 'Error while deleting the records.',
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
+  // }

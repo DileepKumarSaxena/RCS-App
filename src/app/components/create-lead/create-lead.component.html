@@ -1,11 +1,11 @@
 <div class="container-fluid h-100">
 
     <div class="row">
-        <div class="col-sm-3">
+        <!-- <div class="col-sm-3">
             <app-navigation></app-navigation>
-        </div>
+        </div> -->
 
-        <div class="col-sm-9">
+        <div class="col-sm-12">
             <br>
             <br>
             <div class="go-back-section">
@@ -45,18 +45,18 @@
                                     <mat-error *ngIf="leadForm.get('leadName').hasError('duplicateName')">
                                         Lead name already exists
                                     </mat-error>
-                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                    <!-- <mat-icon matSuffix aria-hidden="true" container="body">
                                         <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
                                             (mouseleave)="isHidden2 = !isHidden2">info</span>
-                                    </mat-icon>
+                                    </mat-icon> -->
                                 </mat-form-field>
 
-
+<!-- 
                                 <ng-container *ngIf="isHidden2 && !leadForm.get('leadName').hasError('duplicateName')">
                                     <div style="margin-top: -20px; font-size: small; color: red;  margin-left: 4px">
                                         No Special Characters allowed.
                                     </div>
-                                </ng-container>
+                                </ng-container> -->
                             </div>
 
                             <div class=" col-sm-4">
@@ -99,7 +99,7 @@
                                   
                             </div>
                         </div>
-                        <br>
+                        <br> <br>
                         <div class="row">
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
@@ -114,8 +114,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Enter a date range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker" [min]="minDate">
-                                        <input matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
-                                        <input matEndDate placeholder="End date" formControlName="scheduleEndDtm">
+                                        <input  required matStartDate placeholder="Start date" formControlName="scheduleStartDtm">
+                                        <input required  matEndDate placeholder="End date" formControlName="scheduleEndDtm">
                                     </mat-date-range-input>
                                     <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
                                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>

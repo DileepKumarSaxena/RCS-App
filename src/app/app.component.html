@@ -1,23 +1,40 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="currentUser && !isLoginPage()">
-  <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+  <a class="navbar-brand" href="#">Fonada - Digital SMS </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/vircs']" [ngClass]="{ 'active': isActive('/vircs') }">Template</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/template']" [ngClass]="{ 'active': isActive('/template') }">Template Old</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/campaignList']" [ngClass]="{ 'active': isActive('/campaignList') }">Campaign</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/leadList']" [ngClass]="{ 'active': isActive('/leadList') }">Lead</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/detailreport']" [ngClass]="{ 'active': isActive('/detailreport') }">Detailed Report</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/Summary']" [ngClass]="{ 'active': isActive('/Summary') }">Summary Report</a>
+      </li>
+      <!-- <li class="nav-item">
         <a class="nav-link" href="tel:7479574795"><i class="fa fa-phone"></i> 7479574795</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="mailto:info@fonada.com"><i class="fa fa-envelope"></i> info@fonada.com</a>
-      </li>
+      </li> -->
     </ul>
     <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-5" (click)="resetPassword()">Reset Password</button>
          <button class="btn btn-outline-success btn-sm my-2 my-sm-0" (click)="logout()">Logout</button>
+         
     </form>
   </div>
 </nav>
@@ -38,3 +55,4 @@
 <!-- main app container -->
 
 <router-outlet></router-outlet>
+<app-loader></app-loader>

@@ -8,6 +8,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
+import { Alert } from '@app/_models';
+=======
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
 @Component({
   selector: 'app-googlercs',
   templateUrl: './googlercs.component.html',
@@ -19,6 +23,10 @@ export class GooglercsComponent {
   @ViewChild('paginationCount', { static: false }) paginationCount: ElementRef;
   summaryData: any;
   moment: any = moment;
+<<<<<<< HEAD
+  public data_cnt: any[];
+=======
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
   
  
   displayedColumns: string[] = ['id','created_date', 'lead_name', 'last_modified_date', 'status', 'TOTAL', 'campaing_name'];
@@ -46,7 +54,11 @@ export class GooglercsComponent {
 
   summaryReport() {
     this.summaryListForm = this.formbuilder.group({
+<<<<<<< HEAD
+      startDate:moment().format('YYYY-MM-DD'),
+=======
       startDate: moment().format('YYYY-MM-DD'),
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
       endDate: moment().format('YYYY-MM-DD')
     })
   }
@@ -58,7 +70,11 @@ export class GooglercsComponent {
     this.ngxService.start();
     this.reportservice.getSummaryReport(username, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
+<<<<<<< HEAD
+      //  this.data_cnt=res.data   //showing table when data is available 
+=======
        
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
         this.summaryData = res.data;
         this.dataSource.data = this.summaryData;
         this.dataSource.paginator = this.paginator;
@@ -78,6 +94,7 @@ export class GooglercsComponent {
         this.showLoader=false
       }
     });
+    
   }
   // editRow(data) {
   //   this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });

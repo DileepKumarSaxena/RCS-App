@@ -70,6 +70,7 @@ export class CreateLeadComponent {
     })
 
   }
+  
   getLeadInfo() {
     this.leadService.getLeadData(this.leadID).subscribe({
       next: (res) => {
@@ -206,6 +207,35 @@ export class CreateLeadComponent {
 
 
 
+  validateNumericInput(control) {
+    const numericPattern = /^[0-9]+(,[0-9]+)*$/; // Regular expression for numeric values with a single comma separated
+    if (control.value && !numericPattern.test(control.value)) {
+      return { invalidNumericInput: true };
+    }
+    return null;
+  }
+
+  uploadCsvFile(event) {
+    this.file = event.target.files[0];
+    this.leadForm.controls['file'].updateValueAndValidity();
+
+  }
+
+  validateFileFormat() {
+    return (control) => {
+      const file = this.file;
+      if (file && file.name) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (fileExtension !== 'csv') {
+          return { invalidFileFormat: true };
+        }
+      }
+      return null;
+    };
+  }
+  
+
+  
   checkDuplicateName() {
     this.existingLeadNames = [];
     const leadName = this.leadForm.value.leadName;
@@ -231,7 +261,6 @@ export class CreateLeadComponent {
       }
     })
   }
-
 
   onSubmit() {
     let data = this.leadForm.value;
@@ -332,7 +361,7 @@ export class CreateLeadComponent {
         "windowRequired": "N",
         "scheduleDay": "6",
         "scheduleEndDtm": dataVal['scheduleEndDtm'],
-        "windowStartTime": "10:18",
+        "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }
     } else if (dataVal['leadExecutionType'] == 'save') {
@@ -341,7 +370,7 @@ export class CreateLeadComponent {
         "windowRequired": "N",
         "scheduleDay": "6",
         "scheduleEndDtm": moment().format('YYYY-MM-DDTHH:mm:ssZ'),
-        "windowStartTime": "10:18",
+        "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }
     }

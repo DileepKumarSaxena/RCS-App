@@ -23,7 +23,11 @@ export class CampaignComponent {
   campaignData: any;
   moment: any = moment;
 
+<<<<<<< HEAD
+  displayedColumns: string[] = ['id', 'createdDate', 'campaignName', 'description', 'templateName', 'campaignStatus', 'leadCount', 'usageType', 'actions'];
+=======
   displayedColumns: string[] = ['id','campaignName', 'description', 'messageJson', 'campaignStartTime', 'campaignEndTime', 'usageType', 'actions'];
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -53,20 +57,26 @@ export class CampaignComponent {
     })
   }
   getCampaignList() {
-    this.showLoader=true
+    this.showLoader = true
     let userId = 1;
     let startDateVal = moment(this.campaignListForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.campaignListForm.value.endDate).format('YYYY-MM-DD');
     this.ngxService.start();
     this.campaignservice.getCampaignlistDetails(userId, startDateVal, endDateVal).subscribe({
       next: (res: any) => {
-       
+
         this.campaignData = res.Campaign;
         this.dataSource.data = this.campaignData;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+<<<<<<< HEAD
+        // this.ngxService.stop();
+        this.showLoader = false
+
+=======
         this.showLoader=false
     
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
       },
       error: (err) => {
         this.campaignData = [];
@@ -74,13 +84,19 @@ export class CampaignComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         console.log(err, "Error while fetching the records.");
+<<<<<<< HEAD
+        this.ngxService.stop();
+
+        this.showLoader = false
+        // alert("Something Went Wrong! Please try again.")
+=======
         this.showLoader=false
+>>>>>>> ce3cda90204d41a06156a4e86c6595de7e3c26c0
       }
     });
   }
   editRow(data) {
     this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
-
   }
 
   deleteRow(id: any) {
