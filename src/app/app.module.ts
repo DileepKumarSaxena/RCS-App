@@ -46,10 +46,11 @@ import { NgChartsModule } from 'ng2-charts';
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 
-
+import { MatDialogModule } from '@angular/material/dialog';
 import { FooterComponent } from './components/footer/footer.component';
 import { BlaclistNumberComponent } from './components/blaclist-number/blaclist-number.component';
 import { AddBlaclistNumberComponent } from './components/add-blaclist-number/add-blaclist-number.component';
+import { TemplatePreviewDialogComponent } from './components/template-list/template-preview-dialog/template-preview-dialog.component';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
     bgsPosition: POSITION.bottomCenter,
@@ -94,6 +95,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         MatSlideToggleModule,
         NgFor,
         AsyncPipe,
+        MatDialogModule
         
 
 
@@ -121,7 +123,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         UserRegistrationComponent,
         AddUserComponent,
         BlaclistNumberComponent,
-        AddBlaclistNumberComponent
+        AddBlaclistNumberComponent,
+        TemplatePreviewDialogComponent
 
 
     ],

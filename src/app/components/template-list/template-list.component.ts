@@ -9,7 +9,8 @@ import { MatSort } from '@angular/material/sort';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import Swal from 'sweetalert2';
 import * as Papa from 'papaparse';
-
+import { TemplatePreviewDialogComponent } from './template-preview-dialog/template-preview-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-template-list',
   templateUrl: './template-list.component.html',
@@ -19,7 +20,7 @@ export class TemplateListComponent {
   public showLoader = false;
   moment: any = moment;
   templateFilterForm: FormGroup;
-  displayedColumns: string[] = ['id', 'inserttime', 'templateCode', 'templateType', 'templateMsgType', 'status'];
+  displayedColumns: string[] = ['id', 'inserttime', 'templateCode', 'templateType', 'templateMsgType', 'status', 'actions'];
   dataSource!: MatTableDataSource<any>;
   templateData: any;
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
@@ -31,7 +32,8 @@ export class TemplateListComponent {
     private location: Location,
     private templateService: TemplateService,
     private ngxService: NgxUiLoaderService,
-    private formbuilder: FormBuilder) {
+    private formbuilder: FormBuilder, 
+    private dialog: MatDialog) {
 
   }
   ngOnInit(): void {
@@ -169,6 +171,15 @@ export class TemplateListComponent {
 
   editRow(data) { }
   deleteRow(id: any) { }
+
+  previewTemplate() {
+    const dialogRef = this.dialog.open(TemplatePreviewDialogComponent, {
+      width: '28%'
+    }).afterClosed().subscribe(val => {
+      
+    })
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

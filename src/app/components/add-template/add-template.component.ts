@@ -607,11 +607,13 @@ export class AddTemplateComponent implements OnInit {
       }
     });
 
+    xyz = [...new Set(xyz)];
     const obj = {
       templateCode: val?.templateCode,
       templateType: ((String(xyz)).length > 0) ? 'Dynamic' : 'Static',
       templateMsgType: val.templateType,
-      templateCustomParam: String(xyz),
+      // templateCustomParam: String(xyz),
+      templateCustomParam: String(xyz.join(',')),
       templateUserId: sessionStorage.getItem('userId'),
       botId: sessionStorage.getItem('botId'),
       templateJson: {

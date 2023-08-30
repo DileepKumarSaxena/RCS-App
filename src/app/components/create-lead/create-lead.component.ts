@@ -236,14 +236,19 @@ export class CreateLeadComponent {
 
   templateDetails() {
     let selectedCampaignId = this.leadForm.get('campaignId').value;
+    this.templateCustomParamArray = [];
+    let obj1 = (this.leadForm.controls['testLeadDynamicFields']) as FormArray;
+    obj1.clear();
     this.leadService.getTemplateDetailsByCampaignId(selectedCampaignId).subscribe(res => {
       if (res) {
         this.templateDetailList = res;
-        this.templateCustomParamArray = this.templateDetailList.templateCustomParam.split(',');
-        let obj = <FormArray>this.leadForm.get('testLeadDynamicFields')
-        this.templateCustomParamArray.forEach(element => {
-          obj.push(new FormGroup({ element: new FormControl(null) }))
-        })
+          if (this.templateDetailList.templateCustomParam != null && this.templateDetailList.templateCustomParam.length > 0) {
+          this.templateCustomParamArray = this.templateDetailList.templateCustomParam.split(',');
+          let obj = <FormArray>this.leadForm.get('testLeadDynamicFields')
+          this.templateCustomParamArray.forEach(element => {
+            obj.push(new FormGroup({ element: new FormControl(null) }))
+          })
+        }
       }
     });
   }

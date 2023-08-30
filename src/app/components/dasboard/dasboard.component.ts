@@ -20,6 +20,7 @@ export class DasboardComponent implements AfterViewInit {
   totalSum: number = 0;
   startDate: HTMLInputElement;
   endDate: HTMLInputElement;
+  
   constructor(
     private reportservice: ReportsService,
     private formbuilder: FormBuilder,
@@ -73,8 +74,8 @@ export class DasboardComponent implements AfterViewInit {
     let username = sessionStorage.getItem('username');
     let from = moment(this.currentDate).format('YYYY-MM-DD');
     let to = moment(this.currentDate).format('YYYY-MM-DD');
-    // let from = moment('2023-08-15').format('YYYY-MM-DD');
-    // let to = moment('2023-08-15').format('YYYY-MM-DD');
+    // let from = moment('2023-08-16').format('YYYY-MM-DD');
+    // let to = moment('2023-08-16').format('YYYY-MM-DD');
     this.reportservice.getSummaryData(username, from, to).subscribe({
       next: (res: any) => {
         // res.data[0]['datehour'] = 9;
@@ -157,13 +158,15 @@ export class DasboardComponent implements AfterViewInit {
       }
     },
     scales: {
-      x: {},
+      x: {
+        display: false,
+      },
       y: {
-        min: 10
+        min: 0
       }
     },
     plugins: {
-      legend: { display: true },
+      legend: { display: false },
     }
   };
 
@@ -201,7 +204,7 @@ export class DasboardComponent implements AfterViewInit {
   // Line Chart Start Here
   lineChartOptions: any = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     elements: {
       line: {
         tension: 0.5,
@@ -209,6 +212,14 @@ export class DasboardComponent implements AfterViewInit {
         backgroundColor: 'rgba(243, 187, 69, 0.2)'
       }
     },
+    scales: {
+      x: {
+        display: true,
+      },
+      y: {
+        min: 0
+      }
+    }
 
   };
 
@@ -224,60 +235,49 @@ export class DasboardComponent implements AfterViewInit {
 
 
   public lineChartLabels: string[] = [];
-  public lineChartLegend = false;
+  public lineChartLegend = true;
 
-  // updateLineChartData() {
-  //   if (this.dashboardData && this.dashboardData.length > 0) {
-  //     let dataKeys = ['TOTAL', 'SUBMITTED', 'Delivered', 'failed', 'NonRCS_FAILED', 'Invalid'];
-  //     let currentHour = new Date().getHours();
-  //     let hourLabels = Array.from({ length: currentHour + 1 }, (_, i) => `${i}:00`); // Generate labels from 0 to 23
-
-  //     this.lineChartLabels = hourLabels;
-  //     console.log(hourLabels, 'hourLabels');
-  //     dataKeys.forEach((key, index) => {
-  //       let data: number[] = new Array<number>(24).fill(0);
-
-  //       this.dashboardData.forEach(entry => {
-  //         const hour = entry.datehour;
-  //         data[hour] = entry[key];
-  //       });
-
-  //       this.lineChartData[index].data = data;
-  //     });
-
-  //     this.lineChart?.update();
-  //   }
-  // }
-
-
+  
   updateLineChartData() {
-    if (this.dashboardData && this.dashboardData.length > 0) {
-      let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'failed', 'Invalid'];
-
-      // let currentHour = new Date().getHours();
-
-      // Find the maximum hour with data
-      let maxDataHour = Math.max(...this.dashboardData.map(entry => entry.datehour));
-      console.log(maxDataHour, "maxDataHour");
-      // Generate labels from 0 to the maximum data hour
-      let hourLabels = Array.from({ length: maxDataHour + 1 }, (_, i) => `${i}:00`);
-
-      this.lineChartLabels = hourLabels;
-
-      dataKeys.forEach((key, index) => {
-        let data: number[] = new Array<number>(maxDataHour + 1).fill(0);
-
-        this.dashboardData.forEach(entry => {
-          const hour = entry.datehour;
-          data[hour] = entry[key];
-        });
-
-        this.lineChartData[index].data = data;
-      });
-
-      this.lineChart?.update();
+    let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'failed', 'Invalid'];
+  
+    let currentHour = new Date().getHours();
+    let uploadedHours = this.dashboardData.map(entry => entry.datehour);
+  
+    // Find the earliest uploaded hour
+    let earliestUploadedHour = Math.min(...uploadedHours);
+  
+    // Calculate the starting hour (1 hour back from the earliest uploaded hour)
+    let startHour = earliestUploadedHour - 1;
+    if (startHour < 0) {
+      startHour = 0;
     }
+  
+    // Combine uploaded hours with the current hour and the starting hour
+    let hoursToShow = [...new Set([...uploadedHours, currentHour, startHour])];
+    hoursToShow.sort((a, b) => a - b); // Sort in ascending order
+  
+    // Generate labels for the combined hours
+    let hourLabels = hoursToShow.map(hour => `${hour}:00`);
+    this.lineChartLabels = hourLabels;
+  
+    dataKeys.forEach((key, index) => {
+      let data: number[] = new Array<number>(hoursToShow.length).fill(0);
+  
+      // Fill the data array with values for uploaded hours
+      this.dashboardData.forEach(entry => {
+        const hour = entry.datehour;
+        let hourIndex = hoursToShow.indexOf(hour);
+        if (hourIndex !== -1) {
+          data[hourIndex] = entry[key];
+        }
+      });
+  
+      this.lineChartData[index].data = data;
+    });
+  
+    this.lineChart?.update();
   }
-
+  
 
 }
