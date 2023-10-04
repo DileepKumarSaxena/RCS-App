@@ -7,10 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class UploadService {
 
-  constructor(private http: HttpClient) {
-
-  }
-
+  constructor(private http: HttpClient) {}
 
   upload(file: any, campaignName: any): Observable<any> {
 

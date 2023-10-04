@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '@app/_services/authentication.service';
 import Swal from 'sweetalert2';
@@ -15,7 +15,6 @@ export class ForgotPasswordComponent {
   submitted = false;
   returnUrl: string;
   error = '';
-
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,13 +50,19 @@ export class ForgotPasswordComponent {
             confirmButtonColor: '#F34335',
             width: '300px',
           })
-          console.log(res, "Data===>");
           this.router.navigate(['/login']);
         },
 
         error: (err) => {
-          console.log(err, "err===>");
-          this.error = ('Username or Email is incorrect');
+          // console.log(err, "err===>");
+          // this.error = ('Username or Email is incorrect');
+          // this.loading = false;
+
+          if (err.status === 404) {
+            this.error = 'Username or Email is incorrect';
+          } else {
+            this.error = 'Something went wrong. Please try again later.';
+          }
           this.loading = false;
         }
       })

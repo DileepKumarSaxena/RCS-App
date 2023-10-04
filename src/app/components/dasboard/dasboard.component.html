@@ -1,0 +1,120 @@
+<app-menu></app-menu>
+<div class="go-back-section template-back add-inner-padding">
+    <div class="back-icon">
+        <h5 class="text-center">DASHBOARD</h5>
+    </div>
+</div>
+<br>
+​
+<div class="container-fluid">
+    <div class="p-2">
+        <div>
+            <div class="card">
+                <div class="card-header custom-header-section">
+                    <form [formGroup]="dashBoardForm">
+                        <div class="date-range-section">
+                            <div class="input-fields-container">
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input formControlName="startDate" readonly="true" #startDate matStartDate
+                                            placeholder="Start date" required>
+                                        <input formControlName="endDate" readonly="true" #endDate matEndDate
+                                            placeholder="End date" required>
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+
+                                <!-- <div *ngIf="dashBoardForm.hasError('oneMonthAgo', 'startDate') || dashBoardForm.hasError('oneMonthAgo', 'endDate')" class="error-message">
+                                      Date range must be within the previous one month.
+                                    </div> -->
+
+
+                            </div>
+                            <div class="user-select-container" *ngIf="userId === '1'">
+                                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User"
+                                    bindValue="userName" [searchable]="true" [clearable]="false" appearance="outline"
+                                    formControlName="userName">
+                                </ng-select>
+                            </div>
+                            <button class="btn btn-success btn-lg search"
+                                (click)="getSummaryDataHourly(startDate, endDate)"
+                                [disabled]="dashBoardForm.status === 'INVALID'">Search</button>
+                        </div>
+                    </form>
+                </div>
+                <app-loader *ngIf="showLoader"></app-loader>
+                ​
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="custom-card-section" *ngIf="dashboardData">
+                                <div>
+                                    <div><strong class="total-message-sent counter">{{ getSum('TOTAL')
+                                            }}</strong><br><small class="total-message-sent">Total Request</small>
+                                    </div>
+                                    ​
+                                    <div><strong class="total-rejected counter">{{ getSum('NonRCS_FAILED')
+                                            }}</strong><br><small class="total-rejected">Total Rejected - NonRCS</small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div><strong class="total-submited counter">{{ getSum('SUBMITTED')
+                                            }}</strong><br><small class="total-submited">Total Submitted</small>
+                                    </div>
+                                    ​
+                                    <div><strong class="total-failed counter">{{ getSum('failed') }}</strong><br><small
+                                            class="total-failed">Total
+                                            Failed </small></div>
+                                </div>
+                                <div>
+                                    ​
+                                    <div><strong class="total-delivered counter">{{ getSum('Delivered')
+                                            }}</strong><br><small class="total-delivered">Total Delivered</small>
+                                    </div>
+                                    ​
+                                    <div><strong class="total-balance counter">{{ getSum('Invalid')
+                                            }}</strong><br><small class="total-balance">Total
+                                            Invalid Number</small></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-header custom-header-section">
+                                    <h2 class="custom-header-title">Bar Chart Data <small> Representation of RCS Message
+                                        </small></h2>
+                                    ​
+                                </div>
+                                <div class="card-body chart-section">
+                                    <canvas *ngIf="dashboardData" class="chart" #chart baseChart [data]="barChartData"
+                                        [options]="barChartOptions" [type]="barChartType">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ​
+                </div>
+            </div>
+            ​
+            <br>
+            ​
+            <div class="card">
+                <div class="card-header custom-header-section">
+                    <h2 class="custom-header-title">Daily Activities <small>Hourly traffic trend Only for
+                            today</small></h2>
+                </div>
+                <div class="card-body chart-section">
+                    <canvas height="250px" *ngIf="dashboardData" #lineChart baseChart [datasets]="lineChartData"
+                        [labels]="lineChartLabels" [options]="lineChartOptions" [legend]="lineChartLegend"
+                        [type]="lineChartType"></canvas>
+                </div>
+            </div>
+        </div>
+    </div> ​
+</div>
+​
+<div class="body-spacing"></div>

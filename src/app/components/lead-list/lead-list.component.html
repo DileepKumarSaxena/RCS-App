@@ -1,0 +1,207 @@
+<app-menu></app-menu>
+<div class="go-back-section template-back">
+  <div class="back-icon">
+    <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+    <h5 class="text-center">LEAD LIST</h5>
+  </div>
+
+  <div *ngIf="userId === '1'">
+    <br><br>
+  </div>
+  <button type="button" class="btn btn-info btn-lg" routerLink="/lead/create" *ngIf="userId !== '1'">+ Add Lead</button>
+
+</div>
+<br>
+
+<div class="container-fluid h-100">
+
+  <div class="row">
+    <!-- <div class="col-sm-3">
+      <app-navigation></app-navigation>
+    </div> -->
+
+    <div class="col-sm-12">
+
+      <form [formGroup]="leadForm">
+
+        <div class="card bg-light text-dark">
+          <div class="card-body bottom-space">
+            <div class="row">
+              <div class="col-sm-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select a date range</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date" #startDate
+                      formControlName="startDate" required>
+                    <input ng-disabled="true" readonly="true" matEndDate placeholder="End date" #endDate
+                      formControlName="endDate" (dateChange)="checkAndFilter(startDate, endDate)" required>
+
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-2" *ngIf="userId ==='1'">
+                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
+                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
+                </ng-select>
+              </div>
+
+              <div class="col-sm-2">
+                <ng-select [items]="campaignList" bindLabel="campaignName" (change)="getLeadName()"
+                  placeholder="Select Campaign" bindValue="campaignId" [searchable]="true" [clearable]="false"
+                  appearance="outline" formControlName="campaignId">
+                </ng-select>
+
+              </div>
+              <div class="col-sm-2">
+                <ng-select [items]="leadList" bindLabel="leadName" bindValue="leadId" placeholder="Select Lead"
+                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="leadId">
+                </ng-select>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="action-button-sec">
+                  <button type="button" class="btn btn-success btn-lg" [disabled]="leadForm.status === 'INVALID'"
+                    (click)="getLeadList()">Search</button>
+
+                  <button *ngIf="dataSource['data']['length'] > 0" [ngClass]="{'my_class': userId ==='1'}"
+                    [disabled]="leadForm.status === 'INVALID'" type="text" class="btn btn-success download"
+                    placeholder="Download" (click)="DownloadLeadFile()" readonly>Export
+                    &nbsp;<mat-icon>download</mat-icon></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <app-loader *ngIf="showLoader"></app-loader>
+
+
+      <div class="card bg-light text-dark" style="margin-top: 30px;">
+        <!-- <div use *ngIf="create_campaign"  ></div> -->
+        <div class="card-body">
+
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+              <!-- SLNo Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex * paginatorRef.pageSize) +
+                  (i + 1)}} </td>
+              </ng-container>
+
+              <!-- campaignName -->
+              <ng-container matColumnDef="campaignName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
+                <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
+              </ng-container>
+
+              <!-- leadId -->
+              <ng-container matColumnDef="leadId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Id </th>
+                <td mat-cell *matCellDef="let row">{{row.leadId}}</td>
+              </ng-container>
+
+              <!-- LeadName -->
+              <ng-container matColumnDef="leadName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Name </th>
+                <td mat-cell *matCellDef="let row">{{row.leadName}}</td>
+              </ng-container>
+
+              <!-- leadExecutionType -->
+              <!-- <ng-container matColumnDef="leadExecutionType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Execution Type</th>
+                <td mat-cell *matCellDef="let row">{{row.leadExecutionType}}</td>
+              </ng-container> -->
+
+              <!-- scheduleStartDtm -->
+              <ng-container matColumnDef="scheduleStartDtm">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule Start Date</th>
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('YYYY/MM/DD
+                  HH:mm')}}
+                </td>
+              </ng-container>
+
+              <!-- scheduleEndDtm -->
+              <ng-container matColumnDef="scheduleEndDtm">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule End Date</th>
+                <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('YYYY/MM/DD
+                  HH:mm')}}
+                </td>
+              </ng-container>
+
+              <!-- countOfNumbers -->
+              <ng-container matColumnDef="countOfNumbers">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total No. </th>
+                <td mat-cell *matCellDef="let row">{{row.countOfNumbers}}</td>
+              </ng-container>
+
+              <!-- countOfInvalidNumbers -->
+              <ng-container matColumnDef="countOfInvalidNumbers">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Invalid No. </th>
+                <td mat-cell *matCellDef="let row">{{row.countOfInvalidNumbers}}</td>
+              </ng-container>
+
+              <!-- countOfDuplicateNumbers -->
+              <ng-container matColumnDef="countOfDuplicateNumbers">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Duplicate No. </th>
+                <td mat-cell *matCellDef="let row">{{row.countOfDuplicateNumbers}}</td>
+              </ng-container>
+
+              <!-- countOfBlackListNumbers -->
+              <ng-container matColumnDef="countOfBlackListNumbers">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total BlackList No. </th>
+                <td mat-cell *matCellDef="let row">{{row.countOfBlackListNumbers}}</td>
+              </ng-container>
+
+              <!-- leadStatus -->
+              <ng-container matColumnDef="leadStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.leadStatus)">{{row.leadStatus}}</td>
+              </ng-container>
+
+              <!-- Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let data">
+                  <div class="action-list">
+                    <button mat-icon-button matTooltip="Start" color="primary"
+                      (click)="performAction(data.leadId, 'Start', data)" [disabled]="showEnableDisabled(data)">
+                      <mat-icon>play_arrow</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Pause" color="warn"
+                      (click)="performAction(data.leadId, 'Pause', data)" [disabled]="showEnableDisabled(data)">
+                      <mat-icon>pause_circle_filled</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Stop" color="warn"
+                      (click)="performAction(data.leadId, 'Stop', data)" [disabled]="showEnableDisabled(data)">
+                      <mat-icon>stop</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+            </table>
+            <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No Records Found</div>
+
+            <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
+              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)"
+              showFirstLastButtons>
+            </mat-paginator>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="body-spacing"></div>

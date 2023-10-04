@@ -2,7 +2,7 @@ export interface Template {
     templateCode:string;
     templateType:string;
     templateMsgType:string;
-    templeteJson:TemplateJson;
+    templateJson:TemplateJson;
 }
 export interface TemplateJson {
     botId:number;

@@ -1,0 +1,77 @@
+mat-form-field {
+  width: 100%;
+}
+
+.filter-section,
+.date-range-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.date-range-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+
+  mat-form-field {
+    margin-right: 20px;
+  }
+}
+
+.horizontal-scroll-table {
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+.mdc-data-table__cell {
+  white-space: normal;
+
+}
+
+.status-approved {
+  color: #008000;
+  font-weight: 500;
+}
+
+.status-pending {
+  color: #ff0000;
+  font-weight: 500;
+}
+
+.banner-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin-right: 10px;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Adjust the gap between buttons as needed */
+}
+
+.mat-mdc-slide-toggle.mat-primary {
+  --mdc-switch-selected-focus-state-layer-color: #5fc29f;
+  --mdc-switch-selected-handle-color: #5fc29f;
+  --mdc-switch-selected-hover-state-layer-color: #5fc29f;
+  --mdc-switch-selected-pressed-state-layer-color: #5fc29f;
+  --mdc-switch-selected-focus-handle-color: #5fc29f;
+  --mdc-switch-selected-hover-handle-color: #5fc29f;
+  --mdc-switch-selected-pressed-handle-color: #5fc29f;
+  --mdc-switch-selected-focus-track-color: #5fc29f;
+  --mdc-switch-selected-hover-track-color: #5fc29f;
+  --mdc-switch-selected-pressed-track-color: #5fc29f;
+  --mdc-switch-selected-track-color: #5fc29f;
+}
+
+.my_class {
+  position: absolute;
+  right: 10px;
+  top: 21px;
+}

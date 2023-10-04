@@ -1,5 +1,5 @@
 mat-form-field {
-    width: 100%;
+    width: 10 0%;
   }
 .filter-section,
 .date-range-section {
@@ -29,18 +29,15 @@ mat-form-field {
     word-break: break-word;
 }
 
-.template-back{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-   .mat-icon {
-        margin-top: -10px
-    }
-    .back-icon{
-        display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-}
+
   
+  .status-approved {
+    color: #008000;
+    font-weight: 500;
+  }
   
+  .status-pending {
+    color: #ff0000;
+    font-weight: 500;
+  }
+ 

@@ -9,7 +9,7 @@ export class BaseService {
   public isProduction: boolean = environment.production;
 
   constructor() {
-    this.apiUrl = environment.apiUrl;
+    // this.apiUrl = environment.apiUrl;
     this.baseUrl = environment.baseUrl;
   }
 }

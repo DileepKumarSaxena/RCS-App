@@ -1,0 +1,46 @@
+<app-menu></app-menu> 
+<div class="go-back-section template-back add-inner-padding">
+    <div class="back-icon">
+        <h5 class="text-center">ADD BLACKLIST NUMBERS</h5>
+    </div>
+</div>
+<br>
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-sm-12">
+            <app-loader *ngIf="showLoader"></app-loader>
+            <form [formGroup]="addBlackListForm">
+                <div class="row">
+                    <div class="col-sm-6 offset-sm-3 top-space">
+                        <div class="card bg-light text-dark">
+                            <div class="card-body form-spacing">
+                                <div class="form-group">
+                                    <label>Upload file for blacklist ! </label>
+                                    <div class="input-group custom-file-button">
+                                        <input type="file" class="form-control" id="inputGroupFile"
+                                            formControlName="file" accept=".csv" (change)="uploadCsvFile($event)">
+                                        <label class="input-group-text" for="inputGroupFile">Browse</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button class="btn btn-outline-danger submit" type="submit"
+                                            id="smbtbtn" (click)="onCancel()">Reset</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button class="btn btn-success submit" type="submit"
+                                            id="smbtbtn" (click)="onUploadBlackList()">Upload</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

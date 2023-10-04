@@ -1,4 +1,4 @@
-.auth-bg[_ngcontent-xvv-c46] {
+.auth-bg {
     background-color: rgba(240, 248, 255, 0.801);
 }
 
@@ -16,6 +16,7 @@
 
 .min-vh-100 {
     min-height: 100vh !important;
+    padding-bottom: 20px;
 }
 
 .d-flex {
@@ -40,18 +41,25 @@
 
 .d-flex {
     display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
-.img-fluid {
+.image-container {
     max-width: 100%;
     height: auto;
+
+    img.img-fluid {
+        max-width: 74%;
+        height: auto;
+    }
 }
 
-.auth-section[_ngcontent-xvv-c46] {
+.auth-section {
     padding: 24px;
 }
 
-.auth-section[_ngcontent-xvv-c46] {
+.auth-section {
     padding: 16px;
     border: solid 1px #b1b6bf;
     background-color: #fff;
@@ -62,7 +70,7 @@
     margin-left: auto !important;
 }
 
-.auth-section[_ngcontent-xvv-c46] .heading[_ngcontent-xvv-c46] {
+.auth-section .heading {
     font-family: Roboto, sans-serif;
     font-size: 30px;
     font-weight: 700;
@@ -74,7 +82,7 @@
     color: #3cb187;
 }
 
-.auth-section[_ngcontent-xvv-c46] .sub-heading[_ngcontent-xvv-c46] {
+.auth-section .sub-heading {
     font-family: Roboto, sans-serif;
     font-size: 16px;
     font-weight: 500;

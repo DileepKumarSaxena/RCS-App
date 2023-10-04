@@ -1,0 +1,159 @@
+<app-menu></app-menu>
+<div class="go-back-section template-back add-inner-padding">
+    <div class="back-icon">
+        <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+        <h5 class="text-center">DETAILED REPORT</h5>
+    </div>
+</div>
+<br>
+<div class="container-fluid h-100">
+
+    <div class="row">
+        <!-- <div class="col-sm-3">
+            <app-navigation></app-navigation>
+        </div> -->
+
+        <div class="col-sm-12">
+
+            <form [formGroup]="detailListForm">
+                <div class="card bg-light text-dark">
+                    <div class="card-body bottom-space">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <mat-form-field appearance="outline" class="min-width-set">
+                                    <mat-label>Select a date range</mat-label>
+                                    <mat-date-range-input [rangePicker]="picker">
+                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                                            #startDate formControlName="startDate" required>
+                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="endDate" #endDate
+                                            (dateChange)="handleDateChange(startDate, endDate)" required>
+
+                                        <!-- <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                                            formControlName="endDate" #endDate
+                                            (dateChange)="dateFilter(startDate, endDate, 1)" required> -->
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+                                </mat-form-field>
+                            </div>
+
+
+                            <div class="col-sm-2" *ngIf="userId ==='1'">
+                                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User"
+                                    bindValue="userName" [searchable]="true" [clearable]="false" appearance="outline"
+                                    formControlName="userName">
+                                </ng-select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <ng-select [items]="campaignList" bindLabel="campaignName" (change)="getLeadName()"
+                                    placeholder="Select Campaign" bindValue="campId" [searchable]="true"
+                                    [clearable]="false" appearance="outline" formControlName="campaignId">
+                                </ng-select>
+                            </div>
+                            <div class="col-sm-2">
+                                <ng-select [items]="leadList" bindLabel="leadName" bindValue="leadId"
+                                    placeholder="Select Lead" [searchable]="true" [clearable]="false"
+                                    appearance="outline" formControlName="leadId">
+                                </ng-select>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="action-button-sec">
+                                    <button type="button" class="btn btn-success btn-lg"
+                                        [disabled]="detailListForm.status === 'INVALID'"
+                                        (click)="getDetailList()">Search</button>
+
+                                    <button *ngIf="dataSource['data']['length'] > 0" title="Export to Excel"
+                                        class="btn btn-success download" [ngClass]="{'my_class': userId ==='1'}"
+                                        (click)="exportExcel(paginatorRef)"
+                                        [disabled]="detailListForm.status === 'INVALID'">Export
+                                        &nbsp;<mat-icon>download</mat-icon></button>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <app-loader *ngIf="showLoader"></app-loader>
+
+            <div class="card bg-light text-dark" style="margin-top: 50px;">
+                <!-- <div use *ngIf="" for table condition  ></div> -->
+                <div class="card-body">
+
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+                            <!-- SLNo Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                                <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
+                                    paginatorRef.pageSize) + (i + 1)}} </td>
+                            </ng-container>
+                            <!-- User ID Column -->
+                            <!-- <ng-container matColumnDef="lead_info_detail_id">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Info Detail Id </th>
+                                <td mat-cell *matCellDef="let row"> {{row.lead_info_detail_id}} </td>
+                            </ng-container> -->
+
+                            <!-- Date -->
+                            <ng-container matColumnDef="created_date">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
+                                <td mat-cell *matCellDef="let row">{{moment(row.created_date).format('YYYY/MM/DD')}}
+                                </td>
+                            </ng-container>
+
+                            <!-- Campaign Name -->
+                            <ng-container matColumnDef="campName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name</th>
+                                <td mat-cell *matCellDef="let row">{{row.campName}}</td>
+                            </ng-container>
+
+                            <!-- Lead Name -->
+                            <ng-container matColumnDef="leadname">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Name</th>
+                                <td mat-cell *matCellDef="let row">{{row.leadname}}</td>
+                            </ng-container>
+
+                            <!-- language -->
+                            <ng-container matColumnDef="language">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> MSG ID</th>
+                                <td mat-cell *matCellDef="let row">{{row.language}}</td>
+                            </ng-container>
+
+                            <!-- Phone Number -->
+                            <ng-container matColumnDef="phone_number">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Number</th>
+                                <td mat-cell *matCellDef="let row">{{row.phone_number}}</td>
+                            </ng-container>
+
+                            <!-- Status -->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let row">{{row.phone_number_status === 'NONRCS_NUMBER' ?
+                                    'NONRCS' : row.status === 'Created' ? 'Submit Accepted' : row.status}}</td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+                        </table>
+                        <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No Records Found</div>
+
+                        <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
+                            [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)"
+                            showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body-spacing"></div>

@@ -1,3 +1,11 @@
+<app-menu></app-menu> 
+<div class="go-back-section template-back add-inner-padding">
+    <div class="back-icon">
+        <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+        <h5 class="text-center">{{heading}} CAMPAIGN</h5>
+    </div>
+  </div>
+
 <div class="container-fluid h-100">
 
     <div class="row">
@@ -6,36 +14,56 @@
         </div> -->
 
         <div class="col-sm-12"><br><br>
-            <div class="go-back-section">
-                <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-                <h5 class="text-center">ADD CAMPAIGN</h5>
-            </div>
+         
             <div class="card bg-light text-dark">
                 <div class="card-body">
-
+                    <app-loader *ngIf="showLoader"></app-loader>
                     <form [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
 
                         <div class="row" style="margin-left: 40px;">
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Campaign Name</mat-label>
                                     <input matInput autocomplete="off" placeholder="Campaign name"
-                                        formControlName="campaignName" maxlength="20" (blur)="checkDuplicateName()" />
+                                        formControlName="campaignName" maxlength="255"  (blur)="checkDuplicateName()" />
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
                                         Campaign name is required
                                     </mat-error>
                                     <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">
                                         Campaign name already exists
                                     </mat-error>
-                                
-                                </mat-form-field>
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                        <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
+                                            (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                    </mat-icon>
+                                </mat-form-field> -->
 
-                                <!-- <ng-container
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Campaign Name</mat-label>
+                                    <input
+                                      matInput
+                                      autocomplete="off"
+                                      placeholder="Campaign name"
+                                      formControlName="campaignName"
+                                      maxlength="30"
+                                      (blur)="onCampaignNameInputBlur();"
+                                    />
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">Campaign name is required</mat-error>
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('spacesNotAllowed')">Campaign name cannot be empty or contain only spaces</mat-error>
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('pattern')">Campaign name can only contain letters, numbers, underscores, and dashes</mat-error>
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">Campaign name already exists</mat-error>
+                                    <mat-icon matSuffix aria-hidden="true" container="body">
+                                      <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2" (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                    </mat-icon>
+                                  </mat-form-field>
+                                  
+
+                                <ng-container
                                     *ngIf="isHidden2 && !campaignForm.get('campaignName').hasError('duplicateName')">
                                     <div style="margin-top: -25px; font-size: small; color: red;  margin-left: 4px">
                                         No Special Characters allowed.
                                     </div>
-                                </ng-container> -->
+                                </ng-container>
 
                                 <!-- <div class="error-field" *ngIf="submitted && f.camaignName.errors">
                                     <span *ngIf="f.camaignName.errors.required">This field is required!</span>
@@ -51,22 +79,22 @@
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Description</mat-label>
-                                    <input matInput autocomplete="off" maxlength="50" placeholder="Description"
-                                        formControlName="description" required />
+                                    <input matInput autocomplete="off" maxlength="50" placeholder="Description" formControlName="description"
+                                        required (blur)="onDescriptionBlur()" />
                                     <mat-icon matSuffix aria-hidden="true" container="body">
-                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
-                                            class="material-symbols-outlined">
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden" class="material-symbols-outlined">
                                             info
                                         </span>
-                                    </mat-icon> -->
-
+                                    </mat-icon>
+                                    <mat-error *ngIf="isDescriptionInvalid()">Special characters are not allowed. Use underscores instead.</mat-error>
                                 </mat-form-field>
-                                <!-- <ng-container
+                                
+                                <ng-container
                                     *ngIf="isHidden && !campaignForm.get('campaignName').hasError('duplicateName')">
                                     <div style="margin-top: -25px; font-size: small; color: red; margin-left: 4px;">
                                         Brief description about your campaign.
                                     </div>
-                                </ng-container> -->
+                                </ng-container>
                             </div>
 
                             <!-- <div class="style col-sm-4">
@@ -79,13 +107,18 @@
                             </div> -->
 
                             <div class="col-sm-4">
-                                <mat-form-field appearance="outline">
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Template List</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="messageJson" required>
+                                    <mat-select placeholder="Select One" formControlName="templateId" required>
                                         <mat-option *ngFor="let item of allTemplateList"
                                             [value]="item.id">{{item.templateCode}}</mat-option>
                                     </mat-select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+
+                                <ng-select [items]="allTemplateList" bindLabel="templateCode"
+                                placeholder="Template List" bindValue="id" [searchable]="true"
+                                [clearable]="false" appearance="outline" formControlName="templateId" required>
+                            </ng-select>
                             </div>
 
                         </div>
@@ -93,18 +126,19 @@
 
                         <div class="row mt-4" style="margin-left: 40px; ">
                             <div class="col-sm-4">
-                                
-                                <mat-form-field appearance="outline">
+
+                                <!-- <mat-form-field appearance="outline">
                                     <mat-label>Message Type</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="messageId" required>
-                                        <mat-option *ngFor="let item of messageTypes"
+                                    <mat-select required placeholder="Select One" formControlName="messageId" required>
+                                        <mat-option  *ngFor="let item of messageTypes"
                                             [value]="item.messageId">{{item.messageType}}</mat-option>
                                     </mat-select>
-                                </mat-form-field>
+                                </mat-form-field> -->
+
                                 <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Enter a date range</mat-label>
+                                    <mat-label>Campaign Date Range</mat-label>
                                     <mat-date-range-input [rangePicker]="picker" [min]="minDate">
-                                        <input required ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
                                             formControlName="campaignStartTime">
                                         <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
                                             formControlName="campaignEndTime">
@@ -115,22 +149,42 @@
                                 </mat-form-field> -->
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-success" type="submit" id="smbtbtn"
-                                [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
-
-
-                            </div>
-
-                            <div class="col-sm-4 ">
-                               
-
+<!-- 
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Campaign Type</mat-label>
+                                    <mat-select required placeholder="Select One"  >
+                                        <mat-option *ngFor="let item of campaignType"
+                                        [value]="item.campaignType">{{item.campaignType}}</mat-option>
+                                        
+                                    </mat-select>
+                                </mat-form-field> -->
+                              
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-success" type="submit" id="smbtbtn"
-                                    [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button>
+                                <!-- <mat-form-field appearance="outline">
+                                    <mat-label>Template Type</mat-label>
+                                    <mat-select required placeholder="Select One"  >
+                                        <mat-option *ngFor="let item of campaignSend"
+                                        [value]="item.campaignSend">{{item.campaignSend}}</mat-option>
+                                        
+                                    </mat-select>
+                                </mat-form-field> -->
+                                
                             </div>
-                                               
-                        </div>
+
+                        
+                            <div class="col-sm-4"></div>
+                            
+                            <div class="col-sm-4" >
+                                <button  style="width: 90%;" class="btn btn-success" type="submit" id="smbtbtn"
+                                [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button> 
+                            </div>
+                            <div class="col-sm-4">
+
+                            </div>
+                            </div>
+                                       
+                        
 
 
                     </form>
@@ -139,3 +193,4 @@
         </div>
     </div>
 </div>
+<div class="body-spacing"></div>

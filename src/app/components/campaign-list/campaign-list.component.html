@@ -1,0 +1,165 @@
+<app-menu></app-menu>
+<div class="go-back-section template-back">
+  <div class="back-icon">
+    <h5 class="text-center">CAMPAIGN LIST</h5>
+  </div>
+
+  <div *ngIf="userId === '1'">
+    <br><br>
+  </div>
+  <button type="button" class="btn btn-info btn-lg" routerLink="/campaign/create" *ngIf="userId !== '1'">+ Add
+    Campaign</button>
+
+</div>
+<br>
+<div class="container-fluid h-100">
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="campaignListForm">
+
+        <div class="card bg-light text-dark">
+          <div class="card-body bottom-space">
+            <div class="row">
+              <div class="col-sm-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select a date range</mat-label>
+                  <mat-date-range-input required [rangePicker]="picker">
+                    <input #startDate required ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
+                      formControlName="startDate">
+                    <input #endDate required ng-disabled="true" readonly="true" matEndDate placeholder="End date"
+                      formControlName="endDate" (dateChange)="checkAndFilter(startDate, endDate)">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+
+              </div>
+
+              <div class="col-sm-2" *ngIf="userId ==='1'">
+                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
+                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
+                </ng-select>
+              </div>
+
+              <div class="col-sm-2">
+                <ng-select [items]="templateListbysearch" bindLabel="templateCode" (change)="getCampaignName()"
+                  placeholder="Select Template" bindValue="id" [searchable]="true" [clearable]="false"
+                  appearance="outline" formControlName="templateName">
+                </ng-select>
+              </div>
+              <div class="col-sm-2">
+                <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="campaignId"
+                  placeholder="Select Campaign" [searchable]="true" [clearable]="false" appearance="outline"
+                  formControlName="campaignId">
+                </ng-select>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="action-button-sec">
+                  <button type="button" class="btn btn-success btn-lg"
+                    [disabled]="campaignListForm.status === 'INVALID'" (click)="getCampaignList()">Search</button>
+
+                  <button *ngIf="dataSource['data']['length'] > 0" [disabled]="campaignListForm.status === 'INVALID'"
+                    type="text" [ngClass]="{'my_class': userId ==='1'}" class="btn btn-success download"
+                    placeholder="Download" (click)="downloadFile()" readonly>Export
+                    &nbsp;<mat-icon>download</mat-icon></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <app-loader *ngIf="showLoader"></app-loader>
+
+      <div class="card bg-light text-dark" style="margin-top: 30px;">
+        <br>
+        <div class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+            <!-- SLNo Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+              <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
+                paginatorRef.pageSize) + (i + 1)}} </td>
+            </ng-container>
+
+            <!-- Date -->
+            <ng-container matColumnDef="createdDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+              <td mat-cell *matCellDef="let row">{{moment(row.createdDate).format('YYYY/MM/DD')}}</td>
+            </ng-container>
+
+            <!-- campaignId -->
+            <ng-container matColumnDef="campaignId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
+            </ng-container>
+
+            <!-- campaignName -->
+            <ng-container matColumnDef="campaignName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign Name </th>
+              <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
+            </ng-container>
+
+            <!-- description -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Description</th>
+              <td mat-cell *matCellDef="let row">{{row.description}}</td>
+            </ng-container>
+
+            <!-- template Name -->
+            <ng-container matColumnDef="templateName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Template Name</th>
+              <td mat-cell *matCellDef="let row">{{row.templateName}}</td>
+            </ng-container>
+
+
+            <!-- messageType -->
+            <!-- <ng-container matColumnDef="usageType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Message Type</th>
+                <td mat-cell *matCellDef="let row">{{row.usageType}}</td>
+              </ng-container> -->
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let data">
+                <button mat-icon-button matTooltip="Edit" color="primary" *ngIf="userId !== '1'"
+                  (click)="editRow(data.campaignId)">
+
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <!-- <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteRow(data.campaignId)">
+                    <mat-icon>delete</mat-icon>
+                  </button> -->
+
+
+                <mat-slide-toggle color="primary" [checked]="(data.isDeleted == 0 ? true : false)"
+                  (change)="toggleCampaignStatus(data)">
+                  {{ data.isDeleted == 0 ? 'Active' : 'InActive'}}
+                </mat-slide-toggle>
+
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No Records Found</div>
+
+          <!-- <mat-paginator #paginatorRef (page)="onPaginateChange($event)" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" [length]="totalItems"></mat-paginator> -->
+          <div>
+            <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
+              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)"
+              showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+        <br>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="body-spacing"></div>

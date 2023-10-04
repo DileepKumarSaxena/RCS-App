@@ -1,35 +1,31 @@
-<div _ngcontent-xvv-c46="" class="auth-bg min-vh-100 d-flex flex-column p-3 pt-2">
+<div class="auth-bg min-vh-100 d-flex flex-column">
 
-    <div _ngcontent-xvv-c46="" class="container p-0">
-        <div _ngcontent-xvv-c46="" class="auth-logo">
-            <img _ngcontent-xvv-c46="" alt="Fonada" src="assets/fonada-removebg-preview.png"
-                style="width: 280px;">
+    <div class="container p-0">
+        <div class="auth-logo">
+            <img alt="Fonada" src="assets/fonada-removebg-preview.png" style="width: 280px;">
         </div>
-        <div _ngcontent-xvv-c46="" class="row flex-fill d-flex justify-content-start">
-            <div _ngcontent-xvv-c46="" class="d-none d-md-block col-md-6">
-                
-                <div _ngcontent-xvv-c46="" class="p-40-20"><img _ngcontent-xvv-c46="" alt="Auth" width="480"
-                        class="img-fluid" src="assets/RCS login page.png">
+        <div class="row flex-fill d-flex justify-content-start">
+            <div class="d-none d-md-block col-md-6">
+                <div class="p-40-20 image-container">
+                    <img alt="Auth" class="img-fluid" src="assets/RCS login page.png">
                 </div>
             </div>
 
-            <div _ngcontent-xvv-c46="" class="col-12 col-md-6">
-                <div _ngcontent-xvv-c46="" class="auth-section ms-auto ng-star-inserted">
-                    <form _ngcontent-xvv-c46="" novalidate="" class="ng-pristine ng-invalid ng-touched"
-                        [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                        <h1 _ngcontent-xvv-c46="" class="heading ml-2">Welcome To RCS</h1>
-                        <p _ngcontent-xvv-c46="" class="sub-heading mb-4 ml-3">Please enter your login credentials</p>
+            <div class="col-12 col-md-6">
+                <div class="auth-section ms-auto ng-star-inserted">
+                    <form novalidate="" class="ng-pristine ng-invalid ng-touched" [formGroup]="loginForm"
+                        (ngSubmit)="onSubmit()">
+                        <h1 class="heading ml-2">Welcome To RCS</h1>
+                        <p class="sub-heading mb-4 ml-3">Please enter your login credentials</p>
 
-                        <div _ngcontent-xvv-c46="" class="row">
+                        <div class="row">
 
-                            <div _ngcontent-xvv-c46="" class="col-12">
-                                <div _ngcontent-xvv-c46="" class="col-12"><label _ngcontent-xvv-c46=""
-                                        class="form-label">Enter Username</label>
-                                    <div _ngcontent-xvv-c46="" class="input-group mb-3"><span _ngcontent-xvv-c46=""
-                                            class="input-group-text">
-                                            <i _ngcontent-xvv-c46="" aria-hidden="true" class="fa fa-user"></i>
+                            <div class="col-12">
+                                <div class="col-12"><label class="form-label">Enter Username</label>
+                                    <div class="input-group mb-3"><span class="input-group-text">
+                                            <i aria-hidden="true" class="fa fa-user"></i>
                                         </span>
-                                        <input _ngcontent-xvv-c46="" type="text" formControlName="username"
+                                        <input type="text" maxlength="30" formControlName="username"
                                             class="form-control"
                                             [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
                                             placeholder="Enter here"
@@ -37,44 +33,36 @@
                                         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                                             <div *ngIf="f.username.errors.required">Username is required</div>
                                         </div>
-
                                     </div>
                                 </div>
-                                <div _ngcontent-xvv-c46="" class="col-12"><label _ngcontent-xvv-c46=""
-                                        class="form-label">Enter Password</label>
-                                       
-                                    <div _ngcontent-xvv-c46="" class="input-group mb-3"><span _ngcontent-xvv-c46=""
-                                            class="input-group-text"><i _ngcontent-xvv-c46="" aria-hidden="true"
-                                                class="fa fa-lock"></i></span><input _ngcontent-xvv-c46=""
-                                            type="password" formControlName="password" class="form-control"
+                                <div class="col-12"><label class="form-label">Enter Password</label>
+                                    <div class="input-group mb-3"><span class="input-group-text"><i aria-hidden="true"
+                                                class="fa fa-lock"></i></span><input type="password"
+                                            formControlName="password" minlength="5" maxlength="30" class="form-control"
                                             [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                             placeholder="Enter here"
                                             class="form-control ps-0 ng-pristine ng-valid ng-touched">
-                                          
+
                                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                             <div *ngIf="f.password.errors.required">Password is required</div>
                                         </div>
-                                    
+
                                     </div>
-                                    <a  routerLink="/forgot/password" style="margin-left: 60%;">Forgot Password ?</a>
+                                    <a routerLink="/forgot/password" style="margin-left: 60%;">Forgot Password ?</a>
                                 </div>
                                 <br>
-                                <div _ngcontent-xvv-c46="" class="col-12"><button  _ngcontent-xvv-c46="" type="submit"
-                                        class="w-100 shadow">
+                                <div class="col-12"><button type="submit" class="w-100 shadow">
                                         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                                        LOGIN <i class="fa fa-arrow-right"></i></button>
+                                        LOGIN &nbsp; <i class="fa fa-arrow-right" style="color: white;"></i></button>
                                     <br>
                                     <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                                 </div>
-
-                                <div _ngcontent-xvv-c46="" class="col-12 my-3 text-center"><span _ngcontent-xvv-c46=""
-                                        class="sub-heading">
+                                <div class="col-12 my-3 text-center"><span class="sub-heading">
                                     </span>
                                 </div>
                                 <br>
                                 <br>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -85,3 +73,5 @@
     <!-- <br><br><br><br>
     <p style="margin-left: 20%;">© The website will make use of cookies. By submitting this form, you agree to the privacy policy and cookie policy of this website.</p> -->
 </div>
+
+<app-footer></app-footer>

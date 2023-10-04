@@ -69,7 +69,8 @@ export class ResetPasswordComponent {
     }
 
     this.loading = true;
-    this.authenticationService.resetPassword(this.f.userId.value,this.f.newPassword.value, this.f.oldPassword.value, )
+
+    this.authenticationService.resetPassword(sessionStorage.getItem('userId'), this.f.newPassword.value, this.f.oldPassword.value, )
       // .pipe(first())
       .subscribe({
         next: (res) => {
@@ -79,18 +80,18 @@ export class ResetPasswordComponent {
             confirmButtonColor: '#F34335',
             width: '300px',
           })
-          console.log(res, "Data===>");
           this.authenticationService.logout();
           this.router.navigate(['/login']);
         },
 
         error: (err) => {
-          console.log(err, "err===>");
           this.error = ('Old Password is Not Valid!');
           this.loading = false;
         }
       })
   }
 
+
+  
 }
 

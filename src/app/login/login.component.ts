@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
-
             return;
         }
 
@@ -58,20 +57,22 @@ export class LoginComponent implements OnInit {
         this.authenticationService.login(this.f.username.value, this.f.password.value)
             // .pipe(first())
             .subscribe({
-
                 next: (res) => {
-                    console.log(res, "Data===>");
-                    this.router.navigate(['/vircs']);
+                    sessionStorage.setItem('userId', res.userId);
+                    console.log('userId', res.userId);
+                    sessionStorage.setItem('username', res.result.username);
+                    sessionStorage.setItem('botId', res.botId);
+                    sessionStorage.setItem('dailyUsageLimit', res.dailyUsageLimit);
+
+                    this.router.navigate(['/dasboard']);
                 },
-
                 error: (err) => {
-
-                    console.log(err, "err===>");
-                    this.error = ('Username or password is incorrect');
-
-                    // if(Response['status'] == 403){
-                    //     this.error = ('Username or password is incorrect'); 
-                    // }
+                    if (err.status === 401) {
+                        this.error = 'Username or Password is incorrect';
+                        this.router.navigate(['/login'])
+                    } else {
+                        this.error = 'Something went wrong. Please try again later.';
+                    }
                     this.loading = false;
                 }
             })

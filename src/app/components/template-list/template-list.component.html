@@ -1,132 +1,157 @@
+<app-menu></app-menu>
+<div class="go-back-section template-back">
+  <div class="back-icon">
+    <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
+    <h5 class="text-center">TEMPLATE LIST</h5>
+  </div>
+  <div *ngIf="userId === '1'">
+    <br><br>
+  </div>
+  <button type="button" class="btn btn-info btn-lg" routerLink="/addTemplate" *ngIf="userId !== '1'">+ Add
+    Template</button>
+
+</div>
 <div class="container-fluid h-100">
+  <div class="row">
 
-    <div class="row">
-        <!-- <div class="col-sm-3">
-        <app-navigation></app-navigation>
-      </div> -->
+    <div class="col-sm-12">
+      <br>
+      <form [formGroup]="templateFilterForm">
+        <div class="card bg-light text-dark">
+          <div class="card-body bottom-space">
+            <div class="row">
+              <div class="col-sm-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select a date range</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input #startDate ng-disabled="true" required readonly="true" matStartDate placeholder="Start date"
+                      formControlName="startDate">
+                    <input #endDate ng-disabled="true" required readonly="true" matEndDate placeholder="End date"
+                      formControlName="endDate" (dateChange)="dateFilter(startDate, endDate)">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-2" *ngIf="userId ==='1'">
+                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
+                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
+                </ng-select>
+              </div>
 
-        <div class="col-sm-12">
-            <br><br>
-            <div class="go-back-section template-back">
-                <div class="back-icon">
-                    <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon>
-                    <h5 class="text-center">TEMPLATE LIST</h5>
-                </div>
-                <button type="button" class="btn btn-info btn-lg" routerLink="/addTemplate">+ Add
-                    Template</button>
-            </div>
-            <!-- <form [formGroup]="campaignListForm">
-  
-          <div class="card bg-light text-dark">
-  
-  
-  
-            <div class="card-body">
-  
-              <div class="filter-section">
-                <div class="date-range-section">
-                  <mat-form-field appearance="fill">
-                    <mat-label>Enter a date range</mat-label>
-                    <mat-date-range-input [rangePicker]="picker">
-                      <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
-                        formControlName="startDate">
-                      <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
-                        formControlName="endDate">
-                    </mat-date-range-input>
-                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                  </mat-form-field>
-                  <button type="button" class="btn btn-success btn-lg" (click)="getCampaignList()">Search</button>
-                </div>
-                <button type="button" class="btn btn-info btn-lg" routerLink="/addTemplate">+ Add
-                  Template</button>
+
+              <div class="col-sm-2">
+                <ng-select [items]="templateListbysearch" bindLabel="templateCode" placeholder="Template Name"
+                  bindValue="templateCode" [searchable]="true" [clearable]="false" appearance="outline"
+                  formControlName="templateName">
+                </ng-select>
               </div>
-  
-              <div>
-  
+              <!-- <div class="col-sm-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Template Type</mat-label>
+                  <mat-select formControlName="templateType">
+                    <mat-option>None</mat-option>
+                    <mat-option value="Dynamic">Dynamic</mat-option>
+                    <mat-option value="Static">Static</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+              <div class="col-sm-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Template Status</mat-label>
+                  <mat-select formControlName="templateStatus">
+                    <mat-option>None</mat-option>
+                    <mat-option value="0">Pending</mat-option>
+                    <mat-option value="1">Approved</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-  
+
+              <div class="col-sm-3">
+                <div class="action-button-sec">
+                  <button type="button" [disabled]="templateFilterForm.status === 'INVALID'"
+                    (click)="getTemplateListWithDateFilter()" class="btn btn-success btn-lg">Search</button>
+                  <button type="text" [ngClass]="{'my_class': userId ==='1'}" class="btn btn-success download"
+                    *ngIf="dataSource['data']['length'] > 0" (click)="downloadTemplateFile()" readonly>Export
+                    &nbsp;<mat-icon>download</mat-icon>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </form> -->
-
-            <app-loader *ngIf="showLoader"></app-loader>
-
-            <div class="card bg-light text-dark" style="margin-top: 30px;">
-                <!-- <div use *ngIf="create_campaign"  ></div> -->
-                <div class="card-body">
-                    <!-- <mat-form-field>
-              <mat-label>Filter</mat-label>
-              <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Campaign Name" #input>
-            </mat-form-field> -->
-                    <div class="mat-elevation-z8">
-                        <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
-                            <!-- SLNo Column -->
-                            <ng-container matColumnDef="id">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
-                                <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
-                                    paginatorRef.pageSize) + (i + 1)}} </td>
-                            </ng-container>
-                            <!-- User ID Column -->
-                            <!-- <ng-container matColumnDef="campaignId">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
-                  <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
-                </ng-container> -->
-                            <!-- campaignName -->
-                            <ng-container matColumnDef="campaignName">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Template Name/Code </th>
-                                <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
-                            </ng-container>
-
-                            <!-- description -->
-                            <ng-container matColumnDef="description">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
-                                <td mat-cell *matCellDef="let row">{{row.description}}</td>
-                            </ng-container>
-
-                            <!-- textMessage -->
-                            <ng-container matColumnDef="messageJson">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Updated	</th>
-                                <td mat-cell *matCellDef="let row">{{row.messageJson}}</td>
-                            </ng-container>
-
-                            <!-- campaignStartTime -->
-                            <ng-container matColumnDef="campaignStartTime">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Action</th>
-                                <td mat-cell *matCellDef="let row">
-                                    {{moment(row.campaignStartTime).format('MM/DD/YYYY')}}</td>
-                            </ng-container>
-
-
-                            <!-- Actions -->
-                            <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                <td mat-cell *matCellDef="let data">
-                                    <button mat-icon-button matTooltip="Edit" color="primary"
-                                        (click)="editRow(data.campaignId)">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button mat-icon-button matTooltip="Delete" color="warn"
-                                        (click)="deleteRow(data.campaignId)">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-
-
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-
-                        </table>
-                        <!-- <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No records found</div> -->
-
-                        <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"
-                            aria-label="Select page of users"></mat-paginator>
-                    </div>
-
-                </div>
-            </div>
         </div>
+
+      </form>
+      <app-loader *ngIf="showLoader"></app-loader>
+      <div class="card bg-light text-dark" style="margin-top: 30px;">
+        <!-- <div use *ngIf="create_campaign"  ></div> -->
+        <div class="card-body">
+          <br>
+          <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+              <!-- SLNo Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
+                <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
+                  paginatorRef.pageSize) + (i + 1)}} </td>
+              </ng-container>
+
+              <!-- Time-->
+              <ng-container matColumnDef="inserttime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let row">{{moment(row.inserttime).format('YYYY/MM/DD')}}</td>
+              </ng-container>
+
+              <!-- Template Name -->
+              <ng-container matColumnDef="templateCode">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Template Name </th>
+                <td mat-cell *matCellDef="let row">{{row.templateCode}}</td>
+              </ng-container>
+
+              <!-- templateType -->
+              <ng-container matColumnDef="templateType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Template Type</th>
+                <td mat-cell *matCellDef="let row">{{row.templateType}}</td>
+              </ng-container>
+
+              <!-- templateMsgType -->
+              <ng-container matColumnDef="templateMsgType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Template Message Type</th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.templateMsgType === 'rich_card' ? 'Rich Card Stand Alone' : (row.templateMsgType === 'carousel'
+                  ? 'Rich Card Carousel' : row.templateMsgType==='text_message'? 'Text Message': row.templateMsgType) }}
+                </td>
+              </ng-container>
+
+              <!-- status -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.status == '0'?'Pending':'Approved')">
+                  {{row.status == '0'?'Pending':'Approved'}}
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <!-- <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-icon-button matTooltip="Preview Template" color="primary" (click)="previewTemplate(row)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container> -->
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No Records Found</div>
+            <mat-paginator #paginatorRef [pageIndex]="paginator.pageIndex" [pageSize]="paginator.pageSize"
+              [pageSizeOptions]="[5, 10, 25]" [length]="paginator.length" (page)="onPageChanged($event)"
+              showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="body-spacing"></div>
