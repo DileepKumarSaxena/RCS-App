@@ -28,6 +28,10 @@ export class SummaryReportComponent {
   @ViewChild(MatSort) sort: MatSort;
   userData: any;
   userListbysearch: any;
+  arrayDataList: any = [];
+  currentDate = new Date();
+  campaignList: any = [];
+  leadList: any = [];
   userId = sessionStorage.getItem('userId');
 
   constructor(
@@ -44,6 +48,7 @@ export class SummaryReportComponent {
     this.dataSource = new MatTableDataSource<any>();
     this.paginator.pageIndex = 0;
     this.paginator.pageSize = 5;
+    this.dateFilter(this.currentDate, this.currentDate, 2);
     this.summaryReport();
     this.getSummaryList();
     if (this.userId === '1') {
@@ -58,8 +63,94 @@ export class SummaryReportComponent {
       startDate: moment().format('YYYY-MM-DD'),
       endDate: moment().format('YYYY-MM-DD'),
       userName: [],
+      campaignId: [],
+      leadId: [],
 
     })
+  }
+  handleDateChange(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+    
+    if (startDate.value && endDate.value) {
+      this.dateFilter(startDate, endDate, 1);
+    } else {
+      this.summaryListForm.get('campaignId').setValue(null);
+      this.summaryListForm.get('leadId').setValue(null);
+    }
+    
+  
+  }
+  
+  
+  dateFilter(startDate: any, endDate: any, flag: any) {
+    // this.showLoader = true;
+    let userId = sessionStorage.getItem('userId');
+
+    let from = flag == '1' ? moment(startDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
+    let to = flag == '1' ? moment(endDate.value).format('YYYY-MM-DD') : moment(this.currentDate).format('YYYY-MM-DD');
+    
+    this.campaignList = [];
+    let arrayList = [];
+    let arrayList2 = [];
+    this.leadList = [];
+  
+    this.reportservice.dateRangeFilter(from, to, userId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          let groups: any = {};
+          let obj: any = [];
+
+          res.forEach((element: any) => {
+            arrayList.push({ campId: element.campId, campaignName: element.campaignName });
+
+            arrayList2.push({ leadId: element.leadId, leadName: element.leadName });
+          })
+          this.campaignList = this.removeDupliactes(arrayList);
+          this.leadList = arrayList2;
+          res.forEach((element: any) => {
+            var id = element.campId;
+
+            if (groups[id]) {
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+            } else {
+              groups[id] = {};
+              groups[id]['leadInfo'] = [];
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+              groups[id]['campId'] = element.campId;
+              groups[id]['campaignName'] = element.campaignName;
+            }
+          });
+
+          Object.keys(groups).forEach(function (key) {
+            obj.push(groups[key]);
+          });
+
+          this.arrayDataList = obj;
+          this.showLoader = false;
+        }
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+  
+  removeDupliactes(values: any) {
+    let concatArray = values.map(eachValue => {
+      return Object.values(eachValue).join('')
+    })
+    let filterValues = values.filter((value, index) => {
+      return concatArray.indexOf(concatArray[index]) === index
+    })
+    return filterValues
+  }
+
+
+  getLeadName() {
+    this.leadList = [];
+    let campaignId = this.summaryListForm.controls.campaignId.value;
+    let obj = this.arrayDataList.find(element => element.campId == campaignId);
+    this.leadList = obj['leadInfo'];
   }
 
   getSummaryList() {
@@ -69,8 +160,11 @@ export class SummaryReportComponent {
     let endDateVal = moment(this.summaryListForm.value.endDate).format('YYYY-MM-DD');
     let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
+    let camType = this.summaryListForm.value.campaignId;
+    let leadId = this.summaryListForm.value.leadId;
+    
     this.ngxService.start();
-    this.reportservice.getSummaryReport(userName, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.reportservice.getSummaryReport(userName, startDateVal, endDateVal, limit, start, this.paginator.pageIndex, this.paginator.pageSize,camType,leadId).subscribe({
       next: (res: any) => {
 
         this.summaryData = res.data;

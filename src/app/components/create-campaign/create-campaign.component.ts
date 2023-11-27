@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 import { CampaignService } from 'src/app/services/campaign.service';
@@ -6,10 +6,12 @@ import { TemplateService } from 'src/app/services/template.service'
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-create-campaign',
   templateUrl: './create-campaign.component.html',
-  styleUrls: ['./create-campaign.component.scss']
+  styleUrls: ['./create-campaign.component.scss'],
+  
 })
 export class CreateCampaignComponent {
   campaignForm: FormGroup;
@@ -22,7 +24,8 @@ export class CreateCampaignComponent {
   heading:string = "ADD";
   cmpId: any;
   descriptionPattern = /^[a-zA-Z0-9_]*$/;
-  
+  isCampaignNameDisabled: boolean = false;
+  username =sessionStorage.getItem('username')
   selectedOption: any;
   minDate: any = moment().format('YYYY-MM-DD');
   campaignType: any = [
@@ -73,12 +76,14 @@ export class CreateCampaignComponent {
       next: (res) => {
         this.campaignForm.patchValue(res);
         this.campaignForm.controls['campaignName'].disable();
+        this.isCampaignNameDisabled = true; // Set the variable to true when you disable the field
       },
       error: (err) => {
-        console.log(err, "ERRRRRRR")
+        console.log(err, "ERRRRRRR");
       }
-    })
+    });
   }
+  
   get f() { return this.campaignForm.controls; }
 
   createCampaignForm() {
@@ -86,14 +91,16 @@ export class CreateCampaignComponent {
       userId: sessionStorage.getItem('userId'),
       campaignName: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9_-]+$')]],
       description: [],
-      campaignStartTime: [],
-      campaignEndTime: [],
+      // campaignStartTime: [],
+      // campaignEndTime: [],
       campaignStatus: ['Active'],
       isDeleted: [0],
       usageType: [0],
       channelPriorityScheme: ['Auto'],
       messageId: 1,
       templateId: [],
+      campaignType:[],
+      dataSourceName:[],
      })
 
 
@@ -137,7 +144,7 @@ export class CreateCampaignComponent {
   return descriptionControl.invalid && descriptionControl.touched;
 }
 hasSpecialCharacters(value: string) {
-  const pattern = /^[A-Za-z0-9\s]+$/;
+  const pattern = /^[A-Za-z0-9_\s]+$/;
   return !pattern.test(value);
 }
 
@@ -244,5 +251,7 @@ onDescriptionBlur() {
   goBack(): void {
     this.location.back();
   }
+
+  
 }
 

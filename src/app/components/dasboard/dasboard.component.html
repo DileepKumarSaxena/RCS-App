@@ -34,8 +34,9 @@
 
                             </div>
                             <div class="user-select-container" *ngIf="userId === '1'">
-                                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User"
-                                    bindValue="userName" [searchable]="true" [clearable]="false" appearance="outline"
+                                <ng-select [items]="userListbysearch" [inputAttrs]="{maxlength: '20'}"
+                                    bindLabel="userName" placeholder="Select User" bindValue="userName"
+                                    [searchable]="true" [clearable]="false" appearance="outline"
                                     formControlName="userName">
                                 </ng-select>
                             </div>
@@ -50,7 +51,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <div class="custom-card-section" *ngIf="dashboardData">
+                            <div class="custom-card-section" *ngIf="dashboardData" style="margin-top: -15px;">
                                 <div>
                                     <div><strong class="total-message-sent counter">{{ getSum('TOTAL')
                                             }}</strong><br><small class="total-message-sent">Total Request</small>

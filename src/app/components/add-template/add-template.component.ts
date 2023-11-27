@@ -5,7 +5,7 @@ declare var require: any;
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { TemplateService } from '@app/services/template.service';
-import { Template, TemplateJson } from '@app/_models';
+import { Template, TemplateJson } from '@app/_models/template';
 import { AlertService } from '@app/services';
 import moment from 'moment';
 import { Router } from '@angular/router';
@@ -52,9 +52,6 @@ export class AddTemplateComponent implements OnInit {
   cardAlignmentValue: any = [{ value: 'LEFT', key: 'LEFT' }, { value: 'RIGHT', key: 'RIGHT' }]
   cardWidthValue: any = [{ value: 'SMALL', key: 'SMALL_WIDTH' }, { value: 'MEDIUM', key: 'MEDIUM_WIDTH' }]
   suggestionActionValue: any = [{ value: 'URL Action', key: 'url_action' }, { value: 'Dialer Action', key: 'dialer_action' }, { value: 'Reply', key: 'reply' }]
-
-
-
 
   constructor(
     private fb: FormBuilder,
@@ -113,7 +110,7 @@ export class AddTemplateComponent implements OnInit {
       suggestionType: ['reply'],
       displayText: [''],
       postback: [''],
-      url: ['', [Validators.required, Validators.maxLength(2048), Validators.pattern('^(?!.*\\s).*$')]],
+      url: [''],
       phoneNumber: [''],
     });
   }
@@ -166,7 +163,6 @@ export class AddTemplateComponent implements OnInit {
     event.preventDefault();
   }
 
-
   createCards(): FormGroup {
     return this.fb.group({
       cardWidth: ['SMALL_WIDTH'],
@@ -179,8 +175,8 @@ export class AddTemplateComponent implements OnInit {
       cardDescription: ['', Validators.required],
     });
   }
-  tabs = [];
 
+  tabs = [];
   setValidation(frmCtrl: any, validation: any) {
     if (validation) {
       this.templateForm.controls[frmCtrl].setValidators(validation);
@@ -267,8 +263,8 @@ export class AddTemplateComponent implements OnInit {
         }
       }
     }
-
   }
+
   // Upload Image or Video ---- StandAlone
   validateFile(input: any, frmCtrl: any, frmCtrlDisplay: any, ind: any, flag: any) {
     const file = input.files && input.files[0];
@@ -309,7 +305,6 @@ export class AddTemplateComponent implements OnInit {
               this.templateForm.get('mediaContentType').patchValue(formatType);
             }
           }
-
         }
 
       } else if (formatType == 'video') {
@@ -325,8 +320,6 @@ export class AddTemplateComponent implements OnInit {
           this.templateForm.get(frmCtrl).patchValue(file);
           // this.setValidation('thumbnailFileName', Validators.required);
         }
-
-
       }
 
       var reader = new FileReader();
@@ -347,7 +340,6 @@ export class AddTemplateComponent implements OnInit {
 
         if (fileType === 'image') {
           // Image file validation
-
         } else if (fileType === 'video') {
           // Video file validation
           if (fileSize > maxVideoSize) {
@@ -362,83 +354,9 @@ export class AddTemplateComponent implements OnInit {
           this.fileSizeError = true;
           this.fileSizeErrorMessage = 'Only image and video files are allowed.';
         }
-
-
       }
     }
   }
-
-
-  // onSubmit() {
-  //   this.templateCodeVal = true;
-  //   if (this.templateForm.invalid) {
-  //     Swal.fire({
-  //       title: 'Error',
-  //       text: 'Please fill all the required fields.',
-  //       icon: 'error',
-  //       confirmButtonText: 'OK',
-  //       customClass: {
-  //         icon: 'custom-icon-class',
-  //       },
-  //       width: '300px',
-  //     });
-  //     return;
-  //   }
-  //   if (this.templateForm.valid) {
-  //     let data = this.templateForm?.value;
-  //     let tempData: any = this.dataCreate(data);
-  //     const body = JSON.stringify(tempData);
-  //     const formData = new FormData();
-  //     const cardDetails = this.templateForm.get('cardDetails').value;
-  //     const richCardDetails = this.templateForm.get('templateType').value === 'rich_card'
-  //     if (cardDetails?.length) {
-  //       cardDetails?.forEach(element => {
-  //         formData.append('files', element?.fileName);
-  //       })
-  //     } else if (richCardDetails) {
-  //       formData.append('files', this.templateForm.get('fileName').value);
-  //     }
-
-  //     formData.append('addTemplate', body?.toString());
-  //     this.templateService.templateDataSubmit(formData).subscribe({
-  //       next: (res: any) => {
-  //         if (res.status === 'OK') {
-  //           // Template added successfully
-  //           Swal.fire({
-  //             title: 'Template Created Successfully.',
-  //             icon: 'success',
-  //             confirmButtonText: 'OK',
-  //             customClass: {
-  //               icon: 'custom-icon-class',
-  //             },
-  //             width: '300px',
-  //           });
-  //           this.templateForm.reset();
-  //           this.router.navigate(['/templateList']);
-  //         } else if (res.status === 'CREATED') {
-  //           // Template code already exists
-  //           Swal.fire({
-  //             text: 'Template Name Already Exist.',
-  //             icon: 'warning',
-  //             confirmButtonText: 'OK',
-  //             customClass: {
-  //               icon: 'custom-icon-class',
-  //             },
-  //             width: '300px',
-  //           });
-  //         } else {
-  //           // Handle unexpected response
-  //           this.showErrorMessageBox('Error while adding the Template Details.');
-  //         }
-  //       },
-  //       error: (error: string) => {
-  //         // Display error message
-  //         this.showErrorMessageBox('Error while adding the Template Details.');
-  //       },
-  //     })
-
-  //   }
-  // }
 
   onSubmit() {
     this.templateCodeVal = true;
@@ -468,7 +386,6 @@ export class AddTemplateComponent implements OnInit {
         },
         width: '300px',
       });
-
       return;
     }
 
@@ -492,7 +409,6 @@ export class AddTemplateComponent implements OnInit {
           formData.append('files', richCardFileName);
         }
       }
-
       formData.append('addTemplate', body?.toString());
 
       this.templateService.templateDataSubmit(formData).subscribe({
@@ -536,7 +452,6 @@ export class AddTemplateComponent implements OnInit {
     }
   }
 
-
   showErrorMessageBox(message: string) {
     Swal.fire({
       title: 'Error',
@@ -550,11 +465,9 @@ export class AddTemplateComponent implements OnInit {
     });
   }
 
-
   onCancel() {
     window.location.reload();
   }
-  
   removeTab(index: number) {
     // this.tabs.splice(index, 1);
     if (this.cardDetails.length > 1) {
@@ -633,7 +546,6 @@ export class AddTemplateComponent implements OnInit {
         orientation: val.cardOrientation,
         alignment: val.cardAlignment,
         height: val.mediaHeight,
-
       }
 
     } else if (val['templateType'] == 'carousel') {
@@ -649,7 +561,6 @@ export class AddTemplateComponent implements OnInit {
           orientation: obj.cardOrientation,
           width: obj.cardWidth,
           height: obj.mediaHeight
-
         };
       });
 
@@ -669,7 +580,4 @@ export class AddTemplateComponent implements OnInit {
     return 'Card ' + index;
   }
 
-
-
 }
-

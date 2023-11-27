@@ -1,17 +1,17 @@
 <div class="auth-bg min-vh-100 d-flex flex-column">
 
     <div class="container p-0">
-        <div class="auth-logo">
-            <img alt="Fonada" src="assets/fonada-removebg-preview.png" style="width: 280px;">
-        </div>
+
         <div class="row flex-fill d-flex justify-content-start">
             <div class="d-none d-md-block col-md-6">
                 <div class="p-40-20 image-container">
-                    <img alt="Auth" class="img-fluid" src="assets/RCS login page.png">
+                    <img [src]="authlogo" alt="AuthLogo" style="width: 280px ;margin-top: -10px">
+                    <img [src]="authImg" alt="AuthImg" class="img-fluid">
                 </div>
             </div>
 
             <div class="col-12 col-md-6">
+                <br><br>
                 <div class="auth-section ms-auto ng-star-inserted">
                     <form novalidate="" class="ng-pristine ng-invalid ng-touched" [formGroup]="loginForm"
                         (ngSubmit)="onSubmit()">
@@ -31,7 +31,7 @@
                                             placeholder="Enter here"
                                             class="form-control ps-0 ng-pristine ng-valid ng-touched">
                                         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                                            <div *ngIf="f.username.errors.required">Username is required</div>
+                                            {{errorMessage.require}}
                                         </div>
                                     </div>
                                 </div>
@@ -42,11 +42,9 @@
                                             [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
                                             placeholder="Enter here"
                                             class="form-control ps-0 ng-pristine ng-valid ng-touched">
-
                                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                                            <div *ngIf="f.password.errors.required">Password is required</div>
+                                            {{errorMessage.require}}
                                         </div>
-
                                     </div>
                                     <a routerLink="/forgot/password" style="margin-left: 60%;">Forgot Password ?</a>
                                 </div>
@@ -54,13 +52,13 @@
                                 <div class="col-12"><button type="submit" class="w-100 shadow">
                                         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                                         LOGIN &nbsp; <i class="fa fa-arrow-right" style="color: white;"></i></button>
-                                    <br>
+
                                     <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                                 </div>
                                 <div class="col-12 my-3 text-center"><span class="sub-heading">
                                     </span>
                                 </div>
-                                <br>
+
                                 <br>
                             </div>
                         </div>

@@ -19,29 +19,31 @@ export class TemplateService extends BaseService {
   }
 
 
-  getTemplatelistDetails(templateUserId, limit, start, fromDate, toDate, templateName, templateStatus, pageIndex: number, pageSize: number) {
+  getTemplatelistDetails(templateUserId, limit, start, fromDate, toDate, templateName, templateStatus,userName, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
+    if(userName===null){
     httpParams = httpParams.append("templateUserId", templateUserId);
+    }
     httpParams = httpParams.append("limit", limit);
     httpParams = httpParams.append("start", start);
-
     httpParams = httpParams.append("from", fromDate);
     httpParams = httpParams.append("to", toDate);
-    httpParams = httpParams.append("downloadStatus", 'S');
+    httpParams = httpParams.append("downloadStatus", 'D');
     if (templateName != null) {
       httpParams = httpParams.append("templateCode", templateName);
     }
     if (templateStatus != null) {
       httpParams = httpParams.append("status", templateStatus);
     }
-    // if(templateType!=null){
-    // httpParams = httpParams.append("templateType", templateType);
-    // }
+    if (userName != null) {
+      httpParams = httpParams.append("templateUserId", userName);
+    }
 
     httpParams = httpParams.append("pageIndex", pageIndex.toString());
     httpParams = httpParams.append("pageSize", pageSize.toString());
     return this.http.get(`${this.baseUrlData + 'findAllTemplate'}`, { params: httpParams });
   }
+
 
   getTemplateData(templateUserId, limit, start, fromDate, toDate, templateName, templateStatus, userName, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
@@ -73,6 +75,13 @@ export class TemplateService extends BaseService {
     return this.http.get(`${this.URLS}?from=${from}&to=${to}&templateUserId=${+sessionStorage.getItem('userId')}`);
   }
 
+  private URLS2 = this.baseUrlData + 'getAllTemplateNameAndIdWithDateFilter';
+  dateRangeFilter2(from: string, to: string, templateUserId: string): Observable<any> {
+    return this.http.get(`${this.URLS2}?from=${from}&to=${to}&templateUserId=${templateUserId}`);
+  }
+
+  
+
   getTemplateSearchReport(templateUserId, limit, start, fromDate, toDate, downloadStatus, userName, templateName, templateStatus, pageIndex: number, pageSize: number) {
     let httpParams = new HttpParams()
     if (userName === null) {
@@ -98,10 +107,6 @@ export class TemplateService extends BaseService {
     return this.http.get(`${this.baseUrlData + 'findAllTemplate'}`, { params: httpParams });
   };
 
-  getUserList(): Observable<any> {
-    return this.http.get('http://fuat.flash49.com/rcsmsg/user/findAllUser').pipe(
-      map((data: any) => data.userName)
-    );
-  }
+
 
 }

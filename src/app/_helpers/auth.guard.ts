@@ -31,6 +31,18 @@ export class AuthGuard implements CanActivate {
                     return false;
                 }
             }
+            if (next.data.roles && next.data.roles.includes(Role.User)) {
+                // Check if the user's userId is 1
+                if (currentUser.userId !== 1) {
+                    // Authorized, so return true
+                    return true;
+                } else {
+                    // User is not authorized, show a message and redirect to another route
+                    Swal.fire('You are not authorized to access this content!');
+                    this.router.navigate(['/']);
+                    return false;
+                }
+            }
             // If the route does not require admin role, allow access
             return true;
         }

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder,FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ReportsService } from 'src/app/services/reports.service';
 import { Location } from '@angular/common';
@@ -38,7 +38,7 @@ export class DetailReportComponent {
   currentDate = new Date();
   userData: any;
   userListbysearch: any;
-  userId= sessionStorage.getItem('userId');
+  userId = sessionStorage.getItem('userId');
 
   constructor(
     private reportservice: ReportsService,
@@ -47,8 +47,8 @@ export class DetailReportComponent {
     private ngxService: NgxUiLoaderService,
     private location: Location,
     private userservice: AddUserService,
-    private authenticationService:AuthenticationService
-    
+    private authenticationService: AuthenticationService
+
   ) { }
 
   ngOnInit(): void {
@@ -63,6 +63,13 @@ export class DetailReportComponent {
       this.fetchUserList();
     }
   }
+
+  // In your component.ts file
+// extractLastTenDigits(phoneNumber: string): string {
+//   const lastTenDigits = phoneNumber.slice(-10);
+//   return lastTenDigits;
+// }
+
 
   get f() { return this.detailListForm.controls; }
 
@@ -133,6 +140,10 @@ export class DetailReportComponent {
     if (startDate.value && endDate.value) {
       this.dateFilter(startDate, endDate, 1);
     }
+    else {
+      this.detailListForm.get('campaignId').setValue(null);
+      this.detailListForm.get('leadId').setValue(null);
+    }
   }
 
   removeDupliactes(values: any) {
@@ -184,24 +195,25 @@ export class DetailReportComponent {
         if (err.status === 401) {
           // Log the user out here (e.g., by calling a logout function)
           console.log("Unauthorized. Logging out...");
-          this.authenticationService.logout(); 
+          this.authenticationService.logout();
           window.location.reload();
         } else {
-        this.detailData = [];
-        this.dataSource.data = this.detailData;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        console.log(err, "Error while fetching the records.");
-        this.ngxService.stop();
-        this.showLoader = false
+          this.detailData = [];
+          this.dataSource.data = this.detailData;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          console.log(err, "Error while fetching the records.");
+          this.ngxService.stop();
+          this.showLoader = false
+        }
       }
-    }});
+    });
   }
 
   onPageChanged(event: PageEvent) {
     this.getDetailList();
   }
-  
+
   editRow(data) {
     this.router.navigate(['/campaign/edit'], { queryParams: { id: data } });
   }

@@ -75,3 +75,17 @@ mat-form-field {
   right: 10px;
   top: 21px;
 }
+
+.active-button {
+  background-color: green;
+  color: white;
+ height: 30px;
+
+}
+
+.inactive-button {
+  background-color: red; /* Change this to the color you want for inactive state */
+  color: white;
+  height: 30px;
+ 
+}

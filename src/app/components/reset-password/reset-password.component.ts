@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '@app/_services/authentication.service';
 import Swal from 'sweetalert2';
+import { GLOBAL_CONSTANTS } from '@app/Constants/global-constant';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -15,6 +16,7 @@ export class ResetPasswordComponent {
   submitted = false;
   returnUrl: string;
   error = '';
+  errorMessage = GLOBAL_CONSTANTS.ERROR.validationError.common;
 
 
   constructor(
@@ -64,7 +66,7 @@ export class ResetPasswordComponent {
     this.submitted = true;
     // stop here if form is invalid
     if (this.resetPasswordForm.invalid) {
-      this.error = ('New Password must contain more than 8 characters, 1 upper case letter, and 1 special character');
+      this.error = this.errorMessage.email_pattern;
       return;
     }
 

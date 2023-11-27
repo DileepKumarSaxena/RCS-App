@@ -4,6 +4,7 @@ export interface Template {
     templateMsgType:string;
     templateJson:TemplateJson;
 }
+
 export interface TemplateJson {
     botId:number;
     cardTitle:string;

@@ -1,0 +1,98 @@
+<app-menu></app-menu>
+
+<div id="frame">
+    <div id="sidepanel">
+        <div id="profile" [class.expanded]="expanded">
+            <div class="wrap">
+                <img id="profile-img" 
+                    src="https://t4.ftcdn.net/jpg/04/83/50/97/360_F_483509724_FeRz6eyPgHn66VMCOhtaZH4rTvtLiyiw.jpg"
+                    alt="" />
+                <p>{{ currentUser.result.username | uppercase}}</p>
+                <i (click)="expanded = !expanded" aria-hidden="true"></i>
+                <div id="status-options" [class.active]="expandStatuses">
+                    <ul>
+                        <!-- <li *ngFor="let item of (keyvalue)" [attr.id]="'status-'+item.value"
+                            (click)="activeUser.status = item.value; expandStatuses=false"
+                            [class.active]="item.value === activeUser.status" [class]="item.value">
+                            <span class="status-circle"></span>
+                            <p style="text-transform: capitalize;">{{item.value}}</p>
+                        </li> -->
+                    </ul>
+                </div>
+                <div id="expanded">
+                    <ng-container *ngFor="let item of (activeUser?.social | json | keyvalue)">
+                        <label for="twitter"><i class="fa fa-fw" [class]="'fa-'+item.key"
+                                aria-hidden="true"></i></label>
+                        <input [name]="item.key" type="text" [value]="item.value" />
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div id="search">
+            <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+            <input type="text" [(ngModel)]="searchQuery" placeholder="Search by Phone Number" />
+        </div>
+
+
+        <div id="contacts" [class.expanded]="expanded">
+            <ul class="no-bullet">
+                <li class="contact" *ngFor="let user of users" (click)="setUserActive(user)"
+                    [class.active]="activeUser === user" [hidden]="!isUserMatchingSearch(user)">
+                    <div class="wrap">
+                        <span class="contact-status" [class]="user.status"></span>
+                        <img [src]="user.img" alt="" />
+                        <div class="meta">
+                            <p class="name" (click)="handleBlacklistMsisdnClick(user.blacklistMsisdn)">{{
+                                user.blacklistMsisdn }}</p>
+                            <div *ngFor="let message of user.messages">
+                                <p class="preview">{{ message.message || '' }}</p>
+                                <p class="preview">{{ message.blacklistMsisdn || '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
+    <div class="content">
+        <div class="contact-profile">
+            <img src="https://t4.ftcdn.net/jpg/04/83/50/97/360_F_483509724_FeRz6eyPgHn66VMCOhtaZH4rTvtLiyiw.jpg"
+                alt="" />
+            <p>{{activeUser.blacklistMsisdn }}</p>
+            <!-- <div class="social-media">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+            </div> -->
+        </div>
+
+        <div class="messages" #scrollMe>
+            <ul>
+                <ng-container *ngFor="let user of users">
+                    <li class="message-item" [class]="user.textMessage"
+                        *ngIf="user.blacklistMsisdn === selectedBlacklistMsisdn">
+                        <img [src]="user.textMessage === 'sent' ? activeUser.img : messageReceivedFrom.img" alt="" />
+                        <p>{{ user.textMessage }}</p>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+
+
+
+        <!-- <div class="message-input">
+            <div class="wrap">
+                <input type="text" #msgInput placeholder="Write your message..."
+                    (keyup.enter)="addNewMessage(msgInput)" />
+
+                <button class="submit" (click)="addNewMessage(msgInput)">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div> -->
+    </div>
+</div>

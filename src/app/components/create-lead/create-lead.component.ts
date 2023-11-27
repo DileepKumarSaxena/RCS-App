@@ -24,6 +24,7 @@ export class CreateLeadComponent {
   isHidden2: any;
   isHidden3: any;
   actionBtn: string = "Submit";
+  
   leadID: any;
   campaignId: any;
   campaignList: any = [];
@@ -49,6 +50,7 @@ export class CreateLeadComponent {
   // testLeadFieldsFilled = false;
   phoneNumError: boolean;
   showClickOfSubmitButton = false;
+  userId:any
 
 
   constructor(
@@ -111,6 +113,7 @@ export class CreateLeadComponent {
       scheduleEndDtm: [],
       startTime: [],
       endTime: [],
+      
       testingNumber: ['', [this.validateNumericInput]],
       testLeadDynamicFields: new FormArray([])
     })
@@ -511,7 +514,7 @@ export class CreateLeadComponent {
         "scheduleStartDtm": dataVal['scheduleStartDtm'],
         "windowRequired": "N",
         "scheduleDay": numDays.toString(),
-        "scheduleEndDtm": dataVal['scheduleEndDtm'],
+        "scheduleEndDtm": dataVal['scheduleStartDtm'],
         "windowStartTime": "09:00",
         "windowEndTime": "21:00"
       }

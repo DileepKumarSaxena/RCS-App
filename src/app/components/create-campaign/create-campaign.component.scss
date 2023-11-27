@@ -1,6 +1,10 @@
 .style {
    float: left;
 }
+.disabled-icon {
+   opacity: 0.5; 
+   pointer-events: none; 
+ }
 
 button {
    width: 234px;
@@ -21,3 +25,13 @@ button {
 mat-form-field {
    width: 90%;
 }
+
+.submit{
+   width: 100%;
+}
+
+.custom-submit-button {
+   width: 90%;
+   margin-left: 107%;
+
+ }

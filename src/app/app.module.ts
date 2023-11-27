@@ -51,6 +51,7 @@ import { AddBlaclistNumberComponent } from './components/add-blaclist-number/add
 import { TemplatePreviewDialogComponent } from './components/template-list/template-preview-dialog/template-preview-dialog.component';
 import { ToastrModule } from 'ngx-toastr';
 import { MenuComponent } from './components/menu/menu.component';
+import { ChatAppComponent } from './components/chat-app/chat-app.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     bgsColor: 'red',
@@ -124,7 +125,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
         BlaclistNumberComponent,
         AddBlaclistNumberComponent,
         TemplatePreviewDialogComponent,
-        MenuComponent
+        MenuComponent,
+        ChatAppComponent
     ],
 
     providers: [

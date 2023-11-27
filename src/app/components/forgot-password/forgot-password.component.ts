@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '@app/_services/authentication.service';
 import Swal from 'sweetalert2';
+import { AUTH_LOGO, AUTh_IMG } from '@app/Constants/image-constant';
+import { GLOBAL_CONSTANTS } from '@app/Constants/global-constant';
 
 @Component({
   selector: 'app-forgot-password',
@@ -15,7 +17,10 @@ export class ForgotPasswordComponent {
   submitted = false;
   returnUrl: string;
   error = '';
-
+  authlogo: string = AUTH_LOGO;
+  authImg: string = AUTh_IMG;
+  errorMessage = GLOBAL_CONSTANTS.ERROR.validationError.common;
+  
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -67,6 +72,11 @@ export class ForgotPasswordComponent {
         }
       })
   }
+
+  onCancel() {
+    this.forgetPasswordForm.get('email').setValue('');
+  }
+
 }
 
 

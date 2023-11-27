@@ -1,4 +1,4 @@
-<app-menu></app-menu> 
+<app-menu></app-menu>
 <div class="go-back-section template-back add-inner-padding">
     <div class="back-icon">
         <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
@@ -35,8 +35,8 @@
                                             <mat-error *ngIf="leadForm.get('campaignId').hasError('required')">Select
                                                 Campaign Name</mat-error>
                                         </mat-form-field> -->
-                                       
-                                        <ng-select [items]="campaignList" bindLabel="campaignName" (change)="templateDetails()"
+
+                                        <ng-select [items]="campaignList" [inputAttrs]="{maxlength: '20'}" bindLabel="campaignName" (change)="templateDetails()"
                                         placeholder="Select Campaign Name" bindValue="campaignId" [searchable]="true"
                                         [clearable]="false" appearance="outline" formControlName="campaignId">
                                     </ng-select>
@@ -115,7 +115,10 @@
                                                 <label class="custom-control-label" for="customSwitch2">Remove Duplicate
                                                     No.</label>
                                             </div>
+
                                         </div>
+                                        
+                                        <br>
                                         <!-- <ng-template #validFileContent>
                                             <div class="progress">
                                                 <div class="progress-bar progress-bar-green" role="progressbar"
@@ -140,18 +143,20 @@
                                                 required</mat-error> -->
                                         </mat-form-field>
                                     </div>
+                                    
                                     <div class="col-sm-6" *ngIf="f.leadExecutionType.value === 'schedule'">
-                                        <label for="scheduleStartDtm" class="custom-date-label">Start Date:</label>
+                                        <label for="scheduleStartDtm" class="custom-date-label">Select Date For Schedule:</label>
                                         <input id="scheduleStartDtm" class="custom-date-range-input"
                                             type="datetime-local" formControlName="scheduleStartDtm" [min]="minDate"
                                             placeholder="YYYY-MM-DD" required>
                                     </div>
-                                    <div class="col-sm-6" *ngIf="f.leadExecutionType.value === 'schedule'">
+                                    <div class="col-sm-6" *ngIf="f.leadExecutionType.value === 'schedule' && userId === 1">
                                         <label for="scheduleEndDtm" class="custom-date-label">End Date:</label>
                                         <input id="scheduleEndDtm" class="custom-date-range-input" type="datetime-local"
                                             formControlName="scheduleEndDtm" [min]="f.scheduleStartDtm.value"
                                             placeholder="YYYY-MM-DD" required>
                                     </div>
+                                    
                                 </div>
                                 <br>
                                 <div class="row">
@@ -208,7 +213,7 @@
                                                 Numbers on which Test Message to be given.
                                             </div>
                                         </ng-container>
-                                    
+
                                         <div class="testLeadSection">
                                         <ng-container formArrayName="testLeadDynamicFields">
                                             <div *ngFor="let control of leadForm.get('testLeadDynamicFields')['controls']; let i = index">

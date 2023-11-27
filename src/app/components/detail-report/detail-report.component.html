@@ -40,20 +40,20 @@
 
 
                             <div class="col-sm-2" *ngIf="userId ==='1'">
-                                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User"
+                                <ng-select [items]="userListbysearch" [inputAttrs]="{maxlength: '20'}" bindLabel="userName" placeholder="Select User"
                                     bindValue="userName" [searchable]="true" [clearable]="false" appearance="outline"
                                     formControlName="userName">
                                 </ng-select>
                             </div>
 
                             <div class="col-sm-2">
-                                <ng-select [items]="campaignList" bindLabel="campaignName" (change)="getLeadName()"
+                                <ng-select [items]="campaignList" [inputAttrs]="{maxlength: '20'}" bindLabel="campaignName" (change)="getLeadName()"
                                     placeholder="Select Campaign" bindValue="campId" [searchable]="true"
                                     [clearable]="false" appearance="outline" formControlName="campaignId">
                                 </ng-select>
                             </div>
                             <div class="col-sm-2">
-                                <ng-select [items]="leadList" bindLabel="leadName" bindValue="leadId"
+                                <ng-select [items]="leadList" [inputAttrs]="{maxlength: '20'}" bindLabel="leadName" bindValue="leadId"
                                     placeholder="Select Lead" [searchable]="true" [clearable]="false"
                                     appearance="outline" formControlName="leadId">
                                 </ng-select>
@@ -131,6 +131,8 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Number</th>
                                 <td mat-cell *matCellDef="let row">{{row.phone_number}}</td>
                             </ng-container>
+
+                            <!--{{ extractLastTenDigits(row.phone_number) }} -->
 
                             <!-- Status -->
                             <ng-container matColumnDef="status">

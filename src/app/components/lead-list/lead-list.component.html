@@ -43,23 +43,23 @@
               </div>
 
               <div class="col-sm-2" *ngIf="userId ==='1'">
-                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
-                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
+                <ng-select [items]="userListbysearch" bindLabel="userName" [inputAttrs]="{maxlength: '20'}" placeholder="Select User" bindValue="userId"
+                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName"  (change)="userFilter(startDate, endDate)">
                 </ng-select>
               </div>
 
               <div class="col-sm-2">
-                <ng-select [items]="campaignList" bindLabel="campaignName" (change)="getLeadName()"
-                  placeholder="Select Campaign" bindValue="campaignId" [searchable]="true" [clearable]="false"
-                  appearance="outline" formControlName="campaignId">
+                <ng-select [items]="campaignList" [inputAttrs]="{maxlength: '20'}" bindLabel="campaignName" (change)="getLeadName()"
+                    placeholder="Select Campaign" bindValue="campId" [searchable]="true"
+                    [clearable]="false" appearance="outline" formControlName="campaignId">
                 </ng-select>
-
-              </div>
-              <div class="col-sm-2">
-                <ng-select [items]="leadList" bindLabel="leadName" bindValue="leadId" placeholder="Select Lead"
-                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="leadId">
+            </div>
+            <div class="col-sm-2">
+                <ng-select [items]="leadList" [inputAttrs]="{maxlength: '20'}" bindLabel="leadName" bindValue="leadId"
+                    placeholder="Select Lead" [searchable]="true" [clearable]="false"
+                    appearance="outline" formControlName="leadId">
                 </ng-select>
-              </div>
+            </div>
 
               <div class="col-sm-3">
                 <div class="action-button-sec">
@@ -86,12 +86,19 @@
 
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+
+                   <!-- leadId -->
+                   <ng-container matColumnDef="leadId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Id </th>
+                    <td mat-cell *matCellDef="let row">{{row.leadId}}</td>
+                  </ng-container>
+                  
               <!-- SLNo Column -->
-              <ng-container matColumnDef="id">
+              <!-- <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
                 <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex * paginatorRef.pageSize) +
                   (i + 1)}} </td>
-              </ng-container>
+              </ng-container> -->
 
               <!-- campaignName -->
               <ng-container matColumnDef="campaignName">
@@ -99,11 +106,7 @@
                 <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
               </ng-container>
 
-              <!-- leadId -->
-              <ng-container matColumnDef="leadId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lead Id </th>
-                <td mat-cell *matCellDef="let row">{{row.leadId}}</td>
-              </ng-container>
+         
 
               <!-- LeadName -->
               <ng-container matColumnDef="leadName">
@@ -119,19 +122,19 @@
 
               <!-- scheduleStartDtm -->
               <ng-container matColumnDef="scheduleStartDtm">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule Start Date</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule Date-Time</th>
                 <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleStartDtm).format('YYYY/MM/DD
                   HH:mm')}}
                 </td>
               </ng-container>
 
               <!-- scheduleEndDtm -->
-              <ng-container matColumnDef="scheduleEndDtm">
+              <!-- <ng-container matColumnDef="scheduleEndDtm">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Schedule End Date</th>
                 <td mat-cell *matCellDef="let row">{{moment(row['leadSchedule'].scheduleEndDtm).format('YYYY/MM/DD
                   HH:mm')}}
                 </td>
-              </ng-container>
+              </ng-container> -->
 
               <!-- countOfNumbers -->
               <ng-container matColumnDef="countOfNumbers">
@@ -139,6 +142,14 @@
                 <td mat-cell *matCellDef="let row">{{row.countOfNumbers}}</td>
               </ng-container>
 
+              <ng-container matColumnDef="countOfValidNumbers">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Valid No. </th>
+                <td mat-cell *matCellDef="let row">{{row.countOfNumbers-row.countOfBlackListNumbers-row.countOfDuplicateNumbers-row.countOfInvalidNumbers-row.countOfNonRcsNumbers}}</td>
+              </ng-container>
+
+              
+
+              
               <!-- countOfInvalidNumbers -->
               <ng-container matColumnDef="countOfInvalidNumbers">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Invalid No. </th>
@@ -160,8 +171,11 @@
               <!-- leadStatus -->
               <ng-container matColumnDef="leadStatus">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.leadStatus)">{{row.leadStatus}}</td>
+                <td mat-cell *matCellDef="let row" [ngClass]="getStatusClass(row.leadStatus)">
+                  {{ getStatusFromCompletionStatus(row.leadCompletionStatus) }}
+                </td>
               </ng-container>
+              
 
               <!-- Actions -->
               <ng-container matColumnDef="actions">

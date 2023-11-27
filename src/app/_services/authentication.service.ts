@@ -11,9 +11,9 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  baseUrl = 'http://fuat.flash49.com/rcsmsg/';
+     baseUrl = 'http://fuat.flash49.com/rcsmsg/';
   // baseUrl = 'https://app.flash49.com/rcsmsg/';
-  // baseUrl = 'http://172.20.200.103:8172/api/v1/rcsmessaging/' (Use this when LAN is connected)
+  // baseUrl = 'http://172.20.200.103:8172/api/v1/rcsmessaging/'  //(Use this when LAN is connected)
 
   constructor(private http: HttpClient, public storage: StorageService) {
     this.currentUserSubject = new BehaviorSubject<any>(
@@ -47,12 +47,17 @@ export class AuthenticationService {
           // sessionStorage.setItem("currentUser", JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
-
         }
         )
       );
   }
 
+  /**
+   * This method is useful for forgot password
+   * @param username 
+   * @param email 
+   * @returns 
+   */
   forgetPassword(username: string, email: string) {
     return this.http
       .get<any>(this.baseUrl + 'auth/forgot-password?userName=' + username + "&mail=" + email)

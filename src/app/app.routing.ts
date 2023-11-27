@@ -17,27 +17,29 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import { BlaclistNumberComponent } from './components/blaclist-number/blaclist-number.component';
 import { AddBlaclistNumberComponent } from './components/add-blaclist-number/add-blaclist-number.component';
 import { Role } from './_models/role-model';
+import { ChatAppComponent } from './components/chat-app/chat-app.component';
 
 const routes: Routes = [
     { path: '', component: DasboardComponent, canActivate: [AuthGuard] },
     { path: 'dasboard', component: DasboardComponent, canActivate: [AuthGuard] },
     { path: 'templateList', component: TemplateListComponent, canActivate: [AuthGuard] },
-    { path: 'addTemplate', component: AddTemplateComponent, canActivate: [AuthGuard] },
+    { path: 'addTemplate', component: AddTemplateComponent, canActivate: [AuthGuard], data: { roles: [Role.User] } },
     { path: 'Summary', component: SummaryReportComponent, canActivate: [AuthGuard] },
     { path: 'detailreport', component: DetailReportComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'campaignList', component: CampaignListComponent, canActivate: [AuthGuard] },
-    { path: 'campaign/create', component: CreateCampaignComponent, canActivate: [AuthGuard] },
+    { path: 'campaign/create', component: CreateCampaignComponent, canActivate: [AuthGuard], data: { roles: [Role.User] } },
     { path: 'campaign/edit', component: CreateCampaignComponent, canActivate: [AuthGuard] },
     { path: 'leadList', component: LeadListComponent, canActivate: [AuthGuard] },
-    { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard] },
+    { path: 'lead/create', component: CreateLeadComponent, canActivate: [AuthGuard], data: { roles: [Role.User] } },
     { path: 'lead/edit', component: CreateLeadComponent, canActivate: [AuthGuard] },
     { path: 'change/password', component: ResetPasswordComponent, canActivate: [AuthGuard] },
     { path: 'forgot/password', component: ForgotPasswordComponent },
+
     // { path: 'addUser', component: AddUserComponent, canActivate: [AuthGuard] },
     // { path: 'user/list', component: UserListComponent, canActivate: [AuthGuard] },
     { path: 'blacklist', component: BlaclistNumberComponent, canActivate: [AuthGuard] },
-    { path: 'addBlacklist', component: AddBlaclistNumberComponent, canActivate: [AuthGuard] },
+    { path: 'addBlacklist', component: AddBlaclistNumberComponent, canActivate: [AuthGuard], data: { roles: [Role.User] } },
 
     // { path: 'user/list', pathMatch: 'full', redirectTo: '/user/list' },
 
@@ -48,10 +50,10 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             { path: 'list', component: UserListComponent, pathMatch: 'full', canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
-
         ]
     },
     { path: 'addUser', component: AddUserComponent, pathMatch: 'full', canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+    {path:'chat-app',component:ChatAppComponent,canActivate:[AuthGuard]},
 
     // otherwise redirect to home
     { path: '**', redirectTo: 'login' }

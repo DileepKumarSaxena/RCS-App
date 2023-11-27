@@ -128,11 +128,17 @@ export class CampaignService extends BaseService {
 
   private URLS = this.templateUrlData + 'getAllTemplateNameAndIdWithDateFilter';
   dateRangeFilter(from: string, to: string, templateId: string): Observable<any> {
-
     return this.http.get(`${this.URLS}?from=${from}&to=${to}&templateUserId=${+sessionStorage.getItem('userId')}`);
   }
 
-  private URLS_camp = this.baseUrlData + 'campaignListing';
+  private URLS1 = this.baseUrlData+'campaignNameAndIdListByDateRange';
+  dateRangeFilterforcampaignname(from: string, to: string, templateId: string): Observable<any> {
+    return this.http.get(`${this.URLS1}?from=${from}&to=${to}&userId=${+sessionStorage.getItem('userId')}`);
+  }
+
+  
+
+  private URLS_camp = this.baseUrlData + 'campaignListingByTemplateId';
   // private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
   getCampaignList(userId: string, templateName: string): Observable<any> {
     return this.http.get(`${this.URLS_camp}?userId=${userId}&templateId=${templateName}`);

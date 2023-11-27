@@ -139,9 +139,13 @@ export class LeadService extends BaseService {
     return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
   }
 
-  private URLS_lead = this.campUrlData + 'campaignNameAndIdListByDateRange';
-  // private URLS = this.campUrlData+'campaignNameAndIdListByDateRange';
-  dateRangeFilter(from: string, to: string, userId: string): Observable<any> {
+  private URLS_lead = this.leadUrlData + 'getLeadAndCampaignNameWithIds';
+
+    dateRangeFilter(from: string, to: string, userId: string): Observable<any> {
     return this.http.get(`${this.URLS_lead}?from=${from}&to=${to}&userId=${userId}`);
   }
+
+  
 }
+
+

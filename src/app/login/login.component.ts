@@ -2,20 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../_services';
+import { GLOBAL_CONSTANTS } from '@app/Constants/global-constant';
+import { AUTH_LOGO, AUTh_IMG } from '@app/Constants/image-constant';
 
 @Component({
     templateUrl: 'login.component.html',
     styleUrls: ['login.component.scss']
 })
+/**
+ * This class is useful for login component 
+ * 
+ */
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading = false;
     submitted = false;
-    returnUrl: string;
+     returnUrl: string;
     error = '';
     lastLogin: string;
     token: string;
     loggedInUsername: string;
+    errorMessage = GLOBAL_CONSTANTS.ERROR.validationError.common;
+    authlogo: string = AUTH_LOGO;
+    authImg: string = AUTh_IMG;
 
     constructor(
         private formBuilder: FormBuilder,

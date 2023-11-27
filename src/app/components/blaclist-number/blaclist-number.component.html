@@ -54,7 +54,7 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <mat-form-field appearance="outline">
-                                            <mat-label>Search</mat-label>
+                                            <mat-label>Search Blacklist No.</mat-label>
                                             <input matInput formControlName="search" maxlength="10" required>
                                             <mat-error *ngIf="searchlackListForm.get('search').hasError('required')">
                                                 Search field is required.
@@ -129,7 +129,7 @@
 
                         <div class="records-not-found" *ngIf="dataSource['data']['length'] === 0">No Records Found</div>
 
-                        <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator showFirstLastButtons #paginatorRef [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
                     </div>
                 </div>

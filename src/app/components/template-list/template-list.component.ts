@@ -43,6 +43,7 @@ export class TemplateListComponent {
     private userservice: AddUserService,
     private authenticationService: AuthenticationService) {
   }
+  
   ngOnInit(): void {
     this.templateFilters();
     this.dataSource = new MatTableDataSource<any>(this.templateData);
@@ -54,7 +55,6 @@ export class TemplateListComponent {
     if (this.userId === '1') {
       this.fetchUserList();
     }
-
   }
 
   getStatusClass(status: string): string {
@@ -80,8 +80,9 @@ export class TemplateListComponent {
     let templateName = this.templateFilterForm.value.templateName;
     let templateStatus = this.templateFilterForm.value.templateStatus;
     // let templateType = this.templateFilterForm.value.templateType;
+    let userName = this.templateFilterForm.value.userName;
     // this.ngxService.start();
-    this.templateService.getTemplatelistDetails(templateUserId, limit, start, startDateVal, endDateVal, templateName, templateStatus, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.templateService.getTemplatelistDetails(templateUserId, limit, start, startDateVal, endDateVal, templateName, templateStatus,userName, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         this.templateData = res.template;
         this.dataSource.data = this.templateData;
@@ -97,12 +98,34 @@ export class TemplateListComponent {
       }
     });
   }
+  
   getDateFilter() {
     this.showLoader = true
     let templateUserId = sessionStorage.getItem('UserId');
     let from = moment(this.currentDate).format('YYYY-MM-DD');
     let to = moment(this.currentDate).format('YYYY-MM-DD');
     this.templateService.dateRangeFilter(from, to, templateUserId).subscribe({
+      next: (res: any) => {
+        this.templateData = res.data;
+        this.dataSource.data = this.templateData;
+        if (res) {
+          this.templateListbysearch = res.template;
+        }
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+  getDateFilter2() {
+    // this.showLoader = true
+    // let templateUserId = sessionStorage.getItem('UserId');
+    let templateUserId = this.templateFilterForm.value.userName;
+    let from = moment(this.templateFilterForm.value.startDate).format('YYYY-MM-DD');
+    let to = moment(this.templateFilterForm.value.endDate).format('YYYY-MM-DD');
+    this.templateService.dateRangeFilter2(from, to, templateUserId).subscribe({
       next: (res: any) => {
         this.templateData = res.data;
         this.dataSource.data = this.templateData;
@@ -131,7 +154,8 @@ export class TemplateListComponent {
       let to = moment(endDate.value).format('YYYY-MM-DD');
       this.templateFilterForm.get('templateName').setValue(null);
       this.templateFilterForm.get('templateStatus').setValue(null);
-      // this.templateFilterForm.get('templateType').setValue(null);
+      this.templateFilterForm.get('userName').setValue(null);
+    
       this.templateService.dateRangeFilter(from, to, templateUserId).subscribe({
         next: (res: any) => {
           this.templateData = res.template;
@@ -142,10 +166,8 @@ export class TemplateListComponent {
           this.showLoader = false
         },
         error: (err) => {
-          
           console.log(err, "Error while fetching the records.");
-        }
-        
+        } 
       })
     }
   }
@@ -182,29 +204,29 @@ export class TemplateListComponent {
     });
   }
 
-
   fetchUserList() {
     this.showLoader = true;
     this.userservice.getUserReport().subscribe({
       next: (res: any) => {
         this.userListbysearch = res;
+        
         // console.log(res,'User_List')
         this.showLoader = false;
       },
       error: (err) => {
         if (err.status === 401) {
          
-          console.log("Unauthorized. Logging out...");
+          console.log("Unauthorized.Logging out...");
           this.authenticationService.logout(); 
           window.location.reload()
-        } else {
+        } else {  
           // Handle other errors
           this.userData = [];
           this.dataSource.data = this.userData;
           console.log(err, "Error while fetching the records.");
         }
         this.showLoader = false;
-      } 
+      }   
     });
   }
 

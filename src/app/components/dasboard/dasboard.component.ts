@@ -82,7 +82,10 @@ export class DasboardComponent implements AfterViewInit {
     });
 
     this.getSummaryDate();
-    this.fetchUserList();
+
+   if (this.userId === '1') {
+      this.fetchUserList();
+    }
   }
 
   ngAfterViewInit() {
@@ -344,7 +347,7 @@ export class DasboardComponent implements AfterViewInit {
 
 
   updateLineChartData() {
-    let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'failed', 'Invalid'];
+    let dataKeys = ['TOTAL', 'Delivered', 'NonRCS_FAILED', 'SUBMITTED', 'Failed', 'Invalid'];
 
     let currentHour = new Date().getHours();
     let uploadedHours = this.dashboardData.map(entry => entry.datehour);
@@ -400,6 +403,5 @@ export class DasboardComponent implements AfterViewInit {
       }
     });
   }
-
 
 }

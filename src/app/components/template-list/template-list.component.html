@@ -34,16 +34,17 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-2" *ngIf="userId ==='1'">
-                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
-                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
-                </ng-select>
+                <ng-select [items]="userListbysearch" [inputAttrs]="{maxlength: '20'}" bindLabel="userName" placeholder="Select User" bindValue="userId"
+                [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName" (change)="getDateFilter2()">
+              </ng-select>
+              
               </div>
 
 
               <div class="col-sm-2">
-                <ng-select [items]="templateListbysearch" bindLabel="templateCode" placeholder="Template Name"
+                <ng-select [items]="templateListbysearch" [inputAttrs]="{maxlength: '20'}"  bindLabel="templateCode" placeholder="Template Name"
                   bindValue="templateCode" [searchable]="true" [clearable]="false" appearance="outline"
-                  formControlName="templateName">
+                  formControlName="templateName" >
                 </ng-select>
               </div>
               <!-- <div class="col-sm-2">

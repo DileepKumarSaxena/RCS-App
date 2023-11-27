@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
 import * as Papa from 'papaparse';
 import { AddUserService } from '@app/services/add-user.service';
 import { AuthenticationService } from '@app/_services';
+import { ReportsService } from '@app/services/reports.service';
 interface LeadData {
   leadId: string;
   isStartDisabled: boolean;
@@ -26,13 +27,12 @@ interface LeadData {
 })
 
 
-
 export class LeadListComponent {
-
   public showLoader = false;
   public create_campaign: any[];
   public last_page: number
   public data_ar: any[];
+  arrayDataList: any = [];
   config: any;
   totalCount: number = 0;
   currentPage: number = 1;
@@ -52,13 +52,10 @@ export class LeadListComponent {
   userListbysearch: any;
 
 
-  displayedColumns: string[] = ['id', 'campaignName', 'leadId', 'leadName', 'scheduleStartDtm', 'scheduleEndDtm', 'countOfNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'leadStatus', 'actions'];
+  displayedColumns: string[] = ['leadId', 'campaignName', 'leadName', 'scheduleStartDtm', 'countOfNumbers','countOfValidNumbers', 'countOfInvalidNumbers', 'countOfDuplicateNumbers', 'countOfBlackListNumbers', 'leadStatus', 'actions'];
   dataSource!: MatTableDataSource<any>;
-
   @ViewChild('paginatorRef', { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
-
 
   constructor(
     private leadService: LeadService,
@@ -67,10 +64,9 @@ export class LeadListComponent {
     private ngxService: NgxUiLoaderService,
     private location: Location,
     private userservice: AddUserService,
-    private authenticationService:AuthenticationService
-  ) {
-
-  }
+    private authenticationService:AuthenticationService,
+    private reportservice: ReportsService,
+  ) {}
 
   ngOnInit(): void {
     this.createCampaignForm();
@@ -80,6 +76,7 @@ export class LeadListComponent {
     this.paginator.pageSize = 5;
     // this.campaignListData();
     this.getDateFilter();
+    // this.getleadfilter();
     this.getLeadList();
     if (this.userId === '1') {
       this.fetchUserList();
@@ -89,7 +86,6 @@ export class LeadListComponent {
   getStatusClass(status: string): string {
     return status === 'Completed' ? 'status-completed' : 'status-acitve';
   }
-
 
   get f() { return this.leadForm.controls; }
 
@@ -122,18 +118,18 @@ export class LeadListComponent {
     }
   }
 
-
   getLeadList() {
     this.showLoader = true
     // let userId = 1;
     let startDateVal = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
     let endDateVal = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
+    let userId = this.leadForm.value.userName || sessionStorage.getItem('userId');
     let limit = this.paginator.pageSize.toString();
     let start = (this.paginator.pageIndex * this.paginator.pageSize + 1).toString();
     let campaignId = this.leadForm.value.campaignId;
     let leadId = this.leadForm.value.leadId;
     let userName = this.leadForm.value.userName
-    this.leadService.getLeadlistDetails(startDateVal, endDateVal, sessionStorage.getItem('userId'), campaignId, leadId,userName, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
+    this.leadService.getLeadlistDetails(startDateVal, endDateVal, userId, campaignId, leadId,userName, limit, start, this.paginator.pageIndex, this.paginator.pageSize).subscribe({
       next: (res: any) => {
         this.leadData = res['Lead Info'];
         this.dataSource.data = this.leadData;
@@ -145,7 +141,7 @@ export class LeadListComponent {
         if (err.status === 401) {
           // Log the user out here (e.g., by calling a logout function)
           console.log("Unauthorized. Logging out...");
-          this.authenticationService.logout(); 
+          this.authenticationService.logout();
           window.location.reload();
         } else {
         console.log(err, "Error while fetching the records.");
@@ -154,12 +150,10 @@ export class LeadListComponent {
     });
   }
 
-
-
   getLeadName() {
-    let userId = sessionStorage.getItem('userId');
+    let userId = this.leadForm.value.userName || sessionStorage.getItem('userId');
     let selectedCampaignId = this.leadForm.controls.campaignId.value;
-
+    this.leadForm.get('leadId').setValue(null);
     console.log('Selected campaign ID from form:', selectedCampaignId);
 
     if (selectedCampaignId && userId) {
@@ -177,6 +171,24 @@ export class LeadListComponent {
     }
   }
 
+getleadfilter() {
+  this.showLoader = true
+    let userId = sessionStorage.getItem('userId');
+    let from = moment(this.currentDate).format('YYYY-MM-DD');
+    let to = moment(this.currentDate).format('YYYY-MM-DD');
+    this.reportservice.dateRangeFilter(from, to, userId).subscribe({
+      next: (res: any) => {
+        console.log(res, "DDDDDDD222");
+        if (res) {
+          this.leadList = res;
+        }
+        this.showLoader = false
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+}
 
   getDateFilter() {
     this.showLoader = true
@@ -188,8 +200,8 @@ export class LeadListComponent {
         console.log(res, "DDDDDDD222");
         if (res) {
           this.campaignList = res;
+          this.leadList=res;
         }
-
         this.showLoader = false
       },
       error: (err) => {
@@ -204,13 +216,36 @@ export class LeadListComponent {
     }
   }
 
-  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+  dateFilter(startDate: HTMLInputElement, endDate: HTMLInputElement, selectedUserId?: string) {
     if (startDate.value && endDate.value) {
       // this.showLoader = true
-      let userId = sessionStorage.getItem('userId');
+      let userId = this.leadForm.value.userName || sessionStorage.getItem('userId');
       let from = moment(startDate.value).format('YYYY-MM-DD');
       let to = moment(endDate.value).format('YYYY-MM-DD');
       this.leadForm.get('campaignId').setValue(null);
+      this.leadForm.get('leadId').setValue(null);
+      this.leadService.dateRangeFilter(from, to, userId).subscribe({
+        next: (res: any) => {
+          this.campaignList = res;
+          this.leadList = res;
+          this.showLoader = false;
+        },
+        error: (err) => {
+          console.log(err, "Error while fetching the records.");
+        }
+      });
+    }
+  }
+  
+
+  userFilter(startDate: HTMLInputElement, endDate: HTMLInputElement) {
+    if (startDate.value && endDate.value) {
+      // this.showLoader = true
+      let userId = this.leadForm.value.userName;
+      let from = moment(startDate.value).format('YYYY-MM-DD');
+      let to = moment(endDate.value).format('YYYY-MM-DD');
+      this.leadForm.get('campaignId').setValue(null);
+      this.leadForm.get('leadId').setValue(null);
       this.leadService.dateRangeFilter(from, to, userId).subscribe({
         next: (res: any) => {
           this.campaignList = res;
@@ -237,10 +272,11 @@ export class LeadListComponent {
   }
   performAction(leadId: string, action: string, data: LeadData) {
     this.showLoader = true;
-
+    
     this.leadService.performActionOnLead(leadId, action).subscribe({
       next: (res: any) => {
         this.updateButtonStates(action, data);
+        this.getLeadList();
         this.showLoader = false;
       },
       error: (err) => {
@@ -248,6 +284,7 @@ export class LeadListComponent {
         this.showLoader = false;
       },
     });
+  
   }
 
   updateButtonStates(action: string, data: LeadData) {
@@ -371,15 +408,17 @@ let userName = this.leadForm.value.userName
             // Map only the desired properties with custom header names
             return {
 
-
+              'Lead Id':e.leadId,
               'Campaign Name': e.campaignName,
               'Lead Name': e.leadName,
-              'Schedule Start Date': moment(e.leadSchedule.scheduleStartDtm).format('MM/DD/YYYY'),
-              'Schedule End Date': moment(e.leadSchedule.scheduleEndDtm).format('MM/DD/YYYY'),
+              'Schedule Date-Time': moment(e.leadSchedule.scheduleStartDtm).format('MM/DD/YYYY   HH:mm'),
+              // 'Schedule End Date': moment(e.leadSchedule.scheduleEndDtm).format('MM/DD/YYYY'),
               'Total No.': e.countOfNumbers,
+              'Total Valid No.':e.countOfNumbers-e.countOfBlackListNumbers-e.countOfDuplicateNumbers-e.countOfInvalidNumbers-e.countOfNonRcsNumbers,
               'Total Invalid No.': e.countOfInvalidNumbers,
               'Total Duplicate No.': e.countOfDuplicateNumbers,
               'Total BlackList No.': e.countOfBlackListNumbers,
+              'Status':e.leadStatus
               // Add more properties and header names as needed
             };
           });
@@ -428,6 +467,7 @@ let userName = this.leadForm.value.userName
         this.userListbysearch = res;
         // this.dataSource.data = this.userData;
         this.showLoader = false
+        
       },
       error: (err) => {
         this.userData = [];
@@ -438,6 +478,93 @@ let userName = this.leadForm.value.userName
     });
   }
 
+
+  getStatusFromCompletionStatus(leadCompletionStatus: string): string {
+  
+    if (leadCompletionStatus === "Start") {
+      return "Active";
+    } else if (leadCompletionStatus === "Stop") {
+      return "Stop";}
+      else if (leadCompletionStatus === "Run Manually") {
+        return "Active";
+     
+    } else if (leadCompletionStatus === "Pause") {
+      return "Pause";
+    } else {
+      
+      return leadCompletionStatus;
+      
+    }
+
+  }
+
+  removeDupliactes(values: any) {
+    let concatArray = values.map(eachValue => {
+      return Object.values(eachValue).join('')
+    })
+    let filterValues = values.filter((value, index) => {
+      return concatArray.indexOf(concatArray[index]) === index
+    })
+    return filterValues
+  }
+  
+  getDateFilter2() {
+    // this.showLoader = true;
+    let userId = this.leadForm.value.userName;
+    let startDate = moment(this.leadForm.value.startDate).format('YYYY-MM-DD');
+    let endDate = moment(this.leadForm.value.endDate).format('YYYY-MM-DD');
+
+
+    this.campaignList = [];
+    let arrayList = [];
+    let arrayList2 = [];
+    this.leadList = [];
+
+    this.reportservice.dateRangeFilter(startDate, endDate, userId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          let groups: any = {};
+          let obj: any = [];
+
+          res.forEach((element: any) => {
+            arrayList.push({ campId: element.campId, campaignName: element.campaignName });
+
+            arrayList2.push({ leadId: element.leadId, leadName: element.leadName });
+          })
+          this.campaignList = this.removeDupliactes(arrayList);
+          this.leadList = arrayList2;
+          res.forEach((element: any) => {
+            var id = element.campId;
+
+            if (groups[id]) {
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+            } else {
+              groups[id] = {};
+              groups[id]['leadInfo'] = [];
+              groups[id]['leadInfo'].push({ leadName: element.leadName, leadId: element.leadId });
+              groups[id]['campId'] = element.campId;
+              groups[id]['campaignName'] = element.campaignName;
+            }
+          });
+
+          Object.keys(groups).forEach(function (key) {
+            obj.push(groups[key]);
+          });
+
+          this.arrayDataList = obj;
+          this.showLoader = false;
+        }
+      },
+      error: (err) => {
+        console.log(err, "Error while fetching the records.");
+      }
+    })
+  }
+
+
 }
+
+
+
 
 

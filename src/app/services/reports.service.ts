@@ -30,29 +30,30 @@ export class ReportsService extends BaseService {
     return this.http.get(`${this.URLS_Lead}?userId=${userId}&campaignId=${campaignId}`);
   }
 
- getDeatilReport(userName, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
-  const url = this.baseUrlData + 'getRcsDetailedSmsReport';
-  const storedUserName = sessionStorage.getItem('username'); // Retrieve username from sessionStorage
+  getDeatilReport(userName, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
+    const url = this.baseUrlData + 'getRcsDetailedSmsReport';
+    const storedUserName = sessionStorage.getItem('username'); // Retrieve username from sessionStorage
 
-  const data = {
-    username: userName || storedUserName, // Use selected username or the one from sessionStorage
-    fromDate: fromDate,
-    toDate: toDate,
-    camType: camType != null ? camType : '0',
-    clientId: '0',
-    camId: limit,
-    role: start,
-    pageIndex: pageIndex,
-    pageSize: pageSize
-  };
+    const data = {
+      username: userName || storedUserName, // Use selected username or the one from sessionStorage
+      fromDate: fromDate,
+      toDate: toDate,
+      camType: camType != null ? camType : '0',
+      vmn: leadId != null ? leadId : '0',
+      clientId: '0',
+      camId: limit,
+      role: start,
+      pageIndex: pageIndex,
+      pageSize: pageSize
+    };
 
-  const httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-  return this.http.post(url, data, httpOptions);
-}
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(url, data, httpOptions);
+  }
 
 
   getSummaryData(userName, fromDate, toDate) {
@@ -60,7 +61,7 @@ export class ReportsService extends BaseService {
     const storedUserName = sessionStorage.getItem('username'); // Retrieve username from sessionStorage
 
     const data = {
-   
+
       fromDate: fromDate,
       toDate: toDate,
       username: userName || storedUserName,
@@ -83,7 +84,7 @@ export class ReportsService extends BaseService {
     if (username == null) {
       // Retrieve the username from sessionStorage, replace 'sessionStorageKey' with the actual key you use
       const Username = sessionStorage.getItem('username');
-  
+
       // If a username is found in sessionStorage, use it
       if (Username) {
         username = Username;
@@ -129,7 +130,7 @@ export class ReportsService extends BaseService {
   getDetailData(userName, fromDate, toDate, camType, leadId, limit, start, pageIndex: number, pageSize: number) {
     const url = this.baseUrlData + 'getRcsDetailedSmsReport';
     const storedUserName = sessionStorage.getItem('username');
-    // const url = 'http://fuat.flash49.com/rcsmsg/report/getRcsDetailedSmsReport';
+   
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -151,9 +152,9 @@ export class ReportsService extends BaseService {
   }
 
   //Api for Summary_Report
-  getSummaryReport(userName, fromDate, toDate, limit, start, pageIndex: number, pageSize: number) {
+  getSummaryReport(userName, fromDate, toDate, limit, start, pageIndex: number, pageSize: number, camType, leadId) {
     const url = this.baseUrlData + 'getRcsSummarySmsReport';
-    const storedUserName = sessionStorage.getItem('username'); 
+    const storedUserName = sessionStorage.getItem('username');
     const data = {
       fromDate: fromDate,
       toDate: toDate,
@@ -162,7 +163,9 @@ export class ReportsService extends BaseService {
       camId: limit,
       role: start,
       pageIndex: pageIndex,
-      pageSize: pageSize
+      pageSize: pageSize,
+      camType: camType != null ? camType : '0',
+      vmn: leadId != null ? leadId : '0',
     };
 
     const httpOptions = {

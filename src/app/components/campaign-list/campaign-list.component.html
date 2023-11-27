@@ -27,7 +27,7 @@
                     <input #startDate required ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
                       formControlName="startDate">
                     <input #endDate required ng-disabled="true" readonly="true" matEndDate placeholder="End date"
-                      formControlName="endDate" (dateChange)="checkAndFilter(startDate, endDate)">
+                      formControlName="endDate"  (dateChange)="checkAndFilter(startDate, endDate)">
                   </mat-date-range-input>
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
@@ -36,21 +36,22 @@
               </div>
 
               <div class="col-sm-2" *ngIf="userId ==='1'">
-                <ng-select [items]="userListbysearch" bindLabel="userName" placeholder="Select User" bindValue="userId"
-                  [searchable]="true" [clearable]="false" appearance="outline" formControlName="userName">
+                <ng-select [items]="userListbysearch" bindLabel="userName" [inputAttrs]="{maxlength: '20'}"
+                  placeholder="Select User" bindValue="userId" [searchable]="true" [clearable]="false"
+                  appearance="outline" formControlName="userName">
                 </ng-select>
               </div>
 
               <div class="col-sm-2">
-                <ng-select [items]="templateListbysearch" bindLabel="templateCode" (change)="getCampaignName()"
-                  placeholder="Select Template" bindValue="id" [searchable]="true" [clearable]="false"
-                  appearance="outline" formControlName="templateName">
+                <ng-select [items]="templateListbysearch" bindLabel="templateCode" [inputAttrs]="{maxlength: '20'}"
+                  (change)="getCampaignName()" placeholder="Select Template" bindValue="id" [searchable]="true"
+                  [clearable]="false" appearance="outline" formControlName="templateName">
                 </ng-select>
               </div>
               <div class="col-sm-2">
-                <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="campaignId"
-                  placeholder="Select Campaign" [searchable]="true" [clearable]="false" appearance="outline"
-                  formControlName="campaignId">
+                <ng-select [items]="campaignListbyName" bindLabel="campaignName" [inputAttrs]="{maxlength: '20'}"
+                  bindValue="campaignId" placeholder="Select Campaign" [searchable]="true" [clearable]="false"
+                  appearance="outline" formControlName="campaignId">
                 </ng-select>
               </div>
 
@@ -76,12 +77,17 @@
         <br>
         <div class="mat-elevation-z8">
           <table mat-table [dataSource]="dataSource" matSort class="horizontal-scroll-table">
+            <!-- campaignId -->
+            <ng-container matColumnDef="campaignId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
+            </ng-container>
             <!-- SLNo Column -->
-            <ng-container matColumnDef="id">
+            <!-- <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> SL No. </th>
               <td mat-cell *matCellDef="let row; let i = index;"> {{(paginatorRef.pageIndex *
                 paginatorRef.pageSize) + (i + 1)}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Date -->
             <ng-container matColumnDef="createdDate">
@@ -89,11 +95,7 @@
               <td mat-cell *matCellDef="let row">{{moment(row.createdDate).format('YYYY/MM/DD')}}</td>
             </ng-container>
 
-            <!-- campaignId -->
-            <ng-container matColumnDef="campaignId">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Campaign ID </th>
-              <td mat-cell *matCellDef="let row"> {{row.campaignId}} </td>
-            </ng-container>
+
 
             <!-- campaignName -->
             <ng-container matColumnDef="campaignName">
@@ -113,6 +115,15 @@
               <td mat-cell *matCellDef="let row">{{row.templateName}}</td>
             </ng-container>
 
+            <ng-container matColumnDef="campaignType" *ngIf="username === 'dhanguru'">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Campaign Type</th>
+              <td mat-cell *matCellDef="let row">{{row.campaignType}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="dataSourceName" *ngIf="username === 'dhanguru'">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Source Name</th>
+              <td mat-cell *matCellDef="let row">{{row.dataSourceName}}</td>
+            </ng-container>
 
             <!-- messageType -->
             <!-- <ng-container matColumnDef="usageType">
@@ -132,12 +143,16 @@
                 <!-- <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteRow(data.campaignId)">
                     <mat-icon>delete</mat-icon>
                   </button> -->
+                &nbsp;
 
+                <button style="margin-top: -20px;" class="btn btn"
+                  [ngClass]="data.isDeleted == 0 ? 'active-button' : 'inactive-button'"
+                  (click)="toggleCampaignStatus(data)"
+                  [matTooltip]="data.isDeleted == 0 ?  'Click to Deactivate':'Click to Activate' "
+                  [matTooltipPosition]="'above'">
+                  {{ data.isDeleted == 0 ? 'Active' : 'Inactive'}}
+                </button>
 
-                <mat-slide-toggle color="primary" [checked]="(data.isDeleted == 0 ? true : false)"
-                  (change)="toggleCampaignStatus(data)">
-                  {{ data.isDeleted == 0 ? 'Active' : 'InActive'}}
-                </mat-slide-toggle>
 
               </td>
             </ng-container>

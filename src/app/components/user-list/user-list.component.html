@@ -31,7 +31,7 @@
                     <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
                       formControlName="endDate" required>
                   </mat-date-range-input>
-                  <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+               
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
@@ -137,10 +137,17 @@
                       <mat-icon>delete</mat-icon>
                     </button>
 
-                    <mat-slide-toggle color="primary" [checked]="(USER.active === 'Y' ? true : false)"
-                      (change)="toggleUserStatus(USER)">
-                      {{ USER.active === 'Y' ? 'Active' : 'Inactive' }}
-                    </mat-slide-toggle>
+                    <button [matTooltip]="USER.active === 'Y' ? 'Click to Deactivate' : 'Click to Activate'" 
+                    [matTooltipPosition]="'above'"
+                    [ngClass]="USER.active == 'Y' ? 'active-button' : 'inactive-button'"
+                    [matTooltipShowDelay]="500" 
+                    [matTooltipHideDelay]="100" 
+                    [matTooltipClass]="USER.active === 'Y' ? 'deactivate-tooltip' : 'activate-tooltip'"
+                  class="btn btn"
+                    (click)="toggleUserStatus(USER)">
+                    {{ USER.active === 'Y' ? 'Active' : 'Inactive' }}
+                  </button>
+                  
 
                   </div>
                 </td>

@@ -52,3 +52,32 @@ mat-form-field {
     --mdc-switch-selected-pressed-track-color: #d2f9eb;
     --mdc-switch-selected-track-color: #d2f9eb;
 }
+
+.active-button {
+    background-color: green;
+    color: white;
+   height: 33px;
+  
+  }
+
+  
+  .inactive-button {
+    background-color: red; /* Change this to the color you want for inactive state */
+    color: white;
+    height: 33px;
+   
+  }
+
+  
+//   @media (max-width: 767px) {
+//     .active-button {
+//         background-color: blue; /* Change the background color for mobile screens */
+//         /* For Responsive Web design*/
+//     }
+// }
+
+
+
+  
+  
+  

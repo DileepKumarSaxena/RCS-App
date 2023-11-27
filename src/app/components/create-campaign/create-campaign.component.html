@@ -1,10 +1,10 @@
-<app-menu></app-menu> 
+<app-menu></app-menu>
 <div class="go-back-section template-back add-inner-padding">
     <div class="back-icon">
         <!-- <mat-icon matTooltip="Back" (click)="goBack()">arrow_back</mat-icon> -->
         <h5 class="text-center">{{heading}} CAMPAIGN</h5>
     </div>
-  </div>
+</div>
 
 <div class="container-fluid h-100">
 
@@ -14,7 +14,7 @@
         </div> -->
 
         <div class="col-sm-12"><br><br>
-         
+
             <div class="card bg-light text-dark">
                 <div class="card-body">
                     <app-loader *ngIf="showLoader"></app-loader>
@@ -22,41 +22,29 @@
 
                         <div class="row" style="margin-left: 40px;">
                             <div class="col-sm-4">
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Campaign Name</mat-label>
-                                    <input matInput autocomplete="off" placeholder="Campaign name"
-                                        formControlName="campaignName" maxlength="255"  (blur)="checkDuplicateName()" />
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">
-                                        Campaign name is required
-                                    </mat-error>
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">
-                                        Campaign name already exists
-                                    </mat-error>
-                                    <mat-icon matSuffix aria-hidden="true" container="body">
-                                        <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2"
-                                            (mouseleave)="isHidden2 = !isHidden2">info</span>
-                                    </mat-icon>
-                                </mat-form-field> -->
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Campaign Name</mat-label>
-                                    <input
-                                      matInput
-                                      autocomplete="off"
-                                      placeholder="Campaign name"
-                                      formControlName="campaignName"
-                                      maxlength="30"
-                                      (blur)="onCampaignNameInputBlur();"
-                                    />
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">Campaign name is required</mat-error>
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('spacesNotAllowed')">Campaign name cannot be empty or contain only spaces</mat-error>
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('pattern')">Campaign name can only contain letters, numbers, underscores, and dashes</mat-error>
-                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">Campaign name already exists</mat-error>
-                                    <mat-icon matSuffix aria-hidden="true" container="body">
-                                      <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2" (mouseleave)="isHidden2 = !isHidden2">info</span>
-                                    </mat-icon>
-                                  </mat-form-field>
-                                  
+                                    <input matInput autocomplete="off" placeholder="Campaign name"
+                                        formControlName="campaignName" maxlength="30"
+                                        (blur)="onCampaignNameInputBlur();" />
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('required')">Campaign
+                                        name is required</mat-error>
+                                    <mat-error
+                                        *ngIf="campaignForm.get('campaignName').hasError('spacesNotAllowed')">Campaign
+                                        name cannot be empty or contain only spaces</mat-error>
+                                    <mat-error *ngIf="campaignForm.get('campaignName').hasError('pattern')">Campaign
+                                        name can only contain letters, numbers, underscores, and dashes</mat-error>
+                                    <mat-error
+                                        *ngIf="campaignForm.get('campaignName').hasError('duplicateName')">Campaign name
+                                        already exists</mat-error>
+                                        <mat-icon matSuffix aria-hidden="true" container="body" [class.disabled-icon]="isCampaignNameDisabled">
+                                            <span class="material-symbols-outlined" (mouseenter)="isHidden2 = !isHidden2" (mouseleave)="isHidden2 = !isHidden2">info</span>
+                                          </mat-icon>
+                                          
+                                          
+                                </mat-form-field>
+
 
                                 <ng-container
                                     *ngIf="isHidden2 && !campaignForm.get('campaignName').hasError('duplicateName')">
@@ -64,31 +52,23 @@
                                         No Special Characters allowed.
                                     </div>
                                 </ng-container>
-
-                                <!-- <div class="error-field" *ngIf="submitted && f.camaignName.errors">
-                                    <span *ngIf="f.camaignName.errors.required">This field is required!</span>
-                                    <span *ngIf="f.campignName.errors.pattern">Special character not allowed!</span>
-                                </div>
-                                <div class="error-field" *ngIf="campNameErrorCheck">
-                                    <span>Campaign with Name
-                                        {{ campaignForm.controls.campaignName.value }} already
-                                        exists !!</span>
-                                </div> -->
                             </div>
 
                             <div class="col-sm-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Description</mat-label>
-                                    <input matInput autocomplete="off" maxlength="50" placeholder="Description" formControlName="description"
-                                        required (blur)="onDescriptionBlur()" />
+                                    <input matInput autocomplete="off" maxlength="50" placeholder="Description"
+                                        formControlName="description" required (blur)="onDescriptionBlur()" />
                                     <mat-icon matSuffix aria-hidden="true" container="body">
-                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden" class="material-symbols-outlined">
+                                        <span (mouseenter)="isHidden = !isHidden" (mouseleave)="isHidden = !isHidden"
+                                            class="material-symbols-outlined">
                                             info
                                         </span>
                                     </mat-icon>
-                                    <mat-error *ngIf="isDescriptionInvalid()">Special characters are not allowed. Use underscores instead.</mat-error>
+                                    <mat-error *ngIf="isDescriptionInvalid()">Special characters are not allowed. Use
+                                        underscores instead.</mat-error>
                                 </mat-form-field>
-                                
+
                                 <ng-container
                                     *ngIf="isHidden && !campaignForm.get('campaignName').hasError('duplicateName')">
                                     <div style="margin-top: -25px; font-size: small; color: red; margin-left: 4px;">
@@ -97,96 +77,48 @@
                                 </ng-container>
                             </div>
 
-                            <!-- <div class="style col-sm-4">
-                                <mat-form-field appearance="outline" style="width: 85%;">
-                                    <mat-label>Message</mat-label>
-                                    <textarea placeholder="Enter JSON Format" formControlName="messageJson" matInput
-                                        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                                        cdkAutosizeMaxRows="1"></textarea>
-                                </mat-form-field>
-                            </div> -->
 
                             <div class="col-sm-4">
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Template List</mat-label>
-                                    <mat-select placeholder="Select One" formControlName="templateId" required>
-                                        <mat-option *ngFor="let item of allTemplateList"
-                                            [value]="item.id">{{item.templateCode}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field> -->
-
-                                <ng-select [items]="allTemplateList" bindLabel="templateCode"
-                                placeholder="Template List" bindValue="id" [searchable]="true"
-                                [clearable]="false" appearance="outline" formControlName="templateId" required>
-                            </ng-select>
+                                <ng-select [items]="allTemplateList" bindLabel="templateCode" [inputAttrs]="{maxlength: '20'}"
+                                    placeholder="Template List" bindValue="id" [searchable]="true" [clearable]="false"
+                                    appearance="outline"  formControlName="templateId" [inputAttrs]="{maxlength: '50'}" required>
+                                </ng-select>
                             </div>
 
                         </div>
 
 
                         <div class="row mt-4" style="margin-left: 40px; ">
-                            <div class="col-sm-4">
-
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Message Type</mat-label>
-                                    <mat-select required placeholder="Select One" formControlName="messageId" required>
-                                        <mat-option  *ngFor="let item of messageTypes"
-                                            [value]="item.messageId">{{item.messageType}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field> -->
-
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Campaign Date Range</mat-label>
-                                    <mat-date-range-input [rangePicker]="picker" [min]="minDate">
-                                        <input ng-disabled="true" readonly="true" matStartDate placeholder="Start date"
-                                            formControlName="campaignStartTime">
-                                        <input ng-disabled="true" readonly="true" matEndDate placeholder="End date"
-                                            formControlName="campaignEndTime">
-                                    </mat-date-range-input>
-                                    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-date-range-picker #picker></mat-date-range-picker>
-                                </mat-form-field> -->
-                            </div>
-                            <div class="col-sm-4">
-<!-- 
+                           
+                            <div class="col-sm-4"   *ngIf="username === 'dhanguru'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Campaign Type</mat-label>
-                                    <mat-select required placeholder="Select One"  >
-                                        <mat-option *ngFor="let item of campaignType"
-                                        [value]="item.campaignType">{{item.campaignType}}</mat-option>
-                                        
-                                    </mat-select>
-                                </mat-form-field> -->
-                              
+                                    <input matInput autocomplete="off" placeholder="Campaign Type"
+                                        formControlName="campaignType" maxlength="100"
+                                      required>
+                                    <mat-error *ngIf="campaignForm.get('campaignType').hasError('required')">Campaign
+                                        Type is required</mat-error>      
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-4"  *ngIf="username === 'dhanguru'">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Data Source Name</mat-label>
+                                    <input matInput autocomplete="off" placeholder="Data Source Name"
+                                        formControlName="dataSourceName" maxlength="100"
+                                      required>
+                                    <mat-error *ngIf="campaignForm.get('dataSourceName').hasError('required')">Data Source
+                                        Name is required</mat-error>      
+                                </mat-form-field>
                             </div>
                             <div class="col-sm-4">
-                                <!-- <mat-form-field appearance="outline">
-                                    <mat-label>Template Type</mat-label>
-                                    <mat-select required placeholder="Select One"  >
-                                        <mat-option *ngFor="let item of campaignSend"
-                                        [value]="item.campaignSend">{{item.campaignSend}}</mat-option>
-                                        
-                                    </mat-select>
-                                </mat-form-field> -->
-                                
-                            </div>
-
-                        
-                            <div class="col-sm-4"></div>
-                            
-                            <div class="col-sm-4" >
-                                <button  style="width: 90%;" class="btn btn-success" type="submit" id="smbtbtn"
-                                [disabled]="campaignForm.status === 'INVALID'">{{actionBtn}}</button> 
-                            </div>
-                            <div class="col-sm-4">
-
-                            </div>
-                            </div>
-                                       
-                        
-
-
+                                <button class="btn btn-success submit" type="submit" id="smbtbtn"
+                                        [disabled]="campaignForm.status === 'INVALID'"
+                                        [ngClass]="{'custom-submit-button': !(username === 'dhanguru')}">
+                                  {{ actionBtn }}
+                                </button>
+                              </div>
+                          
+                        </div>
                     </form>
                 </div>
             </div>
